@@ -8,12 +8,10 @@ import { viteStaticCopy } from 'vite-plugin-static-copy';
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
-    react(),
-    dts({ tsconfigPath: './tsconfig.node.json', rollupTypes: true }),
     viteStaticCopy({
       targets: [
         {
-          src: 'src/assets/fonts/**/*',
+          src: path.resolve(__dirname, 'src/assets/fonts/**/*'),
           dest: 'assets/fonts',
         },
         {
@@ -26,6 +24,8 @@ export default defineConfig({
         },
       ],
     }),
+    react(),
+    dts({ tsconfigPath: './tsconfig.node.json', rollupTypes: true }),
   ],
   build: {
     lib: {
