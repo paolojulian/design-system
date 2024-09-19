@@ -11,8 +11,39 @@ export default defineConfig({
     viteStaticCopy({
       targets: [
         {
-          src: path.resolve(__dirname, 'src/assets/fonts/**/*'),
-          dest: 'assets/fonts',
+          src: path.resolve(
+            __dirname,
+            'src/assets/fonts/ITC Avant Garde Gothic/ITC Avant Garde Gothic Bold.otf'
+          ),
+          dest: 'assets/fonts/ITC Avant Garde Gothic',
+        },
+        {
+          src: path.resolve(
+            __dirname,
+            'src/assets/fonts/ITC Avant Garde Gothic/ITC Avant Garde Gothic Medium.otf'
+          ),
+          dest: 'assets/fonts/ITC Avant Garde Gothic',
+        },
+        {
+          src: path.resolve(
+            __dirname,
+            'src/assets/fonts/ITC Avant Garde Gothic/ITC Avant Garde Gothic.otf'
+          ),
+          dest: 'assets/fonts/ITC Avant Garde Gothic',
+        },
+        {
+          src: path.resolve(
+            __dirname,
+            'src/assets/fonts/Merriweather/Merriweather-Bold.ttf'
+          ),
+          dest: 'assets/fonts/Merriweather',
+        },
+        {
+          src: path.resolve(
+            __dirname,
+            'src/assets/fonts/Merriweather/Merriweather-Regular.ttf'
+          ),
+          dest: 'assets/fonts/Merriweather',
         },
         {
           src: 'vite.config.ts',
