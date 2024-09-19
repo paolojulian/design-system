@@ -1,5 +1,6 @@
 {
   "name": "@paolojulian.dev/design-system",
+  "license": "MIT",
   "private": true,
   "version": "0.1.8",
   "type": "module",
@@ -8,13 +9,17 @@
   "module": "dist/index.es.js",
   "exports": {
     ".": {
+      "styles": "./dist/style.css",
       "types": "./dist/index.d.ts",
       "import": "./dist/index.es.js",
       "require": "./dist/index.umd.js"
-    }
+    },
+    "./style.css": "./dist/style.css",
+    "./fonts/*": "./dist/assets/fonts/*",
+    "./tailwind-config/*": "./dist/tailwind-config/*",
+    "./vite-config/*": "./dist/vite-config/*"
   },
   "files": [
-    "/assets",
     "/dist"
   ],
   "publishConfig": {
@@ -22,7 +27,8 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "vite build && tsc -b",
+    "build": "vite build && yarn build:css",
+    "build:css": "tailwindcss -i ./src/index.css -o dist/style.css",
     "lint": "eslint .",
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
@@ -30,10 +36,10 @@
     "publish:pack": "yarn build && npm pack --pack-destination ./packed"
   },
   "dependencies": {
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "tailwind-merge": "^2.2.0"
   },
   "devDependencies": {
@@ -61,7 +67,9 @@
     "tailwindcss": "^3.4.12",
     "typescript": "^5.5.3",
     "typescript-eslint": "^8.0.1",
-    "vite": "^5.4.1"
+    "vite": "^5.4.1",
+    "vite-plugin-dts": "^4.2.1",
+    "vite-plugin-static-copy": "^1.0.6"
   },
   "eslintConfig": {
     "extends": [

@@ -1,5 +1,5 @@
 import { VariantProps } from 'class-variance-authority';
-import '../../styles/tailwind.css';
+import '../../index.css';
 import cn from '../../utils/cn';
 import { PTypographyVariants } from './PTypography.constants';
 

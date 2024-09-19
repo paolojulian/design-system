@@ -2,7 +2,7 @@ import { type Meta, type StoryObj } from '@storybook/react';
 import { PTypography } from '.';
 
 const meta: Meta<typeof PTypography> = {
-  title: 'PipzTypography',
+  title: 'PTypography',
   component: PTypography,
 };
 
