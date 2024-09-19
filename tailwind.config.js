@@ -1,4 +1,4 @@
-import { P_COLORS } from './src/constants/colors';
+import colors from 'tailwindcss/colors';
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -6,7 +6,15 @@ export default {
   theme: {
     extend: {},
     colors: {
-      ...P_COLORS,
+      black: '#0D0D0D',
+      white: '#FCF5ED',
+      primary: '#CE5A67',
+      secondary: '#F4BF96',
+      gray: {
+        darker: colors.stone[500],
+        DEFAULT: '#A3A3A3',
+        lighter: '#e0e6ed',
+      },
     },
     fontFamily: {
       sans: ['AvantGarde', 'sans-serif'],

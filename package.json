@@ -28,7 +28,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build && yarn build:css",
-    "build:css": "tailwindcss -i ./src/index.css -o dist/style.css",
+    "build:css": "tailwindcss -i ./src/index.css -o dist/style.css --minify",
     "lint": "eslint .",
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
