@@ -1,7 +1,7 @@
 {
   "name": "@paolojulian.dev/design-system",
   "license": "MIT",
-  "private": true,
+  "private": false,
   "version": "1.0.0",
   "type": "module",
   "types": "dist/index.d.ts",
