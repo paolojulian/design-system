@@ -3,7 +3,7 @@
 This is my own personal design system used across my websites.
 The design system can be accessed here:
 
-- Storybook: [N/A]
+- Storybook: [https://design-system.paolojulian.dev]
 
 ## Development
 
