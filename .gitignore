@@ -25,3 +25,6 @@ dist-ssr
 
 # Npm packed packages
 packed
+
+# Storybook
+storybook-static
