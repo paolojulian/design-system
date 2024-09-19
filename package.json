@@ -29,7 +29,7 @@
     "dev": "vite",
     "build": "vite build && yarn build:css",
     "build:css": "tailwindcss -i ./src/index.css -o dist/style.css --minify",
-    "build:storybook": "yarn build && storybook build",
+    "build:storybook": "storybook build",
     "lint": "eslint .",
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
