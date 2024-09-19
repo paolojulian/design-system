@@ -1,11 +1,29 @@
-import { FC, ReactNode } from 'react';
+import { VariantProps } from 'class-variance-authority';
+import '../../styles/tailwind.css';
+import cn from '../../utils/cn';
+import { PTypographyVariants } from './PTypography.constants';
 
-export type PTypographyProps = {
-  children: ReactNode;
-};
+export interface PTypographyProps
+  extends VariantProps<typeof PTypographyVariants> {
+  as?: React.ElementType;
+  children: React.ReactNode;
+  className?: string;
+  onClick?: () => void;
+}
 
-const PTypography: FC<PTypographyProps> = ({ children }) => {
-  return <div className='test'>{children}</div>;
-};
-
-export default PTypography;
+export default function PTypography({
+  as: Element = 'p',
+  onClick,
+  children,
+  className = '',
+  variant,
+}: PTypographyProps) {
+  return (
+    <Element
+      className={cn(PTypographyVariants({ variant, className }))}
+      onClick={onClick}
+    >
+      {children}
+    </Element>
+  );
+}

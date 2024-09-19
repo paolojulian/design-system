@@ -1,2 +1,2 @@
-export { Row }  from './PContainers';
-export { default as PTypography, type PTypographyProps } from './PTypography';
+export { Row } from './PContainers';
+export { PTypography, type PTypographyProps } from './PTypography';

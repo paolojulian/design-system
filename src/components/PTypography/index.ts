@@ -1,1 +1,1 @@
-export { default, type PTypographyProps } from './PTypography';
+export { default as PTypography, type PTypographyProps } from './PTypography';

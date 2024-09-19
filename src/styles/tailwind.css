@@ -1,0 +1,57 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  @font-face {
+    font-family: 'AvantGarde';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url('../assets/fonts/ITC Avant Garde Gothic/ITC Avant Garde Gothic.otf')
+      format('opentype');
+  }
+
+  @font-face {
+    font-family: 'AvantGarde';
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: url('../assets/fonts/ITC Avant Garde Gothic/ITC Avant Garde Gothic Medium.otf')
+      format('opentype');
+  }
+
+  @font-face {
+    font-family: 'AvantGarde';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url('../assets/fonts/ITC Avant Garde Gothic/ITC Avant Garde Gothic Bold.otf')
+      format('opentype');
+  }
+
+  @font-face {
+    font-family: 'Merriweather';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url('../assets/fonts/Merriweather/Merriweather-Regular.ttf')
+      format('truetype');
+  }
+  @font-face {
+    font-family: 'Merriweather';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url('../assets/fonts/Merriweather/Merriweather-Bold.ttf')
+      format('truetype');
+  }
+}
+
+.font-sans {
+  font-family: 'AvantGarde', sans-serif;
+}
+
+.font-serif {
+  font-family: 'Merriweather', serif;
+}
