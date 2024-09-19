@@ -28,7 +28,6 @@ export default defineConfig({
     }),
   ],
   build: {
-    assetsDir: path.resolve(__dirname, 'src/assets'),
     lib: {
       entry: {
         index: path.resolve(__dirname, 'src/components/index.ts'),
