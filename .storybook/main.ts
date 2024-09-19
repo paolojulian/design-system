@@ -1,5 +1,4 @@
 import type { StorybookConfig } from '@storybook/react-vite';
-import react from '@vitejs/plugin-react';
 
 const config: StorybookConfig = {
   stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
@@ -13,11 +12,6 @@ const config: StorybookConfig = {
   framework: {
     name: '@storybook/react-vite',
     options: {},
-  },
-  viteFinal: async () => {
-    return {
-      plugins: [react()],
-    };
   },
 };
 export default config;
