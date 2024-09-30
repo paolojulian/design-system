@@ -1,7 +1,7 @@
 import { CSSProperties, FC, ReactNode } from 'react';
 import cn from '../../../utils/cn';
 
-export type RowProps = {
+export type StackProps = {
   children: ReactNode;
   gap?: CSSProperties['gap'];
   alignItems?: CSSProperties['alignItems'];
@@ -9,7 +9,7 @@ export type RowProps = {
   className?: string;
 };
 
-const Row: FC<RowProps> = ({
+const Stack: FC<StackProps> = ({
   children,
   gap = 0,
   alignItems = undefined,
@@ -18,8 +18,8 @@ const Row: FC<RowProps> = ({
 }) => {
   return (
     <div
-      aria-label='Row container'
-      className={cn('flex flex-row', className)}
+      aria-label='Stack container'
+      className={cn('flex flex-col', className)}
       style={{
         gap,
         alignItems,
@@ -31,4 +31,4 @@ const Row: FC<RowProps> = ({
   );
 };
 
-export default Row;
+export default Stack;
