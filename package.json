@@ -13,6 +13,16 @@
       "import": "./dist/index.es.js",
       "require": "./dist/index.umd.js"
     },
+    "./constants": {
+      "types": "./dist/constants.d.ts",
+      "import": "./dist/constants.es.js",
+      "require": "./dist/constants.umd.js"
+    },
+    "./utils": {
+      "types": "./dist/utils.d.ts",
+      "import": "./dist/utils.es.js",
+      "require": "./dist/utils.umd.js"
+    },
     "./style.css": "./dist/style.css",
     "./fonts.css": "./dist/fonts.css",
     "./fonts/*": "./dist/assets/fonts/*",
