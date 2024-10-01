@@ -1,9 +1,19 @@
 import { type Meta, type StoryObj } from '@storybook/react';
 import { PTypography } from '.';
+import { P_COLORS } from '../../constants';
 
 const meta: Meta<typeof PTypography> = {
   title: 'PTypography',
   component: PTypography,
+  args: {
+    className: 'text-white',
+  },
+  parameters: {
+    backgrounds: {
+      values: [{ name: 'Dark', value: P_COLORS.black }],
+      default: 'Dark',
+    },
+  },
 };
 
 type Story = StoryObj<typeof PTypography>;

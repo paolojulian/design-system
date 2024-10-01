@@ -1,0 +1,40 @@
+import {
+  LinkedInIcon,
+  MailIcon,
+  NewTabArrowIcon,
+  PhoneIcon,
+  TriangleListIcon,
+} from '.';
+import { IconGallery, IconItem, Meta } from '@storybook/blocks';
+import { P_COLORS } from '../../constants';
+
+<Meta
+  title='Iconography'
+  args={{
+    background: P_COLORS.black,
+  }}
+  parameters={{
+    backgrounds: {
+      values: [{ name: 'Dark', value: P_COLORS.black }],
+      default: 'Dark',
+    },
+  }}
+/>
+
+<IconGallery>
+  <IconItem name='Linkedin'>
+    <LinkedInIcon className='text-black' />
+  </IconItem>
+  <IconItem name='Mail'>
+    <MailIcon className='text-black' />
+  </IconItem>
+  <IconItem name='New Tab Arrow'>
+    <NewTabArrowIcon className='text-black' />
+  </IconItem>
+  <IconItem name='Phone'>
+    <PhoneIcon className='text-black' />
+  </IconItem>
+  <IconItem name='Triangle List'>
+    <TriangleListIcon className='text-black' />
+  </IconItem>
+</IconGallery>
