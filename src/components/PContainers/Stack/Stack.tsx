@@ -11,7 +11,7 @@ export type StackProps = {
 
 const Stack: FC<StackProps> = ({
   children,
-  gap = 0,
+  gap = undefined,
   alignItems = undefined,
   justifyContent = undefined,
   className = '',

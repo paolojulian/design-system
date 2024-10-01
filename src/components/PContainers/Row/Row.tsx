@@ -11,7 +11,7 @@ export type RowProps = {
 
 const Row: FC<RowProps> = ({
   children,
-  gap = 0,
+  gap = undefined,
   alignItems = undefined,
   justifyContent = undefined,
   className = '',
