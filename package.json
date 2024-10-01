@@ -9,12 +9,12 @@
   "module": "dist/index.es.js",
   "exports": {
     ".": {
-      "styles": "./dist/style.css",
       "types": "./dist/index.d.ts",
       "import": "./dist/index.es.js",
       "require": "./dist/index.umd.js"
     },
     "./style.css": "./dist/style.css",
+    "./fonts.css": "./dist/fonts.css",
     "./fonts/*": "./dist/assets/fonts/*",
     "./tailwind-config/*": "./dist/tailwind-config/*",
     "./vite-config/*": "./dist/vite-config/*"

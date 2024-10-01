@@ -53,6 +53,10 @@ export default defineConfig({
           dest: 'assets/fonts/Merriweather',
         },
         {
+          src: path.resolve(__dirname, 'src/fonts.css'),
+          dest: '.',
+        },
+        {
           src: 'vite.config.ts',
           dest: 'vite-config',
         },
