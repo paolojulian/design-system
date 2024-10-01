@@ -23,6 +23,7 @@
   },
   "include": [
     "src/components",
+    "src/icons",
     "src/utils",
     "src/constants",
     "tailwind.config.js",

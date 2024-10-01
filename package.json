@@ -18,6 +18,11 @@
       "import": "./dist/constants.es.js",
       "require": "./dist/constants.umd.js"
     },
+    "./icons": {
+      "types": "./dist/icons.d.ts",
+      "import": "./dist/icons.es.js",
+      "require": "./dist/icons.umd.js"
+    },
     "./utils": {
       "types": "./dist/utils.d.ts",
       "import": "./dist/utils.es.js",
