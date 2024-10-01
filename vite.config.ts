@@ -13,9 +13,16 @@ export default defineConfig({
         {
           src: path.resolve(
             __dirname,
-            'src/assets/fonts/ITC Avant Garde Gothic/ITC Avant Garde Gothic Bold.otf'
+            'src/assets/fonts/AvantGarde/AvantGarde.woff2'
           ),
-          dest: 'assets/fonts/ITC Avant Garde Gothic',
+          dest: 'assets/fonts/AvantGarde',
+        },
+        {
+          src: path.resolve(
+            __dirname,
+            'src/assets/fonts/AvantGarde/AvantGardeMedium.woff2'
+          ),
+          dest: 'assets/fonts/AvantGarde',
         },
         {
           src: path.resolve(
