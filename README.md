@@ -14,7 +14,7 @@ This design system is made with Vite, React and TailwindCSS
 npm install @paolojulian.dev/design-system
 ```
 
-## Tailwind Config
+### Tailwind Config
 ```js
 // tailwind.config.js
 import type { Config } from 'tailwindcss';
@@ -33,4 +33,9 @@ const config: Pick<Config, 'content' | 'presets' | 'theme'> = {
 };
 
 export default config;
+```
+
+### Styles
+```css
+@import '@paolojulian.dev/design-system/style.css';
 ```
