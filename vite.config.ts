@@ -81,7 +81,7 @@ export default defineConfig({
       fileName: (format) => `[name].${format}.js`,
     },
     rollupOptions: {
-      external: ["react", "react-dom", "tailwindcss"],
+      external: ["react", "react/jsx-runtime", "react-dom", "tailwindcss"],
       output: {
         globals: {
           react: "React",
