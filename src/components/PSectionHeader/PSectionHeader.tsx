@@ -5,7 +5,7 @@ interface Props {
   title: string;
 }
 
-export default function SectionHeader({ title }: Props) {
+export default function PSectionHeader({ title }: Props) {
   return (
     <Stack className='pt-2 border-t border-white text-white'>
       <PTypography className='uppercase' variant='body-wide'>

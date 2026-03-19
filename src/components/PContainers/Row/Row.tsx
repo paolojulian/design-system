@@ -18,7 +18,6 @@ const Row: FC<RowProps> = ({
 }) => {
   return (
     <div
-      aria-label='Row container'
       className={cn('flex flex-row', className)}
       style={{
         gap,

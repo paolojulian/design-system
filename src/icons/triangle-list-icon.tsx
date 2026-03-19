@@ -11,6 +11,7 @@ export default function TriangleListIcon({ className, ...props }: Props) {
       height='12'
       viewBox='0 0 11 12'
       fill='none'
+      aria-hidden='true'
       className={cn('text-secondary', className)}
       {...props}
     >

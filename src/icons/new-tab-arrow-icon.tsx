@@ -11,6 +11,7 @@ export default function NewTabArrowIcon({ className, ...props }: Props) {
       viewBox='0 0 54 55'
       fill='none'
       xmlns='http://www.w3.org/2000/svg'
+      aria-hidden='true'
       className={cn('text-secondary', className)}
       {...props}
     >

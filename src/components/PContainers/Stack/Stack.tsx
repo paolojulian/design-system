@@ -18,7 +18,6 @@ const Stack: FC<StackProps> = ({
 }) => {
   return (
     <div
-      aria-label='Stack container'
       className={cn('flex flex-col', className)}
       style={{
         gap,

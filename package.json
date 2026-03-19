@@ -5,28 +5,28 @@
   "version": "3.0.1",
   "type": "module",
   "types": "dist/index.d.ts",
-  "main": "dist/index.umd.js",
+  "main": "dist/index.cjs.js",
   "module": "dist/index.es.js",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.es.js",
-      "require": "./dist/index.umd.js"
+      "require": "./dist/index.cjs.js"
     },
     "./constants": {
       "types": "./dist/constants.d.ts",
       "import": "./dist/constants.es.js",
-      "require": "./dist/constants.umd.js"
+      "require": "./dist/constants.cjs.js"
     },
     "./icons": {
       "types": "./dist/icons.d.ts",
       "import": "./dist/icons.es.js",
-      "require": "./dist/icons.umd.js"
+      "require": "./dist/icons.cjs.js"
     },
     "./utils": {
       "types": "./dist/utils.d.ts",
       "import": "./dist/utils.es.js",
-      "require": "./dist/utils.umd.js"
+      "require": "./dist/utils.cjs.js"
     },
     "./style.css": "./dist/style.css",
     "./fonts.css": "./dist/fonts.css",
@@ -54,11 +54,13 @@
     "storybook": "storybook dev -p 6006",
     "publish:pack": "yarn build && npm pack --pack-destination ./packed"
   },
+  "peerDependencies": {
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
+  },
   "dependencies": {
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
     "tailwind-merge": "^2.2.0"
   },
   "devDependencies": {
