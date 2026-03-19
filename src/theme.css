@@ -1,12 +1,12 @@
 @theme {
-  --color-black: #0D0D0D;
-  --color-white: #FCF5ED;
-  --color-primary: #CE5A67;
-  --color-secondary: #F4BF96;
+  --color-black: #0d0d0d;
+  --color-white: #ffffff;
+  --color-primary: #ce5a67;
+  --color-secondary: #f4bf96;
   --color-gray-darker: #78716c;
-  --color-gray: #A3A3A3;
+  --color-gray: #a3a3a3;
   --color-gray-lighter: #e0e6ed;
 
-  --font-sans: "AvantGarde", sans-serif;
-  --font-serif: "Lora", serif;
+  --font-sans: 'AvantGarde', sans-serif;
+  --font-serif: 'Lora', serif;
 }
