@@ -2,12 +2,13 @@ import { defineConfig } from "vite";
 import dts from "vite-plugin-dts";
 import react from "@vitejs/plugin-react";
 import path from "path";
-import tailwindcss from "tailwindcss";
+import tailwindcss from "@tailwindcss/vite";
 import { viteStaticCopy } from "vite-plugin-static-copy";
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
+    tailwindcss(),
     viteStaticCopy({
       targets: [
         {
@@ -57,12 +58,12 @@ export default defineConfig({
           dest: ".",
         },
         {
-          src: "vite.config.ts",
-          dest: "vite-config",
+          src: path.resolve(__dirname, "src/theme.css"),
+          dest: ".",
         },
         {
-          src: "tailwind.config.ts",
-          dest: "tailwind-config",
+          src: "vite.config.ts",
+          dest: "vite-config",
         },
       ],
     }),
@@ -98,10 +99,5 @@ export default defineConfig({
      * Remove the dist folder before building
      */
     emptyOutDir: true,
-  },
-  css: {
-    postcss: {
-      plugins: [tailwindcss],
-    },
   },
 });
