@@ -1,0 +1,10 @@
+.p-text-input {
+  --p-input-bg:           var(--color-white);
+  --p-input-bg-focus:     var(--color-white);
+  --p-input-text:         var(--color-black);
+  --p-input-ring:         var(--color-primary);
+  --p-input-label:        var(--color-gray-darker);
+  --p-input-label-focus:  var(--color-primary);
+  --p-input-border:       var(--color-black);
+  --p-input-border-focus: var(--color-black);
+}
