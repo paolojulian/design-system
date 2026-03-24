@@ -16,8 +16,10 @@ export type PTextInputProps = {
   inputClassName?: string;
   /** Visible label — doubles as the floating label and the placeholder. */
   label: string;
+  /** Shown below the field when there is no error. */
+  helperText?: string;
   isError?: boolean;
-  /** Shown below the field when `isError` is true. Announced via `role="alert"`. */
+  /** Shown below the field when `isError` is true. Announced immediately via `role="alert"`. */
   errorMessage?: string;
   /** Decorative element placed on the trailing edge. Ignored when `type="password"`. */
   rightAdornment?: ReactNode;
@@ -81,11 +83,13 @@ export const PTextInput = forwardRef<PTextInputRef, PTextInputProps>(
       inputClassName,
       type,
       label,
+      helperText,
       id,
       isError = false,
       errorMessage,
       rightAdornment,
       disabled,
+      readOnly,
       style,
       ...props
     },
@@ -94,12 +98,20 @@ export const PTextInput = forwardRef<PTextInputRef, PTextInputProps>(
     const generatedId = useId();
     const inputId = id ?? generatedId;
     const errorId = `${inputId}-error`;
+    const helperId = `${inputId}-helper`;
 
     const isPassword = type === 'password';
     const hasRightAdornment = Boolean(rightAdornment) && !isPassword;
     const [showPassword, setShowPassword] = useState(false);
 
     const inputType = isPassword ? (showPassword ? 'text' : 'password') : (type ?? 'text');
+
+    const describedBy = [
+      isError && errorMessage ? errorId : null,
+      !isError && helperText ? helperId : null,
+    ]
+      .filter(Boolean)
+      .join(' ') || undefined;
 
     return (
       // CSS custom properties are declared here (.p-text-input) so every
@@ -112,17 +124,19 @@ export const PTextInput = forwardRef<PTextInputRef, PTextInputProps>(
           ref={ref}
           type={inputType}
           disabled={disabled}
+          readOnly={readOnly}
           // Empty string required for the CSS peer-not-placeholder-shown trick.
           placeholder=" "
           // Accessibility
           aria-invalid={isError || undefined}
-          aria-describedby={isError && errorMessage ? errorId : undefined}
+          aria-describedby={describedBy}
           aria-required={props.required}
           aria-disabled={disabled}
+          aria-readonly={readOnly}
           autoComplete={props.autoComplete ?? (isPassword ? 'current-password' : undefined)}
           className={cn(
             // Layout — tall enough for the floating label + value
-            'peer h-16 w-full rounded-xl px-4 pt-6 pb-2',
+            'peer h-16 w-full rounded px-4 pt-6 pb-2',
             (isPassword || hasRightAdornment) && 'pr-12',
             // Visuals — all colors via CSS custom properties
             'bg-(--p-input-bg) text-(--p-input-text)',
@@ -135,6 +149,7 @@ export const PTextInput = forwardRef<PTextInputRef, PTextInputProps>(
             'transition-all duration-150 ease-in',
             // States
             'disabled:cursor-not-allowed disabled:opacity-50',
+            'read-only:cursor-default read-only:bg-(--p-input-bg-readonly)',
             isError
               ? 'ring-2 ring-red-500'
               : 'focus:ring-2',
@@ -223,13 +238,15 @@ export const PTextInput = forwardRef<PTextInputRef, PTextInputProps>(
 
         {/* Error message — announced immediately via role="alert" */}
         {isError && errorMessage && (
-          <p
-            id={errorId}
-            role="alert"
-            aria-live="polite"
-            className="mt-1 px-4 font-sans text-xs text-red-500"
-          >
+          <p id={errorId} role="alert" className="mt-1 px-4 font-sans text-xs text-red-500">
             {errorMessage}
+          </p>
+        )}
+
+        {/* Helper text — visible only when there is no error */}
+        {!isError && helperText && (
+          <p id={helperId} className="mt-1 px-4 font-sans text-xs text-(--p-input-text-helper)">
+            {helperText}
           </p>
         )}
       </div>

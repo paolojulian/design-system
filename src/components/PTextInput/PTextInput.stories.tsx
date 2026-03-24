@@ -2,8 +2,19 @@ import { type Meta, type StoryObj } from '@storybook/react';
 import { PTextInput } from '.';
 
 const meta: Meta<typeof PTextInput> = {
-  title: 'PTextInput',
+  title: 'Components/PTextInput',
   component: PTextInput,
+  tags: ['autodocs'],
+  parameters: {
+    layout: 'centered',
+  },
+  decorators: [
+    (Story) => (
+      <div style={{ width: 360 }}>
+        <Story />
+      </div>
+    ),
+  ],
   args: {
     label: 'Label',
   },
@@ -11,6 +22,38 @@ const meta: Meta<typeof PTextInput> = {
     type: {
       control: 'select',
       options: ['text', 'password', 'email', 'number', 'tel', 'date'],
+      description: 'HTML input type. Password type enables the show/hide toggle automatically.',
+    },
+    label: {
+      description: 'Visible label — doubles as the floating label and the placeholder.',
+    },
+    helperText: {
+      description: 'Shown below the field when there is no error.',
+    },
+    isError: {
+      description: 'Puts the field into an error state (red ring + error message).',
+    },
+    errorMessage: {
+      description: 'Shown below the field when `isError` is true. Announced via `role="alert"`.',
+    },
+    rightAdornment: {
+      description: 'Decorative element placed on the trailing edge. Ignored when `type="password"`.',
+    },
+    disabled: {
+      description: 'Prevents interaction and applies a muted visual style.',
+    },
+    readOnly: {
+      description: 'Prevents editing but keeps the field focusable and selectable.',
+    },
+    required: {
+      description: 'Marks the field as required for form validation.',
+    },
+    className: {
+      description:
+        'Applied to the root wrapper. Use Tailwind v4 arbitrary-var syntax to override design tokens, e.g. `[--p-input-ring:blue]`.',
+    },
+    inputClassName: {
+      description: 'Applied to the inner `<input>` element for layout / spacing overrides.',
     },
   },
 };
@@ -25,6 +68,15 @@ export const Filled: Story = {
   name: 'Filled',
   args: {
     defaultValue: 'Some value',
+  },
+};
+
+export const WithHelperText: Story = {
+  name: 'With Helper Text',
+  args: {
+    label: 'Email',
+    type: 'email',
+    helperText: 'We will never share your email with anyone.',
   },
 };
 
@@ -46,6 +98,18 @@ export const WithError: Story = {
   },
 };
 
+export const WithErrorAndHelperText: Story = {
+  name: 'Error Overrides Helper Text',
+  args: {
+    label: 'Email',
+    type: 'email',
+    helperText: 'We will never share your email.',
+    isError: true,
+    errorMessage: 'Please enter a valid email address.',
+    defaultValue: 'not-an-email',
+  },
+};
+
 export const WithRightAdornment: Story = {
   name: 'With Right Adornment',
   args: {
@@ -54,11 +118,12 @@ export const WithRightAdornment: Story = {
   },
 };
 
-export const CustomColors: Story = {
-  name: 'Custom Colors (token override)',
+export const ReadOnly: Story = {
+  name: 'Read Only',
   args: {
-    label: 'Custom themed input',
-    className: '[--p-input-ring:#8b5cf6] [--p-input-label-focus:#8b5cf6] [--p-input-bg:#f5f3ff]',
+    readOnly: true,
+    defaultValue: 'Cannot edit this',
+    helperText: 'This field is read-only.',
   },
 };
 
@@ -76,6 +141,14 @@ export const Required: Story = {
     required: true,
     label: 'Email',
     type: 'email',
+  },
+};
+
+export const CustomColors: Story = {
+  name: 'Custom Colors (token override)',
+  args: {
+    label: 'Custom themed input',
+    className: '[--p-input-ring:#8b5cf6] [--p-input-label-focus:#8b5cf6] [--p-input-bg:#f5f3ff]',
   },
 };
 
