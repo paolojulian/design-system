@@ -49,8 +49,7 @@ const meta: Meta<typeof PTextInput> = {
       description: 'Marks the field as required for form validation.',
     },
     className: {
-      description:
-        'Applied to the root wrapper. Use Tailwind v4 arbitrary-var syntax to override design tokens, e.g. `[--p-input-ring:blue]`.',
+      description: 'Applied to the root wrapper element.',
     },
     inputClassName: {
       description: 'Applied to the inner `<input>` element for layout / spacing overrides.',
@@ -141,14 +140,6 @@ export const Required: Story = {
     required: true,
     label: 'Email',
     type: 'email',
-  },
-};
-
-export const CustomColors: Story = {
-  name: 'Custom Colors (token override)',
-  args: {
-    label: 'Custom themed input',
-    className: '[--p-input-ring:#8b5cf6] [--p-input-label-focus:#8b5cf6] [--p-input-bg:#f5f3ff]',
   },
 };
 
