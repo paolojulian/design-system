@@ -1,0 +1,12 @@
+.p-text-area {
+  --p-textarea-bg:            #ffffff;
+  --p-textarea-bg-focus:      #ffffff;
+  --p-textarea-bg-readonly:   #e0e6ed;
+  --p-textarea-text:          #0d0d0d;
+  --p-textarea-text-helper:   #78716c;
+  --p-textarea-ring:          #ce5a67;
+  --p-textarea-label:         #78716c;
+  --p-textarea-label-focus:   #ce5a67;
+  --p-textarea-border:        #0d0d0d;
+  --p-textarea-border-focus:  #0d0d0d;
+}
