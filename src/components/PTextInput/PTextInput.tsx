@@ -1,11 +1,15 @@
 import { forwardRef, type InputHTMLAttributes, type ReactNode, useId, useState } from 'react';
-import '../../index.css';
+import './PTextInput.css';
 import cn from '../../utils/cn';
 
 export type PTextInputRef = HTMLInputElement;
 
 export type PTextInputProps = {
-  /** Applied to the root wrapper element. */
+  /**
+   * Applied to the root wrapper element.
+   * Override design tokens via CSS custom properties, e.g.:
+   *   `[--p-input-ring:blue] [--p-input-bg:#f5f5f5]`
+   */
   className?: string;
   /** Applied to the inner `<input>` element for layout / spacing overrides. */
   inputClassName?: string;
@@ -109,7 +113,7 @@ export const PTextInput = forwardRef<PTextInputRef, PTextInputProps>(
       .join(' ') || undefined;
 
     return (
-      <div className={cn('relative w-full', className)} style={style}>
+      <div className={cn('p-text-input relative w-full', className)} style={style}>
         <input
           {...props}
           id={inputId}
@@ -131,16 +135,17 @@ export const PTextInput = forwardRef<PTextInputRef, PTextInputProps>(
             'peer h-16 w-full rounded px-4 pt-6 pb-2',
             (isPassword || hasRightAdornment) && 'pr-12',
             // Visuals
-            'bg-white text-black',
+            'bg-(--p-input-bg) text-(--p-input-text)',
             'font-sans text-sm outline-none',
-            'border border-black focus:border-black',
+            'border border-(--p-input-border) focus:border-(--p-input-border-focus)',
             // Focus
-            'focus:ring-2 focus:ring-primary',
+            'focus:bg-(--p-input-bg-focus)',
+            'focus:ring-2 focus:ring-(--p-input-ring)',
             // Motion
             'transition-all duration-150 ease-in',
             // States
             'disabled:cursor-not-allowed disabled:opacity-50',
-            'read-only:cursor-default read-only:bg-gray-lighter',
+            'read-only:cursor-default read-only:bg-(--p-input-bg-readonly)',
             isError && 'ring-2 ring-red-500',
             // Date — hide native picker chrome so rightAdornment can replace it
             hasRightAdornment &&
@@ -164,7 +169,7 @@ export const PTextInput = forwardRef<PTextInputRef, PTextInputProps>(
             'scale-0 opacity-0',
             isError
               ? 'text-red-500'
-              : 'text-gray-darker peer-focus:text-primary',
+              : 'text-(--p-input-label) peer-focus:text-(--p-input-label-focus)',
             // Reveal when focused or filled
             'peer-focus:scale-100 peer-focus:opacity-100',
             'peer-not-placeholder-shown:scale-100 peer-not-placeholder-shown:opacity-100',
@@ -182,7 +187,7 @@ export const PTextInput = forwardRef<PTextInputRef, PTextInputProps>(
           htmlFor={inputId}
           className={cn(
             'pointer-events-none absolute top-1/2 left-4 -translate-y-1/2',
-            'font-sans text-sm text-black',
+            'font-sans text-sm text-(--p-input-text)',
             'origin-left transition-all duration-150 ease-in',
             // Collapse when focused or filled
             'peer-focus:scale-0 peer-focus:opacity-0',
@@ -201,9 +206,10 @@ export const PTextInput = forwardRef<PTextInputRef, PTextInputProps>(
             disabled={disabled}
             className={cn(
               'absolute top-1/2 right-4 -translate-y-1/2',
-              'text-gray-darker hover:text-black',
+              'text-(--p-input-label) hover:text-(--p-input-text)',
               'transition-colors duration-150',
-              'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary',
+              'focus-visible:outline-2 focus-visible:outline-offset-2',
+              'focus-visible:outline-(--p-input-ring)',
               'disabled:pointer-events-none disabled:opacity-50',
             )}
             aria-label={showPassword ? 'Hide password' : 'Show password'}
@@ -218,7 +224,7 @@ export const PTextInput = forwardRef<PTextInputRef, PTextInputProps>(
         {hasRightAdornment && (
           <span
             aria-hidden="true"
-            className="pointer-events-none absolute top-1/2 right-4 -translate-y-1/2 text-gray-darker"
+            className="pointer-events-none absolute top-1/2 right-4 -translate-y-1/2 text-(--p-input-label)"
           >
             {rightAdornment}
           </span>
@@ -233,7 +239,7 @@ export const PTextInput = forwardRef<PTextInputRef, PTextInputProps>(
 
         {/* Helper text — visible only when there is no error */}
         {!isError && helperText && (
-          <p id={helperId} className="mt-1 px-4 font-sans text-xs text-gray-darker">
+          <p id={helperId} className="mt-1 px-4 font-sans text-xs text-(--p-input-text-helper)">
             {helperText}
           </p>
         )}

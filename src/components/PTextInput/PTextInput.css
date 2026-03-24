@@ -1,0 +1,12 @@
+.p-text-input {
+  --p-input-bg:            #ffffff;
+  --p-input-bg-focus:      #ffffff;
+  --p-input-bg-readonly:   #e0e6ed;
+  --p-input-text:          #0d0d0d;
+  --p-input-text-helper:   #78716c;
+  --p-input-ring:          #ce5a67;
+  --p-input-label:         #78716c;
+  --p-input-label-focus:   #ce5a67;
+  --p-input-border:        #0d0d0d;
+  --p-input-border-focus:  #0d0d0d;
+}

@@ -143,4 +143,12 @@ export const Required: Story = {
   },
 };
 
+export const CustomColors: Story = {
+  name: 'Custom Colors (token override)',
+  args: {
+    label: 'Custom themed input',
+    className: '[--p-input-ring:#8b5cf6] [--p-input-label-focus:#8b5cf6] [--p-input-bg:#f5f3ff]',
+  },
+};
+
 export default meta;
