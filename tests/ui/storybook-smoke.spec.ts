@@ -96,6 +96,24 @@ test.describe('Storybook smoke tests', () => {
     expect(box?.width).toBeLessThanOrEqual(320);
     expect(box?.height).toBeGreaterThanOrEqual(44);
   });
+
+  test('renders a keyboard-focusable horizontal slider with overflow content', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await gotoStory(page, 'components-phorizontalslider--default');
+
+    const scroller = page.getByRole('region', { name: 'Featured content' });
+    await expect(scroller).toBeVisible();
+    await scroller.focus();
+    await expect(scroller).toBeFocused();
+
+    const metrics = await scroller.evaluate((element) => ({
+      clientWidth: element.clientWidth,
+      scrollWidth: element.scrollWidth,
+    }));
+
+    expect(metrics.scrollWidth).toBeGreaterThan(metrics.clientWidth);
+    await expect(page.getByRole('listitem')).toHaveCount(6);
+  });
 });
 
 test.describe('Storybook accessibility checks', () => {
@@ -107,6 +125,7 @@ test.describe('Storybook accessibility checks', () => {
     'components-pbutton--loading',
     'components-pbutton--active',
     'components-pbutton--mobile',
+    'components-phorizontalslider--default',
     'components-ptextinput--default',
     'components-ptextinput--with-error',
     'components-ptextarea--default',
