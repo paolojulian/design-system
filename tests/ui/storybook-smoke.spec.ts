@@ -17,6 +17,19 @@ async function expectNoA11yViolations(page: Page) {
 }
 
 test.describe('Storybook smoke tests', () => {
+  test('renders button actions and link semantics', async ({ page }) => {
+    await gotoStory(page, 'components-pbutton--primary');
+    await expect(page.getByRole('button', { name: 'Button' })).toBeVisible();
+
+    await gotoStory(page, 'components-pbutton--loading');
+    const loadingButton = page.getByRole('button', { name: 'Saving' });
+    await expect(loadingButton).toBeDisabled();
+    await expect(loadingButton).toHaveAttribute('aria-busy', 'true');
+
+    await gotoStory(page, 'components-pbutton--link');
+    await expect(page.getByRole('link', { name: 'Open details' })).toBeVisible();
+  });
+
   test('renders the critical typography stories', async ({ page }) => {
     await gotoStory(page, 'ptypography--body-wide');
     await expect(page.getByText('AVANT GARDE')).toBeVisible();
@@ -70,6 +83,10 @@ test.describe('Storybook smoke tests', () => {
 test.describe('Storybook accessibility checks', () => {
   for (const storyId of [
     'ptypography--body-wide',
+    'components-pbutton--primary',
+    'components-pbutton--secondary',
+    'components-pbutton--danger',
+    'components-pbutton--loading',
     'components-ptextinput--default',
     'components-ptextinput--with-error',
     'components-ptextarea--default',
