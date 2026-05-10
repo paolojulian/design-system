@@ -191,7 +191,7 @@
   --p-control-border-width: 1px;
   --p-control-padding-x: var(--p-space-4);
   --p-control-padding-y: var(--p-space-3);
-  --p-control-message-margin-top: var(--p-space-1);
+  --p-control-message-margin-top: calc(var(--p-space-1) / 2);
   --p-size-icon-sm: 1rem;
   --p-size-icon-md: 1.25rem;
   --p-size-icon-lg: 1.5rem;
