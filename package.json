@@ -53,7 +53,7 @@
     "storybook": "storybook dev -p 6006",
     "test:ui": "playwright test",
     "test:ui:build": "npm run build:storybook && playwright test",
-    "test:visual": "chromatic --build-script-name build:storybook --only-changed",
+    "test:visual": "npm run build:storybook && chromatic --storybook-build-dir storybook-static --only-changed",
     "test:visual:ci": "chromatic --storybook-build-dir storybook-static --only-changed --ci",
     "publish:pack": "yarn build && npm pack --pack-destination ./packed"
   },
