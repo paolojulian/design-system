@@ -1,5 +1,4 @@
 .p-typography {
-  color: var(--p-color-text);
   font-family: var(--p-font-family-sans);
   font-weight: var(--p-font-weight-regular);
   letter-spacing: var(--p-letter-spacing-default);
