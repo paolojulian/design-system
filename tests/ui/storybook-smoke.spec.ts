@@ -26,6 +26,12 @@ test.describe('Storybook smoke tests', () => {
     await expect(loadingButton).toBeDisabled();
     await expect(loadingButton).toHaveAttribute('aria-busy', 'true');
 
+    await gotoStory(page, 'components-pbutton--active');
+    await expect(page.getByRole('button', { name: 'Current view' })).toHaveAttribute(
+      'data-active',
+      'true',
+    );
+
     await gotoStory(page, 'components-pbutton--link');
     await expect(page.getByRole('link', { name: 'Open details' })).toBeVisible();
   });
@@ -78,6 +84,18 @@ test.describe('Storybook smoke tests', () => {
     const box = await input.boundingBox();
     expect(box?.width).toBeLessThanOrEqual(390);
   });
+
+  test('keeps mobile buttons within the viewport', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await gotoStory(page, 'components-pbutton--mobile');
+
+    const button = page.getByRole('button', { name: 'Review and continue' });
+    await expect(button).toBeVisible();
+
+    const box = await button.boundingBox();
+    expect(box?.width).toBeLessThanOrEqual(320);
+    expect(box?.height).toBeGreaterThanOrEqual(44);
+  });
 });
 
 test.describe('Storybook accessibility checks', () => {
@@ -87,6 +105,8 @@ test.describe('Storybook accessibility checks', () => {
     'components-pbutton--secondary',
     'components-pbutton--danger',
     'components-pbutton--loading',
+    'components-pbutton--active',
+    'components-pbutton--mobile',
     'components-ptextinput--default',
     'components-ptextinput--with-error',
     'components-ptextarea--default',

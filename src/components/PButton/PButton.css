@@ -23,7 +23,8 @@
   position: relative;
   display: inline-flex;
   width: auto;
-  min-width: max-content;
+  max-width: 100%;
+  min-width: 0;
   min-height: var(--p-button-min-height);
   align-items: center;
   justify-content: center;
@@ -54,6 +55,11 @@
 
 .p-button:active {
   background: var(--p-button-bg-active);
+}
+
+.p-button--active {
+  background: var(--p-button-bg-active);
+  border-color: var(--p-button-border-hover);
 }
 
 .p-button:focus {
@@ -125,7 +131,8 @@
 }
 
 .p-button--tertiary:hover,
-.p-button--tertiary:active {
+.p-button--tertiary:active,
+.p-button--tertiary.p-button--active {
   --p-button-text: var(--p-color-text-inverse);
 }
 
@@ -155,6 +162,12 @@
   flex: 0 0 auto;
 }
 
+.p-button__label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .p-button__icon {
   display: inline-flex;
   align-items: center;
@@ -176,6 +189,25 @@
 @media (prefers-reduced-motion: reduce) {
   .p-button__spinner {
     animation-duration: 1.2s;
+  }
+}
+
+@media (max-width: 40rem) {
+  .p-button {
+    --p-button-padding-x: var(--p-space-3);
+    --p-button-gap: var(--p-space-1);
+  }
+
+  .p-button--sm {
+    --p-button-min-height: var(--p-size-touch-min);
+  }
+
+  .p-button--lg {
+    --p-button-min-height: var(--p-size-control-md);
+    --p-button-padding-x: var(--p-space-4);
+    --p-button-font-size: var(--p-font-size-body-sm);
+    --p-button-line-height: var(--p-line-height-body-sm);
+    --p-button-icon-size: var(--p-size-icon-md);
   }
 }
 

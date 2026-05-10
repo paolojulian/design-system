@@ -17,6 +17,7 @@ type PButtonBaseProps = {
   variant?: PButtonVariant;
   size?: PButtonSize;
   fullWidth?: boolean;
+  isActive?: boolean;
   isLoading?: boolean;
   leftIcon?: ReactNode;
   rightIcon?: ReactNode;
@@ -46,6 +47,7 @@ export const PButton = forwardRef<PButtonRef, PButtonProps>(
       variant = 'primary',
       size = 'md',
       fullWidth = false,
+      isActive = false,
       isLoading = false,
       leftIcon,
       rightIcon,
@@ -61,6 +63,7 @@ export const PButton = forwardRef<PButtonRef, PButtonProps>(
       `p-button--${variant}`,
       `p-button--${size}`,
       fullWidth && 'p-button--full-width',
+      isActive && 'p-button--active',
       className,
     );
     const content = (
@@ -74,7 +77,7 @@ export const PButton = forwardRef<PButtonRef, PButtonProps>(
             </span>
           )
         )}
-        <span>{children}</span>
+        <span className="p-button__label">{children}</span>
         {!isLoading && rightIcon && (
           <span className="p-button__icon" aria-hidden="true">
             {rightIcon}
@@ -103,6 +106,7 @@ export const PButton = forwardRef<PButtonRef, PButtonProps>(
           className={buttonClassName}
           aria-disabled={isUnavailable || undefined}
           aria-busy={isLoading || undefined}
+          data-active={isActive || undefined}
           data-disabled={anchorDisabled || undefined}
           tabIndex={isUnavailable ? -1 : anchorProps.tabIndex}
           onClick={handleClick}
@@ -123,6 +127,7 @@ export const PButton = forwardRef<PButtonRef, PButtonProps>(
         disabled={Boolean(buttonDisabled || isLoading)}
         className={buttonClassName}
         aria-busy={isLoading || undefined}
+        data-active={isActive || undefined}
       >
         {content}
       </button>

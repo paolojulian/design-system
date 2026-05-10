@@ -59,6 +59,9 @@ const meta: Meta<typeof PButton> = {
     fullWidth: {
       description: 'Expands the button to fill its container.',
     },
+    isActive: {
+      description: 'Applies the persistent active/current visual state.',
+    },
     isLoading: {
       description: 'Shows a spinner and disables interaction while preserving the label.',
     },
@@ -129,6 +132,14 @@ export const Loading: Story = {
   },
 };
 
+export const Active: Story = {
+  name: 'Active',
+  args: {
+    isActive: true,
+    children: 'Current view',
+  },
+};
+
 export const Disabled: Story = {
   name: 'Disabled',
   args: {
@@ -181,6 +192,27 @@ export const FullWidth: Story = {
   args: {
     fullWidth: true,
     children: 'Continue',
+  },
+};
+
+export const Mobile: Story = {
+  name: 'Mobile',
+  parameters: {
+    viewport: {
+      defaultViewport: 'mobile1',
+    },
+  },
+  decorators: [
+    (Story) => (
+      <div style={{ width: 320 }}>
+        <Story />
+      </div>
+    ),
+  ],
+  args: {
+    fullWidth: true,
+    rightIcon: <ArrowRightIcon />,
+    children: 'Review and continue',
   },
 };
 
