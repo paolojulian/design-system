@@ -112,78 +112,80 @@ export const PTextInput = forwardRef<PTextInputRef, PTextInputProps>(
 
     return (
       <div className={cn('p-text-input', className)} style={style}>
-        <input
-          {...props}
-          id={inputId}
-          ref={ref}
-          type={inputType}
-          disabled={disabled}
-          readOnly={readOnly}
-          // Empty string required for the CSS peer-not-placeholder-shown trick.
-          placeholder=" "
-          // Accessibility
-          aria-invalid={isError || undefined}
-          aria-describedby={describedBy}
-          aria-required={props.required}
-          aria-disabled={disabled}
-          aria-readonly={readOnly}
-          autoComplete={props.autoComplete ?? (isPassword ? 'current-password' : undefined)}
-          className={cn(
-            'p-text-input__control',
-            (isPassword || hasRightAdornment) && 'p-text-input__control--adorned',
-            isError && 'p-text-input__control--error',
-            hasRightAdornment && type === 'date' && 'p-text-input__control--date-adorned',
-            inputClassName,
-          )}
-        />
-
-        {/*
-         * Floating label — shown above the value when focused or filled.
-         * aria-hidden: the <label> below already provides the accessible name.
-         */}
-        <span
-          aria-hidden="true"
-          className={cn(
-            'p-text-input__label p-text-input__floating-label',
-            isError && 'p-text-input__label--error',
-          )}
-        >
-          {label}
-        </span>
-
-        {/*
-         * Placeholder label — centered in the field when empty and unfocused.
-         * pointer-events-none lets clicks fall through to the input beneath;
-         * htmlFor still wires up the accessible name correctly.
-         */}
-        <label
-          htmlFor={inputId}
-          className="p-text-input__label p-text-input__placeholder-label"
-        >
-          {label}
-        </label>
-
-        {/* Password toggle */}
-        {isPassword && (
-          <button
-            type="button"
-            onClick={() => setShowPassword((v) => !v)}
+        <div className="p-text-input__field">
+          <input
+            {...props}
+            id={inputId}
+            ref={ref}
+            type={inputType}
             disabled={disabled}
-            className="p-text-input__action"
-            aria-label={showPassword ? 'Hide password' : 'Show password'}
-            aria-pressed={showPassword}
-            aria-controls={inputId}
-          >
-            {showPassword ? <EyeIcon /> : <EyeOffIcon />}
-          </button>
-        )}
+            readOnly={readOnly}
+            // Empty string required for the CSS peer-not-placeholder-shown trick.
+            placeholder=" "
+            // Accessibility
+            aria-invalid={isError || undefined}
+            aria-describedby={describedBy}
+            aria-required={props.required}
+            aria-disabled={disabled}
+            aria-readonly={readOnly}
+            autoComplete={props.autoComplete ?? (isPassword ? 'current-password' : undefined)}
+            className={cn(
+              'p-text-input__control',
+              (isPassword || hasRightAdornment) && 'p-text-input__control--adorned',
+              isError && 'p-text-input__control--error',
+              hasRightAdornment && type === 'date' && 'p-text-input__control--date-adorned',
+              inputClassName,
+            )}
+          />
 
-        {/* Right adornment — decorative, hidden from assistive tech */}
-        {hasRightAdornment && (
-          <span aria-hidden="true" className="p-text-input__adornment">
-            {rightAdornment}
+          {/*
+           * Floating label — shown above the value when focused or filled.
+           * aria-hidden: the <label> below already provides the accessible name.
+           */}
+          <span
+            aria-hidden="true"
+            className={cn(
+              'p-text-input__label p-text-input__floating-label',
+              isError && 'p-text-input__label--error',
+            )}
+          >
+            {label}
           </span>
-        )}
+
+          {/*
+           * Placeholder label — centered in the field when empty and unfocused.
+           * pointer-events-none lets clicks fall through to the input beneath;
+           * htmlFor still wires up the accessible name correctly.
+           */}
+          <label
+            htmlFor={inputId}
+            className="p-text-input__label p-text-input__placeholder-label"
+          >
+            {label}
+          </label>
+
+          {/* Password toggle */}
+          {isPassword && (
+            <button
+              type="button"
+              onClick={() => setShowPassword((v) => !v)}
+              disabled={disabled}
+              className="p-text-input__action"
+              aria-label={showPassword ? 'Hide password' : 'Show password'}
+              aria-pressed={showPassword}
+              aria-controls={inputId}
+            >
+              {showPassword ? <EyeIcon /> : <EyeOffIcon />}
+            </button>
+          )}
+
+          {/* Right adornment — decorative, hidden from assistive tech */}
+          {hasRightAdornment && (
+            <span aria-hidden="true" className="p-text-input__adornment">
+              {rightAdornment}
+            </span>
+          )}
+        </div>
 
         {/* Error message — announced immediately via role="alert" */}
         {isError && errorMessage && (
