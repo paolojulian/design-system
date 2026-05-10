@@ -46,8 +46,8 @@
 
 @media (min-width: 48rem) {
   .p-typography--heading {
-    font-size: var(--p-font-size-heading-xl);
-    line-height: var(--p-line-height-display-md);
+    font-size: var(--p-font-size-heading-md-desktop);
+    line-height: var(--p-line-height-heading-md-desktop);
   }
 
   .p-typography--heading-lg {
