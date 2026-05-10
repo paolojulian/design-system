@@ -45,7 +45,7 @@ const meta: Meta<typeof PTextArea> = {
     },
     className: {
       description:
-        'Applied to the root wrapper. Override tokens, e.g. `[--p-textarea-ring:blue]`.',
+        'Applied to the root wrapper. Prefer semantic token overrides such as `[--p-textarea-ring:var(--p-color-info)]`.',
     },
     textareaClassName: {
       description: 'Applied to the inner `<textarea>` element for layout / spacing overrides.',
@@ -131,7 +131,8 @@ export const CustomColors: Story = {
   name: 'Custom Colors (token override)',
   args: {
     label: 'Custom themed textarea',
-    className: '[--p-textarea-ring:#8b5cf6] [--p-textarea-label-focus:#8b5cf6] [--p-textarea-bg:#f5f3ff]',
+    className:
+      '[--p-textarea-ring:var(--p-color-info)] [--p-textarea-label-focus:var(--p-color-info)] [--p-textarea-bg:var(--p-color-info-surface)]',
   },
 };
 

@@ -5,6 +5,11 @@ import path from "path";
 import tailwindcss from "@tailwindcss/vite";
 import { viteStaticCopy } from "vite-plugin-static-copy";
 
+const copyBinaryAsset = {
+  encoding: "buffer" as const,
+  handler: (content: Buffer) => content,
+};
+
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
@@ -12,46 +17,22 @@ export default defineConfig({
     viteStaticCopy({
       targets: [
         {
-          src: path.resolve(
-            __dirname,
-            "src/assets/fonts/AvantGarde/AvantGarde.woff2",
-          ),
+          src: path.resolve(__dirname, "src/assets/fonts/AvantGarde/*.woff2"),
           dest: "assets/fonts/AvantGarde",
+          transform: copyBinaryAsset,
         },
         {
           src: path.resolve(
             __dirname,
-            "src/assets/fonts/AvantGarde/AvantGardeMedium.woff2",
-          ),
-          dest: "assets/fonts/AvantGarde",
-        },
-        {
-          src: path.resolve(
-            __dirname,
-            "src/assets/fonts/ITC Avant Garde Gothic/ITC Avant Garde Gothic Medium.otf",
+            "src/assets/fonts/ITC Avant Garde Gothic/*.otf",
           ),
           dest: "assets/fonts/ITC Avant Garde Gothic",
+          transform: copyBinaryAsset,
         },
         {
-          src: path.resolve(
-            __dirname,
-            "src/assets/fonts/ITC Avant Garde Gothic/ITC Avant Garde Gothic.otf",
-          ),
-          dest: "assets/fonts/ITC Avant Garde Gothic",
-        },
-        {
-          src: path.resolve(
-            __dirname,
-            "src/assets/fonts/Merriweather/Merriweather-Bold.ttf",
-          ),
+          src: path.resolve(__dirname, "src/assets/fonts/Merriweather/*.ttf"),
           dest: "assets/fonts/Merriweather",
-        },
-        {
-          src: path.resolve(
-            __dirname,
-            "src/assets/fonts/Merriweather/Merriweather-Regular.ttf",
-          ),
-          dest: "assets/fonts/Merriweather",
+          transform: copyBinaryAsset,
         },
         {
           src: path.resolve(__dirname, "src/fonts.css"),

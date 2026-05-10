@@ -1,12 +1,190 @@
 .p-text-input {
-  --p-input-bg:            #ffffff;
-  --p-input-bg-focus:      #ffffff;
-  --p-input-bg-readonly:   #e0e6ed;
-  --p-input-text:          #0d0d0d;
-  --p-input-text-helper:   #78716c;
-  --p-input-ring:          #ce5a67;
-  --p-input-label:         #78716c;
-  --p-input-label-focus:   #ce5a67;
-  --p-input-border:        #0d0d0d;
-  --p-input-border-focus:  #0d0d0d;
+  --p-input-bg: var(--p-control-bg);
+  --p-input-bg-focus: var(--p-control-bg-focus);
+  --p-input-bg-readonly: var(--p-control-bg-readonly);
+  --p-input-text: var(--p-control-text);
+  --p-input-text-helper: var(--p-control-text-muted);
+  --p-input-ring: var(--p-control-ring);
+  --p-input-label: var(--p-control-text-muted);
+  --p-input-label-focus: var(--p-color-action-primary);
+  --p-input-border: var(--p-control-border);
+  --p-input-border-focus: var(--p-control-border-focus);
+  --p-input-border-error: var(--p-control-border-error);
+  --p-input-radius: var(--p-control-radius);
+  --p-input-font-size: var(--p-control-font-size);
+  --p-input-line-height: var(--p-control-line-height);
+  --p-input-message-font-size: var(--p-control-message-font-size);
+  --p-input-message-line-height: var(--p-control-message-line-height);
+  --p-input-border-width: var(--p-control-border-width);
+  --p-input-focus-ring-width: var(--p-focus-ring-width);
+  --p-input-focus-outline-width: var(--p-focus-outline-width);
+  --p-input-focus-outline-offset: var(--p-focus-ring-offset);
+  --p-input-min-height: var(--p-size-control-lg);
+  --p-input-padding-x: var(--p-control-padding-x);
+  --p-input-padding-top: var(--p-space-6);
+  --p-input-padding-bottom: var(--p-space-2);
+  --p-input-padding-right-adorned: var(--p-space-12);
+  --p-input-label-top: var(--p-space-2);
+  --p-input-placeholder-top: 50%;
+  --p-input-inline-offset: var(--p-control-padding-x);
+  --p-input-message-margin-top: var(--p-control-message-margin-top);
+  --p-input-icon-size: var(--p-size-icon-md);
+  --p-input-transition: var(--p-control-transition);
+
+  position: relative;
+  width: 100%;
+}
+
+.p-text-input__control {
+  width: 100%;
+  border-radius: var(--p-input-radius);
+  min-height: var(--p-input-min-height);
+  padding-block: var(--p-input-padding-top) var(--p-input-padding-bottom);
+  padding-inline: var(--p-input-padding-x);
+  border: var(--p-input-border-width) solid var(--p-input-border);
+  background: var(--p-input-bg);
+  color: var(--p-input-text);
+  font-family: var(--p-font-family-sans);
+  font-size: var(--p-input-font-size);
+  line-height: var(--p-input-line-height);
+  outline: none;
+  transition: var(--p-input-transition);
+}
+
+.p-text-input__control--adorned {
+  padding-inline-end: var(--p-input-padding-right-adorned);
+}
+
+.p-text-input__control:focus {
+  border-color: var(--p-input-border-focus);
+  background: var(--p-input-bg-focus);
+  box-shadow: 0 0 0 var(--p-input-focus-ring-width) var(--p-input-ring);
+}
+
+.p-text-input__control--error {
+  box-shadow: 0 0 0 var(--p-input-focus-ring-width) var(--p-input-border-error);
+}
+
+.p-text-input__control:disabled {
+  cursor: not-allowed;
+  opacity: var(--p-opacity-disabled);
+}
+
+.p-text-input__control:read-only {
+  cursor: default;
+  background: var(--p-input-bg-readonly);
+}
+
+.p-text-input__control--date-adorned::-webkit-calendar-picker-indicator {
+  position: absolute;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  opacity: 0;
+}
+
+.p-text-input__message {
+  margin-block-start: var(--p-input-message-margin-top);
+  padding-inline: var(--p-input-padding-x);
+  font-family: var(--p-font-family-sans);
+  font-size: var(--p-input-message-font-size);
+  line-height: var(--p-input-message-line-height);
+}
+
+.p-text-input__message--error {
+  color: var(--p-input-border-error);
+}
+
+.p-text-input__message--helper {
+  color: var(--p-input-text-helper);
+}
+
+.p-text-input__label {
+  position: absolute;
+  inset-inline-start: var(--p-input-inline-offset);
+  pointer-events: none;
+  transform-origin: left;
+  font-family: var(--p-font-family-sans);
+  transition: opacity var(--p-duration-fast) var(--p-ease-standard),
+    color var(--p-duration-fast) var(--p-ease-standard),
+    transform var(--p-duration-fast) var(--p-ease-standard);
+}
+
+.p-text-input__floating-label {
+  top: var(--p-input-label-top);
+  color: var(--p-input-label);
+  font-size: var(--p-input-message-font-size);
+  line-height: var(--p-input-message-line-height);
+  opacity: 0;
+  transform: scale(0);
+}
+
+.p-text-input__placeholder-label {
+  top: var(--p-input-placeholder-top);
+  color: var(--p-input-text);
+  font-size: var(--p-input-font-size);
+  line-height: var(--p-input-line-height);
+  transform: translateY(-50%);
+}
+
+.p-text-input__control:focus ~ .p-text-input__floating-label,
+.p-text-input__control:not(:placeholder-shown) ~ .p-text-input__floating-label {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.p-text-input__control:focus ~ .p-text-input__floating-label {
+  color: var(--p-input-label-focus);
+}
+
+.p-text-input__control:focus ~ .p-text-input__placeholder-label,
+.p-text-input__control:not(:placeholder-shown) ~ .p-text-input__placeholder-label {
+  opacity: 0;
+  transform: translateY(-50%) scale(0);
+}
+
+.p-text-input__control:disabled ~ .p-text-input__placeholder-label {
+  opacity: var(--p-opacity-disabled);
+}
+
+.p-text-input__label--error {
+  color: var(--p-input-border-error);
+}
+
+.p-text-input__action {
+  position: absolute;
+  top: 50%;
+  right: var(--p-input-inline-offset);
+  color: var(--p-input-label);
+  transform: translateY(-50%);
+  transition: color var(--p-duration-fast) var(--p-ease-standard);
+}
+
+.p-text-input__action:hover {
+  color: var(--p-input-text);
+}
+
+.p-text-input__action:focus-visible {
+  outline: var(--p-input-focus-outline-width) solid var(--p-input-ring);
+  outline-offset: var(--p-input-focus-outline-offset);
+}
+
+.p-text-input__action:disabled {
+  pointer-events: none;
+  opacity: var(--p-opacity-disabled);
+}
+
+.p-text-input__icon {
+  width: var(--p-input-icon-size);
+  height: var(--p-input-icon-size);
+}
+
+.p-text-input__adornment {
+  position: absolute;
+  top: 50%;
+  right: var(--p-input-inline-offset);
+  color: var(--p-input-label);
+  pointer-events: none;
+  transform: translateY(-50%);
 }

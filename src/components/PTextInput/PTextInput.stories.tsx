@@ -49,7 +49,8 @@ const meta: Meta<typeof PTextInput> = {
       description: 'Marks the field as required for form validation.',
     },
     className: {
-      description: 'Applied to the root wrapper element.',
+      description:
+        'Applied to the root wrapper element. Prefer semantic token overrides such as `[--p-input-ring:var(--p-color-info)]`.',
     },
     inputClassName: {
       description: 'Applied to the inner `<input>` element for layout / spacing overrides.',
@@ -147,7 +148,8 @@ export const CustomColors: Story = {
   name: 'Custom Colors (token override)',
   args: {
     label: 'Custom themed input',
-    className: '[--p-input-ring:#8b5cf6] [--p-input-label-focus:#8b5cf6] [--p-input-bg:#f5f3ff]',
+    className:
+      '[--p-input-ring:var(--p-color-info)] [--p-input-label-focus:var(--p-color-info)] [--p-input-bg:var(--p-color-info-surface)]',
   },
 };
 
