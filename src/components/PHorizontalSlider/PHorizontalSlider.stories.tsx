@@ -1,36 +1,37 @@
 import { type Meta, type StoryObj } from '@storybook/react';
 import { PHorizontalSlider } from '.';
-import { PTypography } from '../PTypography';
+import { PCard } from '../PCard';
 
 const items = [
-  'Pipeline overview',
-  'Risk review',
-  'Contract queue',
-  'Account health',
-  'Renewal forecast',
-  'Support load',
+  {
+    title: 'Pipeline overview',
+    description: 'Scan open opportunities and handoff points.',
+    eyebrow: 'Sales',
+  },
+  {
+    title: 'Risk review',
+    eyebrow: 'Control',
+  },
+  {
+    title: 'Contract queue',
+    description: 'Track approvals across legal and finance.',
+    eyebrow: 'Legal',
+  },
+  {
+    title: 'Account health',
+    description: 'Monitor renewal posture and support load.',
+    eyebrow: 'Success',
+  },
+  {
+    title: 'Renewal forecast',
+    eyebrow: 'Finance',
+  },
+  {
+    title: 'Support load',
+    description: 'Review request volume and current response risk.',
+    eyebrow: 'Service',
+  },
 ];
-
-function SliderCard({ index, title }: { index: number; title: string }) {
-  return (
-    <article
-      style={{
-        width: 260,
-        minHeight: 180,
-        border: '1px solid var(--p-color-border)',
-        background: 'var(--p-color-surface)',
-        padding: 'var(--p-space-4)',
-      }}
-    >
-      <PTypography variant="body-wide" style={{ color: 'var(--p-color-text-muted)' }}>
-        {String(index + 1).padStart(2, '0')}
-      </PTypography>
-      <div style={{ marginTop: 'var(--p-space-8)' }}>
-        <PTypography variant="heading">{title}</PTypography>
-      </div>
-    </article>
-  );
-}
 
 const meta: Meta<typeof PHorizontalSlider> = {
   title: 'Components/PHorizontalSlider',
@@ -42,7 +43,13 @@ const meta: Meta<typeof PHorizontalSlider> = {
   args: {
     ariaLabel: 'Featured content',
     children: items.map((item, index) => (
-      <SliderCard key={item} index={index} title={item} />
+      <PCard
+        key={item.title}
+        prefix={String(index + 1).padStart(2, '0')}
+        eyebrow={item.eyebrow}
+        title={item.title}
+        description={item.description}
+      />
     )),
   },
   argTypes: {

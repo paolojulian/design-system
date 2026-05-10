@@ -114,6 +114,17 @@ test.describe('Storybook smoke tests', () => {
     expect(metrics.scrollWidth).toBeGreaterThan(metrics.clientWidth);
     await expect(page.getByRole('listitem')).toHaveCount(6);
   });
+
+  test('renders cards with metadata, description, and interactive semantics', async ({ page }) => {
+    await gotoStory(page, 'components-pcard--default');
+    await expect(page.getByText('01')).toBeVisible();
+    await expect(page.getByText('Operations')).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Pipeline overview' })).toBeVisible();
+    await expect(page.getByText('A compact summary card for scanning enterprise workflows.')).toBeVisible();
+
+    await gotoStory(page, 'components-pcard--interactive');
+    await expect(page.getByRole('link', { name: 'Open account summary' })).toBeVisible();
+  });
 });
 
 test.describe('Storybook accessibility checks', () => {
@@ -125,6 +136,8 @@ test.describe('Storybook accessibility checks', () => {
     'components-pbutton--loading',
     'components-pbutton--active',
     'components-pbutton--mobile',
+    'components-pcard--default',
+    'components-pcard--interactive',
     'components-phorizontalslider--default',
     'components-ptextinput--default',
     'components-ptextinput--with-error',

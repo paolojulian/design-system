@@ -1,5 +1,5 @@
 .p-horizontal-slider {
-  --p-horizontal-slider-gap: var(--p-space-4);
+  --p-horizontal-slider-gap: var(--p-space-3);
   --p-horizontal-slider-padding-block: var(--p-space-6);
   --p-horizontal-slider-padding-inline-end: var(--p-space-8);
   --p-horizontal-slider-padding-inline-start: max(

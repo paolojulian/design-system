@@ -1,5 +1,6 @@
 export { Row, Stack } from './PContainers';
 export { PButton, type PButtonProps, type PButtonRef } from './PButton';
+export { PCard, type PCardProps, type PCardRef } from './PCard';
 export {
   PHorizontalSlider,
   type PHorizontalSliderProps,
