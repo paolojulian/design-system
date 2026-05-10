@@ -14,6 +14,13 @@ const meta: Meta<typeof PTypography> = {
       default: 'Dark',
     },
   },
+  decorators: [
+    (Story) => (
+      <div style={{ backgroundColor: P_COLORS.black }}>
+        <Story />
+      </div>
+    ),
+  ],
 };
 
 type Story = StoryObj<typeof PTypography>;

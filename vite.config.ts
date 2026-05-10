@@ -2,52 +2,54 @@ import { defineConfig } from "vite";
 import dts from "vite-plugin-dts";
 import react from "@vitejs/plugin-react";
 import path from "path";
+import { cpSync, mkdirSync } from "node:fs";
 import tailwindcss from "@tailwindcss/vite";
-import { viteStaticCopy } from "vite-plugin-static-copy";
 
-const copyBinaryAsset = {
-  encoding: "buffer" as const,
-  handler: (content: Buffer) => content,
-};
+const staticAssetTargets = [
+  {
+    src: path.resolve(__dirname, "src/assets/fonts/AvantGarde"),
+    dest: path.resolve(__dirname, "dist/assets/fonts/AvantGarde"),
+  },
+  {
+    src: path.resolve(__dirname, "src/assets/fonts/ITC Avant Garde Gothic"),
+    dest: path.resolve(__dirname, "dist/assets/fonts/ITC Avant Garde Gothic"),
+  },
+  {
+    src: path.resolve(__dirname, "src/assets/fonts/Merriweather"),
+    dest: path.resolve(__dirname, "dist/assets/fonts/Merriweather"),
+  },
+  {
+    src: path.resolve(__dirname, "src/fonts.css"),
+    dest: path.resolve(__dirname, "dist/fonts.css"),
+  },
+  {
+    src: path.resolve(__dirname, "src/theme.css"),
+    dest: path.resolve(__dirname, "dist/theme.css"),
+  },
+  {
+    src: path.resolve(__dirname, "vite.config.ts"),
+    dest: path.resolve(__dirname, "dist/vite-config/vite.config.ts"),
+  },
+] as const;
+
+function copyStaticAssets() {
+  return {
+    name: "p-copy-static-assets",
+    apply: "build" as const,
+    closeBundle() {
+      for (const target of staticAssetTargets) {
+        mkdirSync(path.dirname(target.dest), { recursive: true });
+        cpSync(target.src, target.dest, { recursive: true, force: true });
+      }
+    },
+  };
+}
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     tailwindcss(),
-    viteStaticCopy({
-      targets: [
-        {
-          src: path.resolve(__dirname, "src/assets/fonts/AvantGarde/*.woff2"),
-          dest: "assets/fonts/AvantGarde",
-          transform: copyBinaryAsset,
-        },
-        {
-          src: path.resolve(
-            __dirname,
-            "src/assets/fonts/ITC Avant Garde Gothic/*.otf",
-          ),
-          dest: "assets/fonts/ITC Avant Garde Gothic",
-          transform: copyBinaryAsset,
-        },
-        {
-          src: path.resolve(__dirname, "src/assets/fonts/Merriweather/*.ttf"),
-          dest: "assets/fonts/Merriweather",
-          transform: copyBinaryAsset,
-        },
-        {
-          src: path.resolve(__dirname, "src/fonts.css"),
-          dest: ".",
-        },
-        {
-          src: path.resolve(__dirname, "src/theme.css"),
-          dest: ".",
-        },
-        {
-          src: "vite.config.ts",
-          dest: "vite-config",
-        },
-      ],
-    }),
+    copyStaticAssets(),
     react(),
     dts({ tsconfigPath: "./tsconfig.node.json", rollupTypes: true }),
   ],

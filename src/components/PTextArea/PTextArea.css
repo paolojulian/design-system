@@ -70,7 +70,6 @@
 
 .p-text-area__message {
   margin-block-start: var(--p-textarea-message-margin-top);
-  padding-inline: var(--p-textarea-padding-x);
   font-family: var(--p-font-family-sans);
   font-size: var(--p-textarea-message-font-size);
   line-height: var(--p-textarea-message-line-height);

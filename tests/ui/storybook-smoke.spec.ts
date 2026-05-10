@@ -111,9 +111,100 @@ test.describe('Storybook smoke tests', () => {
     await expect(page.getByLabel('Label')).toBeDisabled();
   });
 
+  test('renders combobox search, selection, and mobile flow', async ({ page }) => {
+    await gotoStory(page, 'components-pcombobox--standard');
+
+    const combobox = page.getByRole('combobox', { name: 'Account owner' });
+    await expect(combobox).toBeVisible();
+    await expectElementWidthAtLeast(page, '.p-combobox', 350);
+
+    await combobox.click();
+    await expect(page.getByRole('listbox', { name: 'Account owner' })).toBeVisible();
+    const desktopPanelBox = await page.locator('.p-combobox__panel').boundingBox();
+    const desktopMessageBox = await page.locator('.p-combobox__message').boundingBox();
+    expect(desktopPanelBox?.y).toBeLessThan(desktopMessageBox?.y ?? 0);
+    await combobox.fill('security');
+    await expect(page.getByRole('option', { name: /Samuel Lee/ })).toBeVisible();
+    await page.getByRole('option', { name: /Samuel Lee/ }).click();
+    await expect(combobox).toHaveValue('Samuel Lee');
+
+    await combobox.click();
+    await page.keyboard.press('ArrowDown');
+    await page.keyboard.press('Enter');
+    await expect(combobox).not.toHaveValue('');
+
+    await page.setViewportSize({ width: 390, height: 844 });
+    await gotoStory(page, 'components-pcombobox--standard');
+    const mobileCombobox = page.getByRole('combobox', { name: 'Account owner', exact: true });
+    await mobileCombobox.click();
+    await expect(page.getByRole('listbox', { name: 'Account owner' })).toBeVisible();
+    await expect(mobileCombobox).not.toBeFocused();
+    await expect(page.getByRole('dialog', { name: 'Account owner' })).toBeVisible();
+    await expect(page.getByRole('combobox', { name: 'Search Account owner' })).toBeFocused();
+
+    const panelPosition = await page
+      .locator('.p-combobox__panel')
+      .evaluate((element) => getComputedStyle(element).position);
+    expect(panelPosition).toBe('fixed');
+    const mobilePanelBox = await page.locator('.p-combobox__panel').boundingBox();
+    const mobileInputBox = await mobileCombobox.boundingBox();
+    expect(mobilePanelBox?.height).toBeGreaterThanOrEqual(422);
+    expect(mobilePanelBox?.y ?? 0).toBeLessThan(mobileInputBox?.y ?? 0);
+    await expect(page.getByRole('button', { name: 'Close Account owner' })).toBeVisible();
+
+    await page.setViewportSize({ width: 768, height: 1024 });
+    await gotoStory(page, 'components-pcombobox--standard');
+    const tabletCombobox = page.getByRole('combobox', { name: 'Account owner', exact: true });
+    await tabletCombobox.click();
+    const tabletPanelPosition = await page
+      .locator('.p-combobox__panel')
+      .evaluate((element) => getComputedStyle(element).position);
+    expect(tabletPanelPosition).toBe('fixed');
+    const tabletPanelBox = await page.locator('.p-combobox__panel').boundingBox();
+    const tabletInputBox = await tabletCombobox.boundingBox();
+    expect(tabletPanelBox?.height).toBeGreaterThanOrEqual(510);
+    expect(tabletPanelBox?.y ?? 0).toBeLessThan(tabletInputBox?.y ?? 0);
+    await expect(tabletCombobox).not.toBeFocused();
+    await expect(page.getByRole('dialog', { name: 'Account owner' })).toBeVisible();
+    await expect(page.getByRole('combobox', { name: 'Search Account owner' })).toBeFocused();
+  });
+
+  test('renders combobox remote loading and pagination flow', async ({ page }) => {
+    await gotoStory(page, 'components-pcombobox--async-infinite-loading');
+
+    const combobox = page.getByRole('combobox', { name: 'Account API' });
+    await combobox.click();
+    await expect(page.getByRole('option', { name: /Loading accounts/ })).toBeVisible();
+    await expect(page.getByRole('option', { name: /Northstar 1/ })).toBeVisible();
+
+    await combobox.fill('account');
+    await expect(page.getByRole('option', { name: /Loading accounts/ })).toBeVisible();
+    await expect(page.getByRole('option', { name: /Security review/ }).first()).toBeVisible();
+
+    await page.getByRole('button', { name: 'Load next page' }).click();
+    await expect(page.getByText('Loading more accounts...')).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Load next page' })).toBeVisible();
+    await page.getByRole('button', { name: 'Load next page' }).click();
+    await expect(page.getByText('Loading more accounts...')).toBeVisible();
+  });
+
+  test('keeps combobox selection and form validity tied to committed values', async ({ page }) => {
+    await gotoStory(page, 'components-pcombobox--selected-option-mismatch');
+    await expect(page.getByRole('combobox', { name: 'Mismatched owner' })).toHaveValue('Nina Patel');
+
+    await gotoStory(page, 'components-pcombobox--required-form-field');
+    const invalidBeforeSelection = await page
+      .locator('input[name="approvalOwner"]')
+      .evaluate((element) => (element as HTMLInputElement).checkValidity());
+    expect(invalidBeforeSelection).toBe(false);
+  });
+
   test('renders date picker standard and preset flows', async ({ page }) => {
     await gotoStory(page, 'components-pdatepicker--standard');
     await expect(page.getByLabel('Due date')).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Due date: May 10, 2026' })).toBeVisible();
+    await expect(page.locator('.p-date-picker__label')).toHaveCount(0);
+    await expect(page.locator('.p-date-picker__trigger-floating-label')).toHaveText('Due date');
     await expectElementWidthAtLeast(page, '.p-date-picker', 350);
     await page.getByLabel('Due date').click();
     await expect(page.getByRole('dialog', { name: 'May 2026' })).toBeVisible();
@@ -122,6 +213,10 @@ test.describe('Storybook smoke tests', () => {
     await expect(selectedDueDate).toBeFocused();
     await page.keyboard.press('ArrowRight');
     await expect(page.getByRole('gridcell', { name: 'Monday, May 11, 2026' })).toBeFocused();
+    await page.getByRole('combobox', { name: 'Month' }).selectOption('6');
+    await expect(page.getByRole('dialog', { name: 'July 2026' })).toBeVisible();
+    await page.getByRole('combobox', { name: 'Year' }).selectOption('2027');
+    await expect(page.getByRole('dialog', { name: 'July 2027' })).toBeVisible();
 
     await gotoStory(page, 'components-pdatepicker--with-presets');
     await expect(page.getByRole('group', { name: 'Report date' })).toBeVisible();
@@ -142,6 +237,17 @@ test.describe('Storybook smoke tests', () => {
     const ownerAfter = await page.getByLabel('Owner').boundingBox();
     expect(ownerAfter?.y).toBeGreaterThan(ownerBefore?.y ?? 0);
 
+    await gotoStory(page, 'components-pdatepicker--with-bounds');
+    await page.getByLabel(/Booking date/).click();
+    await expect(page.getByRole('button', { name: 'Previous month' })).toBeDisabled();
+    await expect(page.getByRole('button', { name: 'Next month' })).toBeDisabled();
+    const disabledMonthOptions = await page
+      .getByRole('combobox', { name: 'Month' })
+      .evaluate((element) =>
+        Array.from((element as HTMLSelectElement).options).filter((option) => option.disabled).length,
+      );
+    expect(disabledMonthOptions).toBe(11);
+
     await gotoStory(page, 'components-pdatepicker--alternate-presets');
     await expect(page.getByRole('button', { name: 'Yesterday' })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Tomorrow' })).toBeVisible();
@@ -154,6 +260,9 @@ test.describe('Storybook smoke tests', () => {
   test('renders date range picker selection and presets', async ({ page }) => {
     await gotoStory(page, 'components-pdaterangepicker--standard');
     await expect(page.getByRole('button', { name: /Report range/ })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Report range: May 1, 2026 - May 10, 2026' })).toBeVisible();
+    await expect(page.locator('.p-date-range-picker__label')).toHaveCount(0);
+    await expect(page.locator('.p-date-range-picker__trigger-floating-label')).toHaveText('Report range');
     await expectElementWidthAtLeast(page, '.p-date-range-picker', 350);
     await page.getByRole('button', { name: /Report range/ }).click();
     await expect(page.getByRole('dialog', { name: 'May 2026' })).toBeVisible();
@@ -166,12 +275,17 @@ test.describe('Storybook smoke tests', () => {
       'aria-selected',
       'true',
     );
+    await page.getByRole('combobox', { name: 'Month' }).selectOption('6');
+    await expect(page.getByRole('dialog', { name: 'July 2026' })).toBeVisible();
+    await page.getByRole('combobox', { name: 'Year' }).selectOption('2027');
+    await expect(page.getByRole('dialog', { name: 'July 2027' })).toBeVisible();
 
     await gotoStory(page, 'components-pdaterangepicker--empty');
     await page.getByRole('button', { name: /Booking range/ }).click();
     await page.getByRole('gridcell', { name: 'Monday, May 4, 2026' }).click();
     await page.getByRole('gridcell', { name: 'Friday, May 15, 2026' }).click();
-    await expect(page.locator('.p-date-range-picker__label-value')).toHaveText(
+    await expect(page.locator('.p-date-range-picker__label')).toHaveCount(0);
+    await expect(page.locator('.p-date-range-picker__trigger-value')).toHaveText(
       'May 4, 2026 - May 15, 2026',
     );
 
@@ -187,6 +301,17 @@ test.describe('Storybook smoke tests', () => {
     );
     await page.getByRole('button', { name: 'Custom' }).click();
     await expect(page.getByRole('dialog')).toBeVisible();
+
+    await gotoStory(page, 'components-pdaterangepicker--with-bounds');
+    await page.getByLabel(/Booking window/).click();
+    await expect(page.getByRole('button', { name: 'Previous month' })).toBeDisabled();
+    await expect(page.getByRole('button', { name: 'Next month' })).toBeDisabled();
+    const disabledRangeMonthOptions = await page
+      .getByRole('combobox', { name: 'Month' })
+      .evaluate((element) =>
+        Array.from((element as HTMLSelectElement).options).filter((option) => option.disabled).length,
+      );
+    expect(disabledRangeMonthOptions).toBe(11);
 
     await gotoStory(page, 'components-pdaterangepicker--presets-only');
     await expect(page.getByRole('button', { name: 'Year to date' })).toBeVisible();
@@ -312,6 +437,10 @@ test.describe('Storybook accessibility checks', () => {
     'components-phighlight--hero-use-case',
     'components-phighlight--custom-color',
     'components-phighlight--custom-background',
+    'components-pcombobox--standard',
+    'components-pcombobox--async-infinite-loading',
+    'components-pcombobox--required-form-field',
+    'components-pcombobox--with-error',
     'components-pdatepicker--standard',
     'components-pdatepicker--with-presets',
     'components-pdatepicker--many-presets',

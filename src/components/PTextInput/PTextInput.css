@@ -86,7 +86,6 @@
 
 .p-text-input__message {
   margin-block-start: var(--p-input-message-margin-top);
-  padding-inline: var(--p-input-padding-x);
   font-family: var(--p-font-family-sans);
   font-size: var(--p-input-message-font-size);
   line-height: var(--p-input-message-line-height);

@@ -1,3 +1,6 @@
+export { default as CalendarIcon } from './calendar-icon';
+export { default as ChevronLeftIcon } from './chevron-left-icon';
+export { default as ChevronRightIcon } from './chevron-right-icon';
 export { default as TriangleListIcon } from './triangle-list-icon';
 export { default as LinkedInIcon } from './linkedin-icon';
 export { default as MailIcon } from './mail-icon';

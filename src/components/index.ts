@@ -10,6 +10,14 @@ export {
 export { PButton, type PButtonProps, type PButtonRef } from './PButton';
 export { PCard, type PCardProps, type PCardRef } from './PCard';
 export {
+  PCombobox,
+  type PComboboxFilterMode,
+  type PComboboxOption,
+  type PComboboxProps,
+  type PComboboxQueryChangeSource,
+  type PComboboxRef,
+} from './PCombobox';
+export {
   PDatePicker,
   PDatePickerPresets,
   type PDatePickerChangeSource,

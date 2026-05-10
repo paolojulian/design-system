@@ -1,14 +1,23 @@
 .p-date-range-picker {
-  --p-date-range-picker-bg: var(--p-color-surface);
-  --p-date-range-picker-bg-hover: var(--p-color-surface-subtle);
-  --p-date-range-picker-border: var(--p-color-border);
-  --p-date-range-picker-border-active: var(--p-color-border-strong);
-  --p-date-range-picker-text: var(--p-color-text);
-  --p-date-range-picker-text-muted: var(--p-color-text-muted);
+  --p-date-range-picker-bg: var(--p-control-bg);
+  --p-date-range-picker-bg-hover: var(--p-control-bg-hover);
+  --p-date-range-picker-bg-focus: var(--p-control-bg-focus);
+  --p-date-range-picker-border: var(--p-control-border);
+  --p-date-range-picker-border-active: var(--p-control-border-focus);
+  --p-date-range-picker-text: var(--p-control-text);
+  --p-date-range-picker-text-muted: var(--p-control-text-muted);
   --p-date-range-picker-accent: var(--p-color-action-primary);
   --p-date-range-picker-accent-subtle: var(--p-color-action-primary-subtle);
-  --p-date-range-picker-error: var(--p-color-danger);
-  --p-date-range-picker-radius: var(--p-radius-sm);
+  --p-date-range-picker-error: var(--p-control-border-error);
+  --p-date-range-picker-ring: var(--p-control-ring);
+  --p-date-range-picker-radius: var(--p-control-radius);
+  --p-date-range-picker-min-height: var(--p-size-control-lg);
+  --p-date-range-picker-padding-x: var(--p-control-padding-x);
+  --p-date-range-picker-padding-top: var(--p-space-6);
+  --p-date-range-picker-padding-bottom: var(--p-space-2);
+  --p-date-range-picker-label-top: var(--p-space-2);
+  --p-date-range-picker-placeholder-top: 50%;
+  --p-date-range-picker-message-margin-top: var(--p-control-message-margin-top);
   --p-date-range-picker-panel-width: 20rem;
   --p-date-range-picker-transition: background-color var(--p-duration-fast) var(--p-ease-standard),
     border-color var(--p-duration-fast) var(--p-ease-standard),
@@ -62,19 +71,87 @@
 }
 
 .p-date-range-picker__trigger {
+  position: relative;
   display: flex;
   width: 100%;
-  min-height: var(--p-size-control-lg);
+  min-height: var(--p-date-range-picker-min-height);
   align-items: center;
   justify-content: space-between;
   gap: var(--p-space-3);
   border-radius: var(--p-date-range-picker-radius);
-  padding-inline: var(--p-space-4);
+  padding-block: var(--p-date-range-picker-padding-top) var(--p-date-range-picker-padding-bottom);
+  padding-inline: var(--p-date-range-picker-padding-x) var(--p-space-12);
   text-align: left;
 }
 
 .p-date-range-picker__trigger--empty {
+  color: var(--p-date-range-picker-text);
+}
+
+.p-date-range-picker__trigger-value {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.p-date-range-picker__trigger-label {
+  position: absolute;
+  inset-inline-start: var(--p-date-range-picker-padding-x);
+  max-width: calc(100% - var(--p-space-16));
+  overflow: hidden;
+  pointer-events: none;
+  text-overflow: ellipsis;
+  transform-origin: left;
+  white-space: nowrap;
+  transition: opacity var(--p-duration-fast) var(--p-ease-standard),
+    color var(--p-duration-fast) var(--p-ease-standard),
+    transform var(--p-duration-fast) var(--p-ease-standard);
+}
+
+.p-date-range-picker__trigger-floating-label {
+  top: var(--p-date-range-picker-label-top);
   color: var(--p-date-range-picker-text-muted);
+  font-size: var(--p-control-message-font-size);
+  line-height: var(--p-control-message-line-height);
+  opacity: 0;
+  transform: scale(0);
+}
+
+.p-date-range-picker__trigger-placeholder-label {
+  top: var(--p-date-range-picker-placeholder-top);
+  color: var(--p-date-range-picker-text);
+  font-size: var(--p-control-font-size);
+  line-height: var(--p-control-line-height);
+  transform: translateY(-50%);
+}
+
+.p-date-range-picker__trigger--empty:not(.p-date-range-picker__trigger--open):not(:focus-visible)
+  .p-date-range-picker__trigger-value {
+  opacity: 0;
+}
+
+.p-date-range-picker__trigger--filled .p-date-range-picker__trigger-floating-label,
+.p-date-range-picker__trigger--open .p-date-range-picker__trigger-floating-label,
+.p-date-range-picker__trigger:focus-visible .p-date-range-picker__trigger-floating-label {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.p-date-range-picker__trigger--open .p-date-range-picker__trigger-floating-label,
+.p-date-range-picker__trigger:focus-visible .p-date-range-picker__trigger-floating-label {
+  color: var(--p-date-range-picker-accent);
+}
+
+.p-date-range-picker__trigger--filled .p-date-range-picker__trigger-placeholder-label,
+.p-date-range-picker__trigger--open .p-date-range-picker__trigger-placeholder-label,
+.p-date-range-picker__trigger:focus-visible .p-date-range-picker__trigger-placeholder-label {
+  opacity: 0;
+  transform: translateY(-50%) scale(0);
+}
+
+.p-date-range-picker__trigger-label--error {
+  color: var(--p-date-range-picker-error);
 }
 
 .p-date-range-picker__trigger:hover,
@@ -90,7 +167,12 @@
 .p-date-range-picker__nav:focus-visible,
 .p-date-range-picker__day:focus-visible {
   outline: var(--p-focus-outline-width) solid transparent;
-  box-shadow: 0 0 0 var(--p-focus-ring-width) var(--p-focus-ring-color);
+  box-shadow: 0 0 0 var(--p-focus-ring-width) var(--p-date-range-picker-ring);
+}
+
+.p-date-range-picker__trigger:focus-visible {
+  background: var(--p-date-range-picker-bg-focus);
+  border-color: var(--p-date-range-picker-border-active);
 }
 
 .p-date-range-picker__trigger:disabled,
@@ -102,17 +184,24 @@
 }
 
 .p-date-range-picker__trigger-icon {
+  position: absolute;
+  top: 50%;
+  right: var(--p-date-range-picker-padding-x);
   display: inline-flex;
   width: var(--p-size-icon-md);
   height: var(--p-size-icon-md);
-  flex: 0 0 auto;
   color: var(--p-date-range-picker-text-muted);
+  transform: translateY(-50%);
 }
 
-.p-date-range-picker__trigger-icon svg,
-.p-date-range-picker__nav svg {
+.p-date-range-picker__trigger-icon svg {
   width: 100%;
   height: 100%;
+}
+
+.p-date-range-picker__nav svg {
+  width: var(--p-size-icon-sm);
+  height: var(--p-size-icon-sm);
 }
 
 .p-date-range-picker__presets {
@@ -159,18 +248,77 @@
 
 .p-date-range-picker__calendar-header {
   display: grid;
-  grid-template-columns: var(--p-size-control-md) 1fr var(--p-size-control-md);
+  grid-template-columns: var(--p-size-control-md) minmax(0, 1fr) var(--p-size-control-md);
   align-items: center;
-  gap: var(--p-space-2);
+  gap: 0;
+  overflow: hidden;
+  border: 1px solid var(--p-color-border-subtle);
+  border-radius: var(--p-date-range-picker-radius);
+  background: var(--p-color-surface-subtle);
   margin-block-end: var(--p-space-3);
 }
 
 .p-date-range-picker__month {
+  position: relative;
+  display: grid;
+  min-width: 0;
+  grid-template-columns: minmax(0, 1fr) 5rem;
+  align-items: center;
+  border-inline: 1px solid var(--p-color-border-subtle);
   color: var(--p-date-range-picker-text);
   font-size: var(--p-font-size-body-sm);
   font-weight: var(--p-font-weight-medium);
   line-height: var(--p-line-height-body-sm);
   text-align: center;
+}
+
+.p-date-range-picker__month-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.p-date-range-picker__calendar-select {
+  min-width: 0;
+  height: var(--p-size-control-md);
+  border: 0;
+  border-radius: 0;
+  appearance: none;
+  background: transparent;
+  color: var(--p-date-range-picker-text);
+  cursor: pointer;
+  font: inherit;
+  font-size: var(--p-font-size-body-sm);
+  font-weight: var(--p-font-weight-medium);
+  line-height: var(--p-line-height-body-sm);
+  padding-inline: var(--p-space-3);
+  text-align: center;
+  text-overflow: ellipsis;
+  transition: var(--p-date-range-picker-transition);
+}
+
+.p-date-range-picker__month-select {
+  border-inline-end: 1px solid var(--p-color-border-subtle);
+}
+
+.p-date-range-picker__year-select {
+  color: var(--p-date-range-picker-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.p-date-range-picker__calendar-select:hover {
+  background: var(--p-date-range-picker-bg-hover);
+  color: var(--p-date-range-picker-text);
+}
+
+.p-date-range-picker__calendar-select:focus-visible {
+  outline: var(--p-focus-outline-width) solid transparent;
+  background: var(--p-date-range-picker-bg);
+  box-shadow: inset 0 0 0 var(--p-focus-ring-width) var(--p-date-range-picker-ring);
 }
 
 .p-date-range-picker__nav {
@@ -179,8 +327,19 @@
   height: var(--p-size-control-md);
   align-items: center;
   justify-content: center;
-  border-radius: var(--p-date-range-picker-radius);
+  border: 0;
+  border-radius: 0;
+  background: transparent;
   color: var(--p-date-range-picker-text-muted);
+}
+
+.p-date-range-picker__nav:hover {
+  background: var(--p-date-range-picker-bg-hover);
+  color: var(--p-date-range-picker-text);
+}
+
+.p-date-range-picker__nav:focus-visible {
+  box-shadow: inset 0 0 0 var(--p-focus-ring-width) var(--p-date-range-picker-ring);
 }
 
 .p-date-range-picker__weekdays,
@@ -228,7 +387,7 @@
 }
 
 .p-date-range-picker__message {
-  margin-block-start: var(--p-space-1);
+  margin-block-start: var(--p-date-range-picker-message-margin-top);
   color: var(--p-date-range-picker-text-muted);
   font-size: var(--p-font-size-caption);
   line-height: var(--p-line-height-caption);

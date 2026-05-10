@@ -6,9 +6,11 @@ import {
   useRef,
   useState,
   type ButtonHTMLAttributes,
+  type ChangeEvent,
   type CSSProperties,
   type HTMLAttributes,
 } from 'react';
+import { CalendarIcon, ChevronLeftIcon, ChevronRightIcon } from '../../icons';
 import cn from '../../utils/cn';
 import './PDateRangePicker.css';
 
@@ -136,6 +138,13 @@ function getMonthLabel(date: Date, locale?: string) {
   return new Intl.DateTimeFormat(locale, { month: 'long', year: 'numeric' }).format(date);
 }
 
+function getMonthOptions(locale?: string) {
+  return Array.from({ length: 12 }, (_, month) => ({
+    label: new Intl.DateTimeFormat(locale, { month: 'long' }).format(new Date(2024, month, 1)),
+    value: month,
+  }));
+}
+
 function getDateLabel(date: Date, locale?: string) {
   return new Intl.DateTimeFormat(locale, {
     month: 'short',
@@ -174,6 +183,61 @@ function isBeforeDate(date: Date, minDate: Date | null) {
 
 function isAfterDate(date: Date, maxDate: Date | null) {
   return Boolean(maxDate && date.getTime() > maxDate.getTime());
+}
+
+function isSameMonth(a: Date, b: Date) {
+  return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth();
+}
+
+function isMonthDisabled(monthDate: Date, minDate: Date | null, maxDate: Date | null) {
+  const monthStart = startOfMonth(monthDate);
+  const monthEnd = endOfMonth(monthDate);
+
+  return Boolean((minDate && monthEnd < minDate) || (maxDate && monthStart > maxDate));
+}
+
+function clampVisibleMonth(monthDate: Date, minDate: Date | null, maxDate: Date | null) {
+  if (minDate && endOfMonth(monthDate) < minDate) {
+    return startOfMonth(minDate);
+  }
+
+  if (maxDate && startOfMonth(monthDate) > maxDate) {
+    return startOfMonth(maxDate);
+  }
+
+  return startOfMonth(monthDate);
+}
+
+function getFocusableDateInMonth(monthDate: Date, preferredDate: Date, minDate: Date | null, maxDate: Date | null) {
+  const monthStart = startOfMonth(monthDate);
+  const monthEnd = endOfMonth(monthDate);
+  let nextDate = new Date(
+    monthStart.getFullYear(),
+    monthStart.getMonth(),
+    Math.min(preferredDate.getDate(), monthEnd.getDate()),
+  );
+
+  if (minDate && nextDate < minDate) {
+    nextDate = isSameMonth(minDate, monthStart) ? minDate : monthStart;
+  }
+
+  if (maxDate && nextDate > maxDate) {
+    nextDate = isSameMonth(maxDate, monthStart) ? maxDate : monthEnd;
+  }
+
+  return nextDate;
+}
+
+function getYearOptions(visibleMonth: Date, minDate: Date | null, maxDate: Date | null, today: Date) {
+  const visibleYear = visibleMonth.getFullYear();
+  const defaultStartYear = Math.min(visibleYear, today.getFullYear() - 100);
+  const defaultEndYear = Math.max(visibleYear, today.getFullYear() + 20);
+  const startYear = minDate?.getFullYear() ?? defaultStartYear;
+  const endYear = maxDate?.getFullYear() ?? defaultEndYear;
+  const firstYear = Math.min(startYear, endYear, visibleYear);
+  const lastYear = Math.max(startYear, endYear, visibleYear);
+
+  return Array.from({ length: lastYear - firstYear + 1 }, (_, index) => firstYear + index);
 }
 
 function isInRange(date: Date, startDate: Date | null, endDate: Date | null) {
@@ -231,33 +295,6 @@ function getRangeLabel(value: PDateRangeValue | undefined, placeholder: string, 
   return placeholder;
 }
 
-function CalendarIcon() {
-  return (
-    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden="true">
-      <path d="M6 3v3" />
-      <path d="M14 3v3" />
-      <path d="M4 8h12" />
-      <path d="M5 5h10a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Z" />
-    </svg>
-  );
-}
-
-function ChevronLeftIcon() {
-  return (
-    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden="true">
-      <path d="m12 5-5 5 5 5" />
-    </svg>
-  );
-}
-
-function ChevronRightIcon() {
-  return (
-    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden="true">
-      <path d="m8 5 5 5-5 5" />
-    </svg>
-  );
-}
-
 export const PDateRangePicker = forwardRef<PDateRangePickerRef, PDateRangePickerProps>(
   (
     {
@@ -307,8 +344,11 @@ export const PDateRangePicker = forwardRef<PDateRangePickerRef, PDateRangePicker
     const [focusedDate, setFocusedDate] = useState(() => startDate ?? today);
     const calendarTriggerRef = useRef<FocusableElement | null>(null);
     const dayRefs = useRef<Record<string, FocusableElement | null>>({});
+    const shouldFocusCalendarDateRef = useRef(false);
     const calendarDays = getCalendarDays(visibleMonth, weekStartsOn);
     const weekdayLabels = getWeekdayLabels(weekStartsOn, locale);
+    const monthOptions = useMemo(() => getMonthOptions(locale), [locale]);
+    const yearOptions = getYearOptions(visibleMonth, minDate, maxDate, today);
     const hasPresets = presets.length > 0;
     const shouldRenderCustom = hasPresets ? showCustom : true;
     const presetColumnsStyle =
@@ -324,13 +364,20 @@ export const PDateRangePicker = forwardRef<PDateRangePickerRef, PDateRangePicker
       ? presets.some((preset) => isSameRange(resolvePresetRange(preset), selectedValue))
       : false;
     const isCustomActive = isOpen || Boolean(hasCompleteRange && !selectedMatchesPreset);
+    const previousMonth = addMonths(visibleMonth, -1);
+    const nextMonth = addMonths(visibleMonth, 1);
+    const isPreviousMonthDisabled = isMonthDisabled(previousMonth, minDate, maxDate);
+    const isNextMonthDisabled = isMonthDisabled(nextMonth, minDate, maxDate);
 
     useEffect(() => {
       if (!isOpen) {
         return;
       }
 
-      dayRefs.current[toIsoDate(focusedDate)]?.focus();
+      if (shouldFocusCalendarDateRef.current) {
+        dayRefs.current[toIsoDate(focusedDate)]?.focus();
+        shouldFocusCalendarDateRef.current = false;
+      }
     }, [focusedDate, isOpen, visibleMonth]);
 
     const setRangeValue = (range: PDateRangeValue, source: PDateRangePickerChangeSource) => {
@@ -361,6 +408,7 @@ export const PDateRangePicker = forwardRef<PDateRangePickerRef, PDateRangePicker
 
       const nextFocusedDate = startDate ?? today;
       calendarTriggerRef.current = trigger as unknown as FocusableElement;
+      shouldFocusCalendarDateRef.current = true;
       setFocusedDate(nextFocusedDate);
       setVisibleMonth(startOfMonth(nextFocusedDate));
       setIsOpen(true);
@@ -372,6 +420,25 @@ export const PDateRangePicker = forwardRef<PDateRangePickerRef, PDateRangePicker
       if (restoreFocus) {
         calendarTriggerRef.current?.focus();
       }
+    };
+
+    const updateVisibleMonth = (nextMonth: Date) => {
+      const clampedMonth = clampVisibleMonth(nextMonth, minDate, maxDate);
+
+      setVisibleMonth(clampedMonth);
+      setFocusedDate(getFocusableDateInMonth(clampedMonth, focusedDate, minDate, maxDate));
+    };
+
+    const handleMonthChange = (event: ChangeEvent<HTMLSelectElement>) => {
+      const { value: nextMonth } = event.currentTarget as unknown as { value: string };
+
+      updateVisibleMonth(new Date(visibleMonth.getFullYear(), Number(nextMonth), 1));
+    };
+
+    const handleYearChange = (event: ChangeEvent<HTMLSelectElement>) => {
+      const { value: nextYear } = event.currentTarget as unknown as { value: string };
+
+      updateVisibleMonth(new Date(Number(nextYear), visibleMonth.getMonth(), 1));
     };
 
     const handlePresetClick = (preset: PDateRangePickerPreset) => {
@@ -404,6 +471,7 @@ export const PDateRangePicker = forwardRef<PDateRangePickerRef, PDateRangePicker
         return;
       }
 
+      shouldFocusCalendarDateRef.current = true;
       setFocusedDate(date);
       setVisibleMonth(startOfMonth(date));
     };
@@ -452,17 +520,19 @@ export const PDateRangePicker = forwardRef<PDateRangePickerRef, PDateRangePicker
           className,
         )}
       >
-        <div id={labelId} className="p-date-range-picker__label">
-          <span>{label}</span>
-          <span
-            className={cn(
-              'p-date-range-picker__label-value',
-              !hasCompleteRange && 'p-date-range-picker__label-value--empty',
-            )}
-          >
-            {displayValue}
-          </span>
-        </div>
+        {hasPresets ? (
+          <div id={labelId} className="p-date-range-picker__label">
+            <span>{label}</span>
+            <span
+              className={cn(
+                'p-date-range-picker__label-value',
+                !hasCompleteRange && 'p-date-range-picker__label-value--empty',
+              )}
+            >
+              {displayValue}
+            </span>
+          </div>
+        ) : null}
 
         {hasPresets ? (
           <div
@@ -514,16 +584,37 @@ export const PDateRangePicker = forwardRef<PDateRangePickerRef, PDateRangePicker
             className={cn(
               'p-date-range-picker__trigger',
               !hasCompleteRange && 'p-date-range-picker__trigger--empty',
+              hasCompleteRange && 'p-date-range-picker__trigger--filled',
+              isOpen && 'p-date-range-picker__trigger--open',
             )}
             disabled={disabled}
             aria-controls={panelId}
             aria-describedby={messageId}
             aria-expanded={isOpen}
             aria-haspopup="dialog"
-            aria-labelledby={labelId}
+            aria-label={`${label}: ${displayValue}`}
             onClick={(event) => (isOpen ? closeCalendar(true) : openCalendar(event.currentTarget))}
           >
-            <span>{displayValue}</span>
+            <span
+              id={labelId}
+              className={cn(
+                'p-date-range-picker__trigger-label p-date-range-picker__trigger-floating-label',
+                isError && 'p-date-range-picker__trigger-label--error',
+              )}
+              aria-hidden="true"
+            >
+              {label}
+            </span>
+            <span
+              className={cn(
+                'p-date-range-picker__trigger-label p-date-range-picker__trigger-placeholder-label',
+                isError && 'p-date-range-picker__trigger-label--error',
+              )}
+              aria-hidden="true"
+            >
+              {label}
+            </span>
+            <span className="p-date-range-picker__trigger-value">{displayValue}</span>
             <span className="p-date-range-picker__trigger-icon">
               <CalendarIcon />
             </span>
@@ -550,18 +641,50 @@ export const PDateRangePicker = forwardRef<PDateRangePickerRef, PDateRangePicker
                 type="button"
                 className="p-date-range-picker__nav"
                 aria-label="Previous month"
-                onClick={() => setVisibleMonth((date) => addMonths(date, -1))}
+                disabled={isPreviousMonthDisabled}
+                onClick={() => updateVisibleMonth(previousMonth)}
               >
                 <ChevronLeftIcon />
               </button>
-              <div id={`${panelId}-title`} className="p-date-range-picker__month">
-                {getMonthLabel(visibleMonth, locale)}
+              <div className="p-date-range-picker__month">
+                <span id={`${panelId}-title`} className="p-date-range-picker__month-label">
+                  {getMonthLabel(visibleMonth, locale)}
+                </span>
+                <select
+                  className="p-date-range-picker__month-select p-date-range-picker__calendar-select"
+                  aria-label="Month"
+                  value={visibleMonth.getMonth()}
+                  onChange={handleMonthChange}
+                >
+                  {monthOptions.map((month) => (
+                    <option
+                      key={month.value}
+                      value={month.value}
+                      disabled={isMonthDisabled(new Date(visibleMonth.getFullYear(), month.value, 1), minDate, maxDate)}
+                    >
+                      {month.label}
+                    </option>
+                  ))}
+                </select>
+                <select
+                  className="p-date-range-picker__year-select p-date-range-picker__calendar-select"
+                  aria-label="Year"
+                  value={visibleMonth.getFullYear()}
+                  onChange={handleYearChange}
+                >
+                  {yearOptions.map((year) => (
+                    <option key={year} value={year}>
+                      {year}
+                    </option>
+                  ))}
+                </select>
               </div>
               <button
                 type="button"
                 className="p-date-range-picker__nav"
                 aria-label="Next month"
-                onClick={() => setVisibleMonth((date) => addMonths(date, 1))}
+                disabled={isNextMonthDisabled}
+                onClick={() => updateVisibleMonth(nextMonth)}
               >
                 <ChevronRightIcon />
               </button>
