@@ -102,6 +102,13 @@ test.describe('Storybook smoke tests', () => {
   });
 
   test('renders text input states and announces errors', async ({ page }) => {
+    await gotoStory(page, 'components-ptextinput--with-helper-text');
+    const textInputBox = await page.getByLabel('Email').boundingBox();
+    const placeholderLabelBox = await page.locator('.p-text-input__placeholder-label').boundingBox();
+    const inputCenter = (textInputBox?.y ?? 0) + (textInputBox?.height ?? 0) / 2;
+    const placeholderCenter = (placeholderLabelBox?.y ?? 0) + (placeholderLabelBox?.height ?? 0) / 2;
+    expect(Math.abs(inputCenter - placeholderCenter)).toBeLessThanOrEqual(1);
+
     await gotoStory(page, 'components-ptextinput--with-error');
 
     await expect(page.getByLabel('Label')).toBeVisible();

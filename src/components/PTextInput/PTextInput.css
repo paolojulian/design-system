@@ -31,11 +31,16 @@
   --p-input-icon-size: var(--p-size-icon-md);
   --p-input-transition: var(--p-control-transition);
 
+  width: 100%;
+}
+
+.p-text-input__field {
   position: relative;
   width: 100%;
 }
 
 .p-text-input__control {
+  display: block;
   width: 100%;
   border-radius: var(--p-input-radius);
   min-height: var(--p-input-min-height);
