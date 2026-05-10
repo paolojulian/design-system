@@ -2,34 +2,35 @@ import { type Meta, type StoryObj } from '@storybook/react';
 import { PHorizontalSlider } from '.';
 import { PCard } from '../PCard';
 
-const items = [
+type SliderStoryItem = {
+  title: string;
+  width: number;
+};
+
+const items: SliderStoryItem[] = [
   {
     title: 'Pipeline overview',
-    description: 'Scan open opportunities and handoff points.',
-    eyebrow: 'Sales',
+    width: 300,
   },
   {
     title: 'Risk review',
-    eyebrow: 'Control',
+    width: 300,
   },
   {
     title: 'Contract queue',
-    description: 'Track approvals across legal and finance.',
-    eyebrow: 'Legal',
+    width: 300,
   },
   {
     title: 'Account health',
-    description: 'Monitor renewal posture and support load.',
-    eyebrow: 'Success',
+    width: 300,
   },
   {
     title: 'Renewal forecast',
-    eyebrow: 'Finance',
+    width: 300,
   },
   {
     title: 'Support load',
-    description: 'Review request volume and current response risk.',
-    eyebrow: 'Service',
+    width: 300,
   },
 ];
 
@@ -43,13 +44,7 @@ const meta: Meta<typeof PHorizontalSlider> = {
   args: {
     ariaLabel: 'Featured content',
     children: items.map((item, index) => (
-      <PCard
-        key={item.title}
-        prefix={String(index + 1).padStart(2, '0')}
-        eyebrow={item.eyebrow}
-        title={item.title}
-        description={item.description}
-      />
+      <PCard key={item.title} prefix={String(index + 1).padStart(2, '0')} {...item} />
     )),
   },
   argTypes: {

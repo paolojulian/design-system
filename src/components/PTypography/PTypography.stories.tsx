@@ -3,7 +3,7 @@ import { PTypography } from '.';
 import { P_COLORS } from '../../constants';
 
 const meta: Meta<typeof PTypography> = {
-  title: 'PTypography',
+  title: 'Components/PTypography',
   component: PTypography,
   args: {
     className: 'text-white',
