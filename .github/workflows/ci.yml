@@ -9,6 +9,8 @@ on:
 jobs:
   verify:
     runs-on: ubuntu-latest
+    env:
+      CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
 
     steps:
       - name: Checkout
@@ -39,6 +41,14 @@ jobs:
 
       - name: Run UI tests
         run: npm run test:ui
+
+      - name: Upload Storybook to Chromatic
+        if: ${{ env.CHROMATIC_PROJECT_TOKEN != '' }}
+        run: npm run test:visual:ci
+
+      - name: Skip Chromatic upload
+        if: ${{ env.CHROMATIC_PROJECT_TOKEN == '' }}
+        run: echo "CHROMATIC_PROJECT_TOKEN is not configured; skipping Chromatic upload."
 
       - name: Upload Playwright report
         if: failure()
