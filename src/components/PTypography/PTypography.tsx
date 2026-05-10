@@ -2,6 +2,7 @@ import { VariantProps } from 'class-variance-authority';
 import { HTMLAttributes } from 'react';
 import '../../index.css';
 import cn from '../../utils/cn';
+import './PTypography.css';
 import { PTypographyVariants } from './PTypography.constants';
 
 export interface PTypographyProps

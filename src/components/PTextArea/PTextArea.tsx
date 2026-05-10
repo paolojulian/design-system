@@ -8,7 +8,7 @@ export type PTextAreaProps = {
   /**
    * Applied to the root wrapper element.
    * Override design tokens via CSS custom properties, e.g.:
-   *   `[--p-textarea-ring:blue] [--p-textarea-bg:#f5f5f5]`
+   *   `[--p-textarea-ring:var(--p-color-info)] [--p-textarea-bg:var(--p-color-info-surface)]`
    */
   className?: string;
   /** Applied to the inner `<textarea>` element for layout / spacing overrides. */
@@ -58,7 +58,7 @@ export const PTextArea = forwardRef<PTextAreaRef, PTextAreaProps>(
       .join(' ') || undefined;
 
     return (
-      <div className={cn('p-text-area relative w-full', className)} style={style}>
+      <div className={cn('p-text-area', className)} style={style}>
         <textarea
           {...props}
           id={textareaId}
@@ -75,23 +75,8 @@ export const PTextArea = forwardRef<PTextAreaRef, PTextAreaProps>(
           aria-disabled={disabled}
           aria-readonly={readOnly}
           className={cn(
-            // Layout
-            'peer w-full rounded px-4 pt-8 pb-3',
-            // Visuals
-            'bg-(--p-textarea-bg) text-(--p-textarea-text)',
-            'font-sans text-sm outline-none',
-            'border border-(--p-textarea-border) focus:border-(--p-textarea-border-focus)',
-            // Focus
-            'focus:bg-(--p-textarea-bg-focus)',
-            'focus:ring-2 focus:ring-(--p-textarea-ring)',
-            // Resize
-            'resize-y',
-            // Motion
-            'transition-all duration-150 ease-in',
-            // States
-            'disabled:cursor-not-allowed disabled:opacity-50',
-            'read-only:cursor-default read-only:bg-(--p-textarea-bg-readonly)',
-            isError && 'ring-2 ring-red-500',
+            'p-text-area__control',
+            isError && 'p-text-area__control--error',
             textareaClassName,
           )}
         />
@@ -103,17 +88,8 @@ export const PTextArea = forwardRef<PTextAreaRef, PTextAreaProps>(
         <span
           aria-hidden="true"
           className={cn(
-            'pointer-events-none absolute top-2 left-4',
-            'font-sans text-xs',
-            'origin-left transition-all duration-150 ease-in',
-            // Hidden by default
-            'scale-0 opacity-0',
-            isError
-              ? 'text-red-500'
-              : 'text-(--p-textarea-label) peer-focus:text-(--p-textarea-label-focus)',
-            // Reveal when focused or filled
-            'peer-focus:scale-100 peer-focus:opacity-100',
-            'peer-not-placeholder-shown:scale-100 peer-not-placeholder-shown:opacity-100',
+            'p-text-area__label p-text-area__floating-label',
+            isError && 'p-text-area__label--error',
           )}
         >
           {label}
@@ -126,29 +102,28 @@ export const PTextArea = forwardRef<PTextAreaRef, PTextAreaProps>(
          */}
         <label
           htmlFor={textareaId}
-          className={cn(
-            'pointer-events-none absolute top-4 left-4',
-            'font-sans text-sm text-(--p-textarea-text)',
-            'origin-left transition-all duration-150 ease-in',
-            // Collapse when focused or filled
-            'peer-focus:scale-0 peer-focus:opacity-0',
-            'peer-not-placeholder-shown:scale-0 peer-not-placeholder-shown:opacity-0',
-            disabled && 'opacity-50',
-          )}
+          className="p-text-area__label p-text-area__placeholder-label"
         >
           {label}
         </label>
 
         {/* Error message — announced immediately via role="alert" */}
         {isError && errorMessage && (
-          <p id={errorId} role="alert" className="mt-1 px-4 font-sans text-xs text-red-500">
+          <p
+            id={errorId}
+            role="alert"
+            className="p-text-area__message p-text-area__message--error"
+          >
             {errorMessage}
           </p>
         )}
 
         {/* Helper text — visible only when there is no error */}
         {!isError && helperText && (
-          <p id={helperId} className="mt-1 px-4 font-sans text-xs text-(--p-textarea-text-helper)">
+          <p
+            id={helperId}
+            className="p-text-area__message p-text-area__message--helper"
+          >
             {helperText}
           </p>
         )}

@@ -1,12 +1,136 @@
 .p-text-area {
-  --p-textarea-bg:            #ffffff;
-  --p-textarea-bg-focus:      #ffffff;
-  --p-textarea-bg-readonly:   #e0e6ed;
-  --p-textarea-text:          #0d0d0d;
-  --p-textarea-text-helper:   #78716c;
-  --p-textarea-ring:          #ce5a67;
-  --p-textarea-label:         #78716c;
-  --p-textarea-label-focus:   #ce5a67;
-  --p-textarea-border:        #0d0d0d;
-  --p-textarea-border-focus:  #0d0d0d;
+  --p-textarea-bg: var(--p-control-bg);
+  --p-textarea-bg-focus: var(--p-control-bg-focus);
+  --p-textarea-bg-readonly: var(--p-control-bg-readonly);
+  --p-textarea-text: var(--p-control-text);
+  --p-textarea-text-helper: var(--p-control-text-muted);
+  --p-textarea-ring: var(--p-control-ring);
+  --p-textarea-label: var(--p-control-text-muted);
+  --p-textarea-label-focus: var(--p-color-action-primary);
+  --p-textarea-border: var(--p-control-border);
+  --p-textarea-border-focus: var(--p-control-border-focus);
+  --p-textarea-border-error: var(--p-control-border-error);
+  --p-textarea-radius: var(--p-control-radius);
+  --p-textarea-font-size: var(--p-control-font-size);
+  --p-textarea-line-height: var(--p-control-line-height);
+  --p-textarea-message-font-size: var(--p-control-message-font-size);
+  --p-textarea-message-line-height: var(--p-control-message-line-height);
+  --p-textarea-border-width: var(--p-control-border-width);
+  --p-textarea-focus-ring-width: var(--p-focus-ring-width);
+  --p-textarea-min-height: calc(var(--p-size-control-lg) * 2);
+  --p-textarea-padding-x: var(--p-control-padding-x);
+  --p-textarea-padding-top: var(--p-space-8);
+  --p-textarea-padding-bottom: var(--p-space-3);
+  --p-textarea-label-top: var(--p-space-2);
+  --p-textarea-placeholder-top: var(--p-space-4);
+  --p-textarea-inline-offset: var(--p-control-padding-x);
+  --p-textarea-message-margin-top: var(--p-control-message-margin-top);
+  --p-textarea-transition: var(--p-control-transition);
+
+  position: relative;
+  width: 100%;
+}
+
+.p-text-area__control {
+  width: 100%;
+  border-radius: var(--p-textarea-radius);
+  min-height: var(--p-textarea-min-height);
+  padding-block: var(--p-textarea-padding-top) var(--p-textarea-padding-bottom);
+  padding-inline: var(--p-textarea-padding-x);
+  border: var(--p-textarea-border-width) solid var(--p-textarea-border);
+  background: var(--p-textarea-bg);
+  color: var(--p-textarea-text);
+  font-family: var(--p-font-family-sans);
+  font-size: var(--p-textarea-font-size);
+  line-height: var(--p-textarea-line-height);
+  outline: none;
+  resize: vertical;
+  transition: var(--p-textarea-transition);
+}
+
+.p-text-area__control:focus {
+  border-color: var(--p-textarea-border-focus);
+  background: var(--p-textarea-bg-focus);
+  box-shadow: 0 0 0 var(--p-textarea-focus-ring-width) var(--p-textarea-ring);
+}
+
+.p-text-area__control--error {
+  box-shadow: 0 0 0 var(--p-textarea-focus-ring-width) var(--p-textarea-border-error);
+}
+
+.p-text-area__control:disabled {
+  cursor: not-allowed;
+  opacity: var(--p-opacity-disabled);
+}
+
+.p-text-area__control:read-only {
+  cursor: default;
+  background: var(--p-textarea-bg-readonly);
+}
+
+.p-text-area__message {
+  margin-block-start: var(--p-textarea-message-margin-top);
+  padding-inline: var(--p-textarea-padding-x);
+  font-family: var(--p-font-family-sans);
+  font-size: var(--p-textarea-message-font-size);
+  line-height: var(--p-textarea-message-line-height);
+}
+
+.p-text-area__message--error {
+  color: var(--p-textarea-border-error);
+}
+
+.p-text-area__message--helper {
+  color: var(--p-textarea-text-helper);
+}
+
+.p-text-area__label {
+  position: absolute;
+  inset-inline-start: var(--p-textarea-inline-offset);
+  pointer-events: none;
+  transform-origin: left;
+  font-family: var(--p-font-family-sans);
+  transition: opacity var(--p-duration-fast) var(--p-ease-standard),
+    color var(--p-duration-fast) var(--p-ease-standard),
+    transform var(--p-duration-fast) var(--p-ease-standard);
+}
+
+.p-text-area__floating-label {
+  top: var(--p-textarea-label-top);
+  color: var(--p-textarea-label);
+  font-size: var(--p-textarea-message-font-size);
+  line-height: var(--p-textarea-message-line-height);
+  opacity: 0;
+  transform: scale(0);
+}
+
+.p-text-area__placeholder-label {
+  top: var(--p-textarea-placeholder-top);
+  color: var(--p-textarea-text);
+  font-size: var(--p-textarea-font-size);
+  line-height: var(--p-textarea-line-height);
+}
+
+.p-text-area__control:focus ~ .p-text-area__floating-label,
+.p-text-area__control:not(:placeholder-shown) ~ .p-text-area__floating-label {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.p-text-area__control:focus ~ .p-text-area__floating-label {
+  color: var(--p-textarea-label-focus);
+}
+
+.p-text-area__control:focus ~ .p-text-area__placeholder-label,
+.p-text-area__control:not(:placeholder-shown) ~ .p-text-area__placeholder-label {
+  opacity: 0;
+  transform: scale(0);
+}
+
+.p-text-area__control:disabled ~ .p-text-area__placeholder-label {
+  opacity: var(--p-opacity-disabled);
+}
+
+.p-text-area__label--error {
+  color: var(--p-textarea-border-error);
 }

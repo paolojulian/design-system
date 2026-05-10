@@ -1,14 +1,14 @@
-import colors from 'tailwindcss/colors';
+import { P_TOKEN_VALUES } from './tokens';
 
 export const P_COLORS = {
-  black: '#0D0D0D',
-  white: '#FCF5ED',
-  primary: '#CE5A67',
-  secondary: '#F4BF96',
+  black: P_TOKEN_VALUES.color.neutral[950],
+  white: P_TOKEN_VALUES.color.neutral[0],
+  primary: P_TOKEN_VALUES.color.brand[600],
+  secondary: P_TOKEN_VALUES.color.accent[600],
   gray: {
-    darker: colors.stone[500],
-    DEFAULT: '#A3A3A3',
-    lighter: '#e0e6ed',
+    darker: P_TOKEN_VALUES.color.neutral[600],
+    DEFAULT: P_TOKEN_VALUES.color.neutral[400],
+    lighter: P_TOKEN_VALUES.color.neutral[200],
   },
 };
 

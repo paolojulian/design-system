@@ -51,6 +51,10 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
+    "test:ui": "playwright test",
+    "test:ui:build": "npm run build:storybook && playwright test",
+    "test:visual": "npm run build:storybook && chromatic --storybook-build-dir storybook-static --only-changed",
+    "test:visual:ci": "chromatic --storybook-build-dir storybook-static --only-changed --ci",
     "publish:pack": "yarn build && npm pack --pack-destination ./packed"
   },
   "peerDependencies": {
@@ -63,8 +67,10 @@
     "tailwind-merge": "^2.2.0"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.11.3",
     "@chromatic-com/storybook": "^1.9.0",
     "@eslint/js": "^9.9.0",
+    "@playwright/test": "^1.59.1",
     "@storybook/addon-essentials": "^8.3.1",
     "@storybook/addon-interactions": "^8.3.1",
     "@storybook/addon-links": "^8.3.1",
@@ -73,10 +79,10 @@
     "@storybook/react": "^8.3.1",
     "@storybook/react-vite": "^8.3.1",
     "@storybook/test": "^8.3.1",
+    "@tailwindcss/vite": "^4.0.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "@vitejs/plugin-react": "^4.3.1",
-    "@tailwindcss/vite": "^4.0.0",
     "eslint": "^9.9.0",
     "eslint-plugin-react-hooks": "^5.1.0-rc.0",
     "eslint-plugin-react-refresh": "^0.4.9",

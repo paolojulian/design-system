@@ -8,7 +8,7 @@ export type PTextInputProps = {
   /**
    * Applied to the root wrapper element.
    * Override design tokens via CSS custom properties, e.g.:
-   *   `[--p-input-ring:blue] [--p-input-bg:#f5f5f5]`
+   *   `[--p-input-ring:var(--p-color-info)] [--p-input-bg:var(--p-color-info-surface)]`
    */
   className?: string;
   /** Applied to the inner `<input>` element for layout / spacing overrides. */
@@ -33,8 +33,6 @@ function EyeIcon() {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="20"
-      height="20"
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
@@ -43,6 +41,7 @@ function EyeIcon() {
       strokeLinejoin="round"
       aria-hidden="true"
       focusable="false"
+      className="p-text-input__icon"
     >
       <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
       <circle cx="12" cy="12" r="3" />
@@ -54,8 +53,6 @@ function EyeOffIcon() {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="20"
-      height="20"
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
@@ -64,6 +61,7 @@ function EyeOffIcon() {
       strokeLinejoin="round"
       aria-hidden="true"
       focusable="false"
+      className="p-text-input__icon"
     >
       <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24" />
       <path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68" />
@@ -113,7 +111,7 @@ export const PTextInput = forwardRef<PTextInputRef, PTextInputProps>(
       .join(' ') || undefined;
 
     return (
-      <div className={cn('p-text-input relative w-full', className)} style={style}>
+      <div className={cn('p-text-input', className)} style={style}>
         <input
           {...props}
           id={inputId}
@@ -131,26 +129,10 @@ export const PTextInput = forwardRef<PTextInputRef, PTextInputProps>(
           aria-readonly={readOnly}
           autoComplete={props.autoComplete ?? (isPassword ? 'current-password' : undefined)}
           className={cn(
-            // Layout — tall enough for the floating label + value
-            'peer h-16 w-full rounded px-4 pt-6 pb-2',
-            (isPassword || hasRightAdornment) && 'pr-12',
-            // Visuals
-            'bg-(--p-input-bg) text-(--p-input-text)',
-            'font-sans text-sm outline-none',
-            'border border-(--p-input-border) focus:border-(--p-input-border-focus)',
-            // Focus
-            'focus:bg-(--p-input-bg-focus)',
-            'focus:ring-2 focus:ring-(--p-input-ring)',
-            // Motion
-            'transition-all duration-150 ease-in',
-            // States
-            'disabled:cursor-not-allowed disabled:opacity-50',
-            'read-only:cursor-default read-only:bg-(--p-input-bg-readonly)',
-            isError && 'ring-2 ring-red-500',
-            // Date — hide native picker chrome so rightAdornment can replace it
-            hasRightAdornment &&
-              type === 'date' &&
-              '[&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-0 [&::-webkit-calendar-picker-indicator]:h-full [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-0',
+            'p-text-input__control',
+            (isPassword || hasRightAdornment) && 'p-text-input__control--adorned',
+            isError && 'p-text-input__control--error',
+            hasRightAdornment && type === 'date' && 'p-text-input__control--date-adorned',
             inputClassName,
           )}
         />
@@ -162,17 +144,8 @@ export const PTextInput = forwardRef<PTextInputRef, PTextInputProps>(
         <span
           aria-hidden="true"
           className={cn(
-            'pointer-events-none absolute top-2 left-4',
-            'font-sans text-xs',
-            'origin-left transition-all duration-150 ease-in',
-            // Hidden by default
-            'scale-0 opacity-0',
-            isError
-              ? 'text-red-500'
-              : 'text-(--p-input-label) peer-focus:text-(--p-input-label-focus)',
-            // Reveal when focused or filled
-            'peer-focus:scale-100 peer-focus:opacity-100',
-            'peer-not-placeholder-shown:scale-100 peer-not-placeholder-shown:opacity-100',
+            'p-text-input__label p-text-input__floating-label',
+            isError && 'p-text-input__label--error',
           )}
         >
           {label}
@@ -185,15 +158,7 @@ export const PTextInput = forwardRef<PTextInputRef, PTextInputProps>(
          */}
         <label
           htmlFor={inputId}
-          className={cn(
-            'pointer-events-none absolute top-1/2 left-4 -translate-y-1/2',
-            'font-sans text-sm text-(--p-input-text)',
-            'origin-left transition-all duration-150 ease-in',
-            // Collapse when focused or filled
-            'peer-focus:scale-0 peer-focus:opacity-0',
-            'peer-not-placeholder-shown:scale-0 peer-not-placeholder-shown:opacity-0',
-            disabled && 'opacity-50',
-          )}
+          className="p-text-input__label p-text-input__placeholder-label"
         >
           {label}
         </label>
@@ -204,14 +169,7 @@ export const PTextInput = forwardRef<PTextInputRef, PTextInputProps>(
             type="button"
             onClick={() => setShowPassword((v) => !v)}
             disabled={disabled}
-            className={cn(
-              'absolute top-1/2 right-4 -translate-y-1/2',
-              'text-(--p-input-label) hover:text-(--p-input-text)',
-              'transition-colors duration-150',
-              'focus-visible:outline-2 focus-visible:outline-offset-2',
-              'focus-visible:outline-(--p-input-ring)',
-              'disabled:pointer-events-none disabled:opacity-50',
-            )}
+            className="p-text-input__action"
             aria-label={showPassword ? 'Hide password' : 'Show password'}
             aria-pressed={showPassword}
             aria-controls={inputId}
@@ -222,24 +180,28 @@ export const PTextInput = forwardRef<PTextInputRef, PTextInputProps>(
 
         {/* Right adornment — decorative, hidden from assistive tech */}
         {hasRightAdornment && (
-          <span
-            aria-hidden="true"
-            className="pointer-events-none absolute top-1/2 right-4 -translate-y-1/2 text-(--p-input-label)"
-          >
+          <span aria-hidden="true" className="p-text-input__adornment">
             {rightAdornment}
           </span>
         )}
 
         {/* Error message — announced immediately via role="alert" */}
         {isError && errorMessage && (
-          <p id={errorId} role="alert" className="mt-1 px-4 font-sans text-xs text-red-500">
+          <p
+            id={errorId}
+            role="alert"
+            className="p-text-input__message p-text-input__message--error"
+          >
             {errorMessage}
           </p>
         )}
 
         {/* Helper text — visible only when there is no error */}
         {!isError && helperText && (
-          <p id={helperId} className="mt-1 px-4 font-sans text-xs text-(--p-input-text-helper)">
+          <p
+            id={helperId}
+            className="p-text-input__message p-text-input__message--helper"
+          >
             {helperText}
           </p>
         )}
