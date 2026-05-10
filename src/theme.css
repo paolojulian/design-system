@@ -24,7 +24,7 @@
   --color-info: var(--p-color-info);
 
   --font-sans: 'AvantGarde', sans-serif;
-  --font-serif: 'Merriweather', serif;
+  --font-serif: 'Lora', serif;
 
   --breakpoint-xs: 30rem;
   --breakpoint-sm: 40rem;
@@ -104,7 +104,7 @@
 
   /* Typography tokens */
   --p-font-family-sans: 'AvantGarde', sans-serif;
-  --p-font-family-serif: 'Merriweather', serif;
+  --p-font-family-serif: 'Lora', serif;
   --p-font-weight-regular: 400;
   --p-font-weight-medium: 500;
   --p-font-weight-bold: 700;

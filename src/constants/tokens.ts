@@ -50,7 +50,7 @@ export const P_TOKEN_VALUES = {
   typography: {
     family: {
       sans: "'AvantGarde', sans-serif",
-      serif: "'Merriweather', serif",
+      serif: "'Lora', serif",
     },
     weight: {
       regular: '400',
