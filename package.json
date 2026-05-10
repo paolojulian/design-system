@@ -54,7 +54,7 @@
     "test:ui": "playwright test",
     "test:ui:build": "npm run build:storybook && playwright test",
     "test:visual": "npm run build:storybook && chromatic --storybook-build-dir storybook-static --only-changed",
-    "test:visual:ci": "chromatic --storybook-build-dir storybook-static --only-changed --ci",
+    "test:visual:ci": "chromatic --storybook-build-dir storybook-static --only-changed --ci --exit-once-uploaded",
     "publish:pack": "yarn build && npm pack --pack-destination ./packed"
   },
   "peerDependencies": {
