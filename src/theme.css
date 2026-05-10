@@ -109,6 +109,8 @@
   --p-font-weight-medium: 500;
   --p-font-weight-bold: 700;
   --p-letter-spacing-default: 0;
+  --p-letter-spacing-wide: 0.40em;
+  --p-letter-spacing-heading: -0.04em;
   --p-font-size-caption: 0.75rem;
   --p-line-height-caption: 1rem;
   --p-font-size-body-sm: 0.875rem;
@@ -119,12 +121,14 @@
   --p-line-height-heading-sm: 1.75rem;
   --p-font-size-heading-md: 1.5rem;
   --p-line-height-heading-md: 2rem;
-  --p-font-size-heading-lg: 2rem;
-  --p-line-height-heading-lg: 2.5rem;
-  --p-font-size-heading-xl: 3rem;
+  --p-font-size-heading-lg: 2.5rem;
+  --p-line-height-heading-lg: 2.75rem;
+  --p-font-size-heading-xl: 4rem;
   --p-line-height-heading-xl: 3.5rem;
-  --p-font-size-display-sm: 4rem;
-  --p-line-height-display-sm: 4.5rem;
+  --p-font-size-display-sm: 7rem;
+  --p-line-height-display-sm: 5.5rem;
+  --p-font-size-display-md: 4rem;
+  --p-line-height-display-md: 4.5rem;
 
   /* Spacing tokens */
   --p-space-0: 0;

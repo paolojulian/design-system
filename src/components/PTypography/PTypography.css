@@ -18,6 +18,7 @@
 .p-typography--body-wide {
   font-size: var(--p-font-size-body-sm);
   font-weight: var(--p-font-weight-medium);
+  letter-spacing: var(--p-letter-spacing-wide);
   line-height: var(--p-line-height-body-sm);
   text-transform: uppercase;
 }
@@ -25,25 +26,33 @@
 .p-typography--heading {
   font-size: var(--p-font-size-heading-md);
   font-weight: var(--p-font-weight-medium);
+  letter-spacing: var(--p-letter-spacing-heading);
   line-height: var(--p-line-height-heading-md);
 }
 
 .p-typography--heading-lg {
   font-size: var(--p-font-size-heading-lg);
   font-weight: var(--p-font-weight-medium);
+  letter-spacing: var(--p-letter-spacing-heading);
   line-height: var(--p-line-height-heading-lg);
 }
 
 .p-typography--heading-xl {
   font-size: var(--p-font-size-heading-xl);
   font-weight: var(--p-font-weight-medium);
+  letter-spacing: var(--p-letter-spacing-heading);
   line-height: var(--p-line-height-heading-xl);
 }
 
 @media (min-width: 48rem) {
-  .p-typography--heading-lg {
+  .p-typography--heading {
     font-size: var(--p-font-size-heading-xl);
-    line-height: var(--p-line-height-heading-xl);
+    line-height: var(--p-line-height-display-md);
+  }
+
+  .p-typography--heading-lg {
+    font-size: var(--p-font-size-display-md);
+    line-height: var(--p-line-height-display-md);
   }
 
   .p-typography--heading-xl {

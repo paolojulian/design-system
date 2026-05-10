@@ -63,9 +63,10 @@ export const P_TOKEN_VALUES = {
       bodyMd: '1rem',
       headingSm: '1.25rem',
       headingMd: '1.5rem',
-      headingLg: '2rem',
-      headingXl: '3rem',
-      displaySm: '4rem',
+      headingLg: '2.5rem',
+      headingXl: '4rem',
+      displaySm: '7rem',
+      displayMd: '4rem',
     },
     lineHeight: {
       caption: '1rem',
@@ -73,12 +74,15 @@ export const P_TOKEN_VALUES = {
       bodyMd: '1.5rem',
       headingSm: '1.75rem',
       headingMd: '2rem',
-      headingLg: '2.5rem',
+      headingLg: '2.75rem',
       headingXl: '3.5rem',
-      displaySm: '4.5rem',
+      displaySm: '5.5rem',
+      displayMd: '4.5rem',
     },
     letterSpacing: {
       default: '0',
+      wide: '0.40em',
+      heading: '-0.04em',
     },
   },
   space: {
@@ -203,6 +207,7 @@ export const P_TOKENS = {
       headingLg: cssVar('--p-font-size-heading-lg'),
       headingXl: cssVar('--p-font-size-heading-xl'),
       displaySm: cssVar('--p-font-size-display-sm'),
+      displayMd: cssVar('--p-font-size-display-md'),
     },
     lineHeight: {
       caption: cssVar('--p-line-height-caption'),
@@ -213,9 +218,12 @@ export const P_TOKENS = {
       headingLg: cssVar('--p-line-height-heading-lg'),
       headingXl: cssVar('--p-line-height-heading-xl'),
       displaySm: cssVar('--p-line-height-display-sm'),
+      displayMd: cssVar('--p-line-height-display-md'),
     },
     letterSpacing: {
       default: cssVar('--p-letter-spacing-default'),
+      wide: cssVar('--p-letter-spacing-wide'),
+      heading: cssVar('--p-letter-spacing-heading'),
     },
   },
   space: {
@@ -300,4 +308,3 @@ export const P_TOKENS = {
 
 export type PTokenValues = typeof P_TOKEN_VALUES;
 export type PTokens = typeof P_TOKENS;
-
