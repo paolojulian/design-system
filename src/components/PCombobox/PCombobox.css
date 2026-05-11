@@ -7,6 +7,7 @@
     --p-combobox-panel-bg: var(--p-color-surface);
     --p-combobox-text: var(--p-control-text);
     --p-combobox-text-muted: var(--p-control-text-muted);
+    --p-combobox-label-focus: var(--p-combobox-text);
     --p-combobox-border: var(--p-control-border);
     --p-combobox-border-hover: var(--p-control-border-hover);
     --p-combobox-border-focus: var(--p-control-border-focus);
@@ -134,7 +135,7 @@
 }
 
 .p-combobox__input:focus ~ .p-combobox__floating-label {
-    color: var(--p-color-action-primary);
+    color: var(--p-combobox-label-focus);
 }
 
 .p-combobox__input:focus ~ .p-combobox__placeholder-label,

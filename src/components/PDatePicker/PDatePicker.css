@@ -7,6 +7,7 @@
     --p-date-picker-border-active: var(--p-control-border-focus);
     --p-date-picker-text: var(--p-control-text);
     --p-date-picker-text-muted: var(--p-control-text-muted);
+    --p-date-picker-label-focus: var(--p-date-picker-text);
     --p-date-picker-accent: var(--p-color-action-primary);
     --p-date-picker-accent-subtle: var(--p-color-action-primary-subtle);
     --p-date-picker-error: var(--p-control-border-error);
@@ -143,7 +144,7 @@
 
 .p-date-picker__trigger--open .p-date-picker__trigger-floating-label,
 .p-date-picker__trigger:focus-visible .p-date-picker__trigger-floating-label {
-    color: var(--p-date-picker-accent);
+    color: var(--p-date-picker-label-focus);
 }
 
 .p-date-picker__trigger--filled .p-date-picker__trigger-placeholder-label,

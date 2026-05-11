@@ -149,7 +149,7 @@ export const CustomColors: Story = {
   args: {
     label: 'Custom themed input',
     className:
-      '[--p-input-ring:var(--p-color-info)] [--p-input-label-focus:var(--p-color-info)] [--p-input-bg:var(--p-color-info-surface)]',
+      '[--p-input-ring:var(--p-color-info)] [--p-input-bg:var(--p-color-info-surface)]',
   },
 };
 

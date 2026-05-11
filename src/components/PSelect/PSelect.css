@@ -5,6 +5,7 @@
   --p-select-bg-focus: var(--p-control-bg-focus);
   --p-select-text: var(--p-control-text);
   --p-select-text-muted: var(--p-control-text-muted);
+  --p-select-label-focus: var(--p-select-text);
   --p-select-border: var(--p-control-border);
   --p-select-border-hover: var(--p-control-border-hover);
   --p-select-border-focus: var(--p-control-border-focus);
@@ -188,7 +189,7 @@
 }
 
 .p-select__control:focus ~ .p-select__floating-label {
-  color: var(--p-color-action-primary);
+  color: var(--p-select-label-focus);
 }
 
 .p-select__control:focus ~ .p-select__placeholder-label,

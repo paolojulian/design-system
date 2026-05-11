@@ -132,7 +132,7 @@ export const CustomColors: Story = {
   args: {
     label: 'Custom themed textarea',
     className:
-      '[--p-textarea-ring:var(--p-color-info)] [--p-textarea-label-focus:var(--p-color-info)] [--p-textarea-bg:var(--p-color-info-surface)]',
+      '[--p-textarea-ring:var(--p-color-info)] [--p-textarea-bg:var(--p-color-info-surface)]',
   },
 };
 

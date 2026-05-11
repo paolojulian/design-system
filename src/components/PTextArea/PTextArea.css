@@ -7,7 +7,7 @@
   --p-textarea-text-helper: var(--p-control-text-muted);
   --p-textarea-ring: var(--p-control-ring);
   --p-textarea-label: var(--p-control-text-muted);
-  --p-textarea-label-focus: var(--p-color-action-primary);
+  --p-textarea-label-focus: var(--p-control-text);
   --p-textarea-border: var(--p-control-border);
   --p-textarea-border-focus: var(--p-control-border-focus);
   --p-textarea-border-error: var(--p-control-border-error);

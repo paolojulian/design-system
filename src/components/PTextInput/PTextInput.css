@@ -7,7 +7,7 @@
   --p-input-text-helper: var(--p-control-text-muted);
   --p-input-ring: var(--p-control-ring);
   --p-input-label: var(--p-control-text-muted);
-  --p-input-label-focus: var(--p-color-action-primary);
+  --p-input-label-focus: var(--p-control-text);
   --p-input-border: var(--p-control-border);
   --p-input-border-focus: var(--p-control-border-focus);
   --p-input-border-error: var(--p-control-border-error);

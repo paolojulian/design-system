@@ -2,6 +2,7 @@ import AxeBuilder from '@axe-core/playwright';
 import { expect, type Page, test } from '@playwright/test';
 
 const storyUrl = (id: string) => `/iframe.html?id=${id}&viewMode=story`;
+const lightControlTextColor = 'rgb(17, 17, 17)';
 
 function getCurrentMonthRangeLabel() {
   const today = new Date();
@@ -124,6 +125,9 @@ test.describe('Storybook smoke tests', () => {
     const placeholderCenter = (placeholderLabelBox?.y ?? 0) + (placeholderLabelBox?.height ?? 0) / 2;
     expect(Math.abs(inputCenter - placeholderCenter)).toBeLessThanOrEqual(1);
 
+    await page.getByLabel('Email').focus();
+    await expect(page.locator('.p-text-input__floating-label')).toHaveCSS('color', lightControlTextColor);
+
     await gotoStory(page, 'components-ptextinput--with-error');
 
     await expect(page.getByLabel('Label')).toBeVisible();
@@ -131,6 +135,13 @@ test.describe('Storybook smoke tests', () => {
 
     await gotoStory(page, 'components-ptextinput--disabled');
     await expect(page.getByLabel('Label')).toBeDisabled();
+  });
+
+  test('keeps floating select labels neutral on focus', async ({ page }) => {
+    await gotoStory(page, 'components-pselect--default');
+
+    await page.locator('.p-select__control').focus();
+    await expect(page.locator('.p-select__floating-label')).toHaveCSS('color', lightControlTextColor);
   });
 
   test('renders combobox search, selection, and mobile flow', async ({ page }) => {
@@ -141,6 +152,7 @@ test.describe('Storybook smoke tests', () => {
     await expectElementWidthAtLeast(page, '.p-combobox', 350);
 
     await combobox.click();
+    await expect(page.locator('.p-combobox__floating-label')).toHaveCSS('color', lightControlTextColor);
     await expect(page.getByRole('listbox', { name: 'Account owner' })).toBeVisible();
     const desktopPanelBox = await page.locator('.p-combobox__panel').boundingBox();
     const desktopMessageBox = await page.locator('.p-combobox__message').boundingBox();
@@ -328,6 +340,7 @@ test.describe('Storybook smoke tests', () => {
     await expect(page.locator('.p-date-picker__trigger-floating-label')).toHaveText('Due date');
     await expectElementWidthAtLeast(page, '.p-date-picker', 350);
     await page.getByLabel('Due date').click();
+    await expect(page.locator('.p-date-picker__trigger-floating-label')).toHaveCSS('color', lightControlTextColor);
     await expect(page.getByRole('dialog', { name: 'May 2026' })).toBeVisible();
     const selectedDueDate = page.getByRole('gridcell', { name: 'Sunday, May 10, 2026' });
     await expect(selectedDueDate).toHaveAttribute('aria-selected', 'true');
@@ -386,6 +399,10 @@ test.describe('Storybook smoke tests', () => {
     await expect(page.locator('.p-date-range-picker__trigger-floating-label')).toHaveText('Report range');
     await expectElementWidthAtLeast(page, '.p-date-range-picker', 350);
     await page.getByRole('button', { name: /Report range/ }).click();
+    await expect(page.locator('.p-date-range-picker__trigger-floating-label')).toHaveCSS(
+      'color',
+      lightControlTextColor,
+    );
     await expect(page.getByRole('dialog', { name: 'May 2026' })).toBeVisible();
     const rangeStart = page.getByRole('gridcell', { name: 'Friday, May 1, 2026' });
     await expect(rangeStart).toHaveAttribute('aria-selected', 'true');
@@ -440,6 +457,10 @@ test.describe('Storybook smoke tests', () => {
   });
 
   test('renders textarea states and announces errors', async ({ page }) => {
+    await gotoStory(page, 'components-ptextarea--with-helper-text');
+    await page.getByLabel('Bio').focus();
+    await expect(page.locator('.p-text-area__floating-label')).toHaveCSS('color', lightControlTextColor);
+
     await gotoStory(page, 'components-ptextarea--with-error');
 
     await expect(page.getByLabel('Label')).toBeVisible();
