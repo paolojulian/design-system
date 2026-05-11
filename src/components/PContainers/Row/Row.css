@@ -1,4 +1,7 @@
+@layer components {
 .p-row {
   display: flex;
   flex-direction: row;
+}
+
 }

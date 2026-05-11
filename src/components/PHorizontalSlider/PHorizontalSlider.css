@@ -1,3 +1,4 @@
+@layer components {
 .p-horizontal-slider {
   --p-horizontal-slider-gap: var(--p-space-2);
   --p-horizontal-slider-padding-block: var(--p-space-6);
@@ -115,4 +116,6 @@
       calc((100vw - 96rem) / 2)
     );
   }
+}
+
 }

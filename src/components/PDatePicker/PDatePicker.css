@@ -1,3 +1,4 @@
+@layer components {
 .p-date-picker {
     --p-date-picker-bg: var(--p-control-bg);
     --p-date-picker-bg-hover: var(--p-control-bg-hover);
@@ -412,4 +413,6 @@
         width: 100%;
         max-width: 100%;
     }
+}
+
 }

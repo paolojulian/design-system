@@ -1,68 +1,70 @@
-:where(.p-typography) {
-  font-family: var(--p-font-family-sans);
-  font-weight: var(--p-font-weight-regular);
-  letter-spacing: var(--p-letter-spacing-default);
-}
-
-:where(.p-typography--serif) {
-  font-family: var(--p-font-family-serif);
-  font-size: var(--p-font-size-body-md);
-  line-height: var(--p-line-height-body-md);
-}
-
-:where(.p-typography--body) {
-  font-size: var(--p-font-size-body-md);
-  line-height: var(--p-line-height-body-md);
-}
-
-:where(.p-typography--body-medium) {
-  font-size: var(--p-font-size-body-md);
-  font-weight: var(--p-font-weight-medium);
-  line-height: var(--p-line-height-body-md);
-}
-
-:where(.p-typography--body-wide) {
-  font-size: var(--p-font-size-body-sm);
-  font-weight: var(--p-font-weight-medium);
-  letter-spacing: var(--p-letter-spacing-wide);
-  line-height: var(--p-line-height-body-sm);
-  text-transform: uppercase;
-}
-
-:where(.p-typography--heading) {
-  font-size: var(--p-font-size-heading-md);
-  font-weight: var(--p-font-weight-medium);
-  letter-spacing: var(--p-letter-spacing-heading);
-  line-height: var(--p-line-height-heading-md);
-}
-
-:where(.p-typography--heading-lg) {
-  font-size: var(--p-font-size-heading-lg);
-  font-weight: var(--p-font-weight-medium);
-  letter-spacing: var(--p-letter-spacing-heading);
-  line-height: var(--p-line-height-heading-lg);
-}
-
-:where(.p-typography--heading-xl) {
-  font-size: var(--p-font-size-heading-xl);
-  font-weight: var(--p-font-weight-medium);
-  letter-spacing: var(--p-letter-spacing-heading);
-  line-height: var(--p-line-height-heading-xl);
-}
-
-@media (min-width: 48rem) {
-  :where(.p-typography--heading) {
-    font-size: var(--p-font-size-heading-md-desktop);
-    line-height: var(--p-line-height-heading-md-desktop);
+@layer components {
+  .p-typography {
+    font-family: var(--p-font-family-sans);
+    font-weight: var(--p-font-weight-regular);
+    letter-spacing: var(--p-letter-spacing-default);
   }
 
-  :where(.p-typography--heading-lg) {
-    font-size: var(--p-font-size-display-md);
-    line-height: var(--p-line-height-display-md);
+  .p-typography--serif {
+    font-family: var(--p-font-family-serif);
+    font-size: var(--p-font-size-body-md);
+    line-height: var(--p-line-height-body-md);
   }
 
-  :where(.p-typography--heading-xl) {
-    font-size: var(--p-font-size-display-sm);
-    line-height: var(--p-line-height-display-sm);
+  .p-typography--body {
+    font-size: var(--p-font-size-body-md);
+    line-height: var(--p-line-height-body-md);
+  }
+
+  .p-typography--body-medium {
+    font-size: var(--p-font-size-body-md);
+    font-weight: var(--p-font-weight-medium);
+    line-height: var(--p-line-height-body-md);
+  }
+
+  .p-typography--body-wide {
+    font-size: var(--p-font-size-body-sm);
+    font-weight: var(--p-font-weight-medium);
+    letter-spacing: var(--p-letter-spacing-wide);
+    line-height: var(--p-line-height-body-sm);
+    text-transform: uppercase;
+  }
+
+  .p-typography--heading {
+    font-size: var(--p-font-size-heading-md);
+    font-weight: var(--p-font-weight-medium);
+    letter-spacing: var(--p-letter-spacing-heading);
+    line-height: var(--p-line-height-heading-md);
+  }
+
+  .p-typography--heading-lg {
+    font-size: var(--p-font-size-heading-lg);
+    font-weight: var(--p-font-weight-medium);
+    letter-spacing: var(--p-letter-spacing-heading);
+    line-height: var(--p-line-height-heading-lg);
+  }
+
+  .p-typography--heading-xl {
+    font-size: var(--p-font-size-heading-xl);
+    font-weight: var(--p-font-weight-medium);
+    letter-spacing: var(--p-letter-spacing-heading);
+    line-height: var(--p-line-height-heading-xl);
+  }
+
+  @media (min-width: 48rem) {
+    .p-typography--heading {
+      font-size: var(--p-font-size-heading-md-desktop);
+      line-height: var(--p-line-height-heading-md-desktop);
+    }
+
+    .p-typography--heading-lg {
+      font-size: var(--p-font-size-display-md);
+      line-height: var(--p-line-height-display-md);
+    }
+
+    .p-typography--heading-xl {
+      font-size: var(--p-font-size-display-sm);
+      line-height: var(--p-line-height-display-sm);
+    }
   }
 }

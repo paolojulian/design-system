@@ -1,3 +1,4 @@
+@layer components {
 .p-text-input {
   --p-input-bg: var(--p-control-bg);
   --p-input-bg-focus: var(--p-control-bg-focus);
@@ -191,4 +192,6 @@
   color: var(--p-input-label);
   pointer-events: none;
   transform: translateY(-50%);
+}
+
 }

@@ -1,3 +1,4 @@
+@layer components {
 .p-pagination {
   --p-pagination-bg: var(--p-color-surface);
   --p-pagination-bg-muted: var(--p-color-surface-subtle);
@@ -253,4 +254,6 @@
   .p-pagination__page-size .p-select__field {
     padding-inline: 0 var(--p-space-2);
   }
+}
+
 }

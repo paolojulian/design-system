@@ -1,4 +1,7 @@
+@layer components {
 .p-stack {
   display: flex;
   flex-direction: column;
+}
+
 }

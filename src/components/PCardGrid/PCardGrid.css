@@ -1,3 +1,4 @@
+@layer components {
 .p-card-grid {
   --p-card-grid-mobile-columns: 1;
   --p-card-grid-tablet-columns: 2;
@@ -29,13 +30,13 @@
 }
 
 .p-card-grid--gap-none > .p-card,
-.p-card-grid--gap-none > :where(li) > .p-card {
+.p-card-grid--gap-none > li > .p-card {
   height: 100%;
   border: 0;
   border-radius: 0;
 }
 
-.p-card-grid--gap-none > :where(li) {
+.p-card-grid--gap-none > li {
   display: flex;
   min-width: 0;
   background: var(--p-color-surface);
@@ -75,4 +76,6 @@
   .p-card-grid:not(.p-card-grid--auto-fit) {
     grid-template-columns: repeat(var(--p-card-grid-desktop-columns), minmax(0, 1fr));
   }
+}
+
 }

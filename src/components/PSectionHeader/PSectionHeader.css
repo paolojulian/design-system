@@ -1,3 +1,4 @@
+@layer components {
 .p-section-header {
     color: var(--p-color-text);
     font-family: var(--p-font-family-sans);
@@ -39,4 +40,6 @@
 .p-section-header--indexed .p-section-header__title {
     margin-left: var(--p-space-2);
     font-weight: var(--p-font-weight-medium);
+}
+
 }

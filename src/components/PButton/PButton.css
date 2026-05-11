@@ -1,3 +1,4 @@
+@layer components {
 .p-button {
   --p-button-bg: var(--p-color-action-primary);
   --p-button-bg-hover: var(--p-color-action-primary-hover);
@@ -242,4 +243,6 @@
   50% {
     box-shadow: 0 0 0 6px var(--p-button-ping-shadow-transparent);
   }
+}
+
 }

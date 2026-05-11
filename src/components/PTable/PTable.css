@@ -1,3 +1,4 @@
+@layer components {
 .p-table {
   --p-table-bg: var(--p-color-surface);
   --p-table-bg-muted: var(--p-color-neutral-50);
@@ -498,4 +499,6 @@
   .p-table__mobile-state {
     padding: var(--p-space-8) var(--p-space-4);
   }
+}
+
 }

@@ -1,3 +1,4 @@
+@layer components {
 .p-select {
   --p-select-bg: var(--p-control-bg);
   --p-select-bg-hover: var(--p-control-bg-hover);
@@ -234,4 +235,6 @@
 
 .p-select__message--error {
   color: var(--p-select-border-error);
+}
+
 }

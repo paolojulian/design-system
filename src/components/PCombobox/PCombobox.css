@@ -1,3 +1,4 @@
+@layer components {
 .p-combobox {
     --p-combobox-bg: var(--p-control-bg);
     --p-combobox-bg-hover: var(--p-control-bg-hover);
@@ -549,4 +550,6 @@
         border-radius: var(--p-radius-lg) var(--p-radius-lg) 0 0;
         transform: none;
     }
+}
+
 }

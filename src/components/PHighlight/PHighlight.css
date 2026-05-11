@@ -1,3 +1,4 @@
+@layer components {
 .p-highlight {
   --p-highlight-color: var(--p-color-action-primary);
   --p-highlight-bg: var(--p-color-action-primary);
@@ -55,4 +56,6 @@
   --p-highlight-color: var(--p-color-text);
   --p-highlight-bg: var(--p-color-surface-inverse);
   --p-highlight-text: var(--p-color-text-inverse);
+}
+
 }
