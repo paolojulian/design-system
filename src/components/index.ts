@@ -10,6 +10,14 @@ export {
 export { PButton, type PButtonProps, type PButtonRef } from './PButton';
 export { PCard, type PCardProps, type PCardRef } from './PCard';
 export {
+  PCardGrid,
+  type PCardGridColumns,
+  type PCardGridGap,
+  type PCardGridProps,
+  type PCardGridRef,
+  type PCardGridResponsiveColumns,
+} from './PCardGrid';
+export {
   PCombobox,
   type PComboboxFilterMode,
   type PComboboxOption,
@@ -48,7 +56,32 @@ export {
   type PHorizontalSliderProps,
   type PHorizontalSliderRef,
 } from './PHorizontalSlider';
+export {
+  PPagination,
+  type PPaginationDensity,
+  type PPaginationItem,
+  type PPaginationProps,
+  type PPaginationRef,
+} from './PPagination';
+export {
+  PTable,
+  type PTableAlign,
+  type PTableColumn,
+  type PTableColumnPriority,
+  type PTableDensity,
+  type PTableProps,
+  type PTableRecord,
+  type PTableRef,
+  type PTableRowTone,
+  type PTableSortDirection,
+  type PTableState,
+  type PTableStateTone,
+} from './PTable';
 export { PTypography, type PTypographyProps } from './PTypography';
-export { PSectionHeader } from './PSectionHeader';
+export {
+  PSectionHeader,
+  type PSectionHeaderProps,
+  type PSectionHeaderVariant,
+} from './PSectionHeader';
 export { PTextInput, type PTextInputProps } from './PTextInput';
 export { PTextArea, type PTextAreaProps, type PTextAreaRef } from './PTextArea';

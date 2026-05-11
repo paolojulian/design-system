@@ -91,6 +91,15 @@ test.describe('Storybook smoke tests', () => {
     await expect(page.getByText(/Lorem ipsum dolor sit amet/).first()).toBeVisible();
   });
 
+  test('renders section header indexed hierarchy', async ({ page }) => {
+    await gotoStory(page, 'components-psectionheader--indexed');
+
+    await expect(page.getByText('01')).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Portfolio Health' })).toBeVisible();
+    await expect(page.locator('.p-section-header__mark')).toHaveText('-');
+    await expect(page.locator('.p-section-header__divider')).toHaveText('\\');
+  });
+
   test('keeps the Serif variant on the enterprise serif contract', async ({ page }) => {
     await gotoStory(page, 'components-ptypography--serif');
 
@@ -204,6 +213,93 @@ test.describe('Storybook smoke tests', () => {
       .locator('input[name="approvalOwner"]')
       .evaluate((element) => (element as HTMLInputElement).checkValidity());
     expect(invalidBeforeSelection).toBe(false);
+  });
+
+  test('renders responsive enterprise table states', async ({ page }) => {
+    await gotoStory(page, 'components-ptable--standard');
+    await expect(page.getByRole('table', { name: 'Enterprise accounts' })).toBeVisible();
+    await expect(page.getByRole('columnheader', { name: 'Account' })).toHaveAttribute(
+      'aria-sort',
+      'ascending',
+    );
+    await expect(page.getByRole('cell', { name: 'Acme Industrial' })).toBeVisible();
+    const accountHeaderBox = await page.getByRole('columnheader', { name: 'Account' }).boundingBox();
+    const accountCellBox = await page.getByRole('cell', { name: 'Acme Industrial' }).boundingBox();
+    expect(Math.abs((accountHeaderBox?.x ?? 0) - (accountCellBox?.x ?? 0))).toBeLessThanOrEqual(1);
+    await expect(page.locator('.p-table__viewport')).toHaveCSS('overflow-x', 'auto');
+
+    await page.setViewportSize({ width: 768, height: 1024 });
+    await gotoStory(page, 'components-ptable--standard');
+    await expect(page.locator('.p-table__viewport')).toBeVisible();
+    await expect(page.locator('.p-table__mobile-list')).toBeHidden();
+    await expect(page.locator('.p-table__head-cell', { hasText: 'Risk' })).toBeHidden();
+    const tabletAccountHeaderBox = await page.getByRole('columnheader', { name: 'Account' }).boundingBox();
+    const tabletAccountCellBox = await page.getByRole('cell', { name: 'Acme Industrial' }).boundingBox();
+    expect(Math.abs((tabletAccountHeaderBox?.x ?? 0) - (tabletAccountCellBox?.x ?? 0))).toBeLessThanOrEqual(1);
+
+    await page.setViewportSize({ width: 390, height: 844 });
+    await gotoStory(page, 'components-ptable--standard');
+    await expect(page.locator('.p-table__viewport')).toBeHidden();
+    await expect(page.locator('.p-table__mobile-list')).toBeVisible();
+    await expect(page.locator('.p-table__mobile-row').first()).toContainText('Acme Industrial');
+    await expect(page.locator('.p-table__mobile-field').first()).toContainText('Owner');
+
+    await gotoStory(page, 'components-ptable--loading');
+    await expect(page.locator('.p-table__mobile-state').getByText('Loading table data...')).toBeVisible();
+
+    await gotoStory(page, 'components-ptable--empty');
+    await expect(page.locator('.p-table__mobile-state').getByText('No matching accounts')).toBeVisible();
+
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoStory(page, 'components-ptable--interactive-rows');
+    const accountRow = page.getByRole('row', { name: /Acme Industrial/ });
+    await accountRow.focus();
+    await page.keyboard.press('Enter');
+    await expect(page.getByText('Selected Acme Industrial')).toBeVisible();
+    const firstReviewAction = page.getByRole('button', { name: 'Review' }).first();
+    await expect(firstReviewAction).toBeVisible();
+    const firstReviewActionBox = await firstReviewAction.boundingBox();
+    const firstActionCellBox = await page.locator('.p-table__actions-cell').first().boundingBox();
+    expect(firstReviewActionBox?.width).toBeGreaterThan(100);
+    expect(firstActionCellBox?.width).toBeGreaterThan(180);
+    await firstReviewAction.click();
+    await expect(page.getByText('Reviewing Acme Industrial')).toBeVisible();
+  });
+
+  test('renders pagination controls and responsive card grids', async ({ page }) => {
+    await gotoStory(page, 'components-ppagination--standard');
+    await expect(page.getByRole('navigation', { name: 'Pagination' })).toBeVisible();
+    await expect(page.getByText('Showing 101-120 of 476 records')).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Go to page 6' })).toHaveAttribute(
+      'aria-current',
+      'page',
+    );
+    await page.getByRole('button', { name: 'Go to next page' }).click();
+    await expect(page.getByText('Showing 121-140 of 476 records')).toBeVisible();
+    await page.getByRole('combobox', { name: 'Rows per page' }).selectOption('50');
+    await expect(page.getByText('Showing 1-50 of 476 records')).toBeVisible();
+
+    await page.setViewportSize({ width: 390, height: 844 });
+    await gotoStory(page, 'components-ppagination--standard');
+    const paginationControls = await page.locator('.p-pagination__controls').boundingBox();
+    const previousButton = await page.getByRole('button', { name: 'Go to previous page' }).boundingBox();
+    expect(paginationControls?.width).toBeLessThanOrEqual(390);
+    expect(previousButton?.height).toBeGreaterThanOrEqual(44);
+
+    await page.setViewportSize({ width: 1024, height: 768 });
+    await gotoStory(page, 'components-pcardgrid--four-cards');
+    await expect(page.locator('.p-card-grid')).toBeVisible();
+    await expectGridColumnCount(page, '.p-card-grid', 2);
+    await expect(page.locator('.p-card')).toHaveCount(4);
+    await expect(page.locator('.p-card-grid')).toHaveCSS('column-gap', '1px');
+    await expect(page.locator('.p-card-grid')).toHaveCSS('border-top-width', '1px');
+    await expect(page.locator('.p-card-grid')).toHaveCSS('border-top-left-radius', '4px');
+    await expect(page.locator('.p-card').first()).toHaveCSS('border-top-width', '0px');
+    await expect(page.locator('.p-card').first()).toHaveCSS('border-top-left-radius', '0px');
+
+    await page.setViewportSize({ width: 390, height: 844 });
+    await gotoStory(page, 'components-pcardgrid--four-cards');
+    await expectGridColumnCount(page, '.p-card-grid', 1);
   });
 
   test('renders date picker standard and preset flows', async ({ page }) => {
@@ -440,14 +536,27 @@ test.describe('Storybook accessibility checks', () => {
     'components-pbutton--loading',
     'components-pbutton--active',
     'components-pbutton--mobile',
+    'components-psectionheader--default',
+    'components-psectionheader--indexed',
     'components-phighlight--default',
     'components-phighlight--hero-use-case',
     'components-phighlight--custom-color',
     'components-phighlight--custom-background',
+    'components-ppagination--standard',
+    'components-ppagination--cursor-based',
+    'components-ppagination--loading',
+    'components-pcardgrid--two-across',
+    'components-pcardgrid--four-cards',
+    'components-pcardgrid--auto-fit',
     'components-pcombobox--standard',
     'components-pcombobox--async-infinite-loading',
     'components-pcombobox--required-form-field',
     'components-pcombobox--with-error',
+    'components-ptable--standard',
+    'components-ptable--loading',
+    'components-ptable--empty',
+    'components-ptable--error-state',
+    'components-ptable--interactive-rows',
     'components-pdatepicker--standard',
     'components-pdatepicker--with-presets',
     'components-pdatepicker--many-presets',

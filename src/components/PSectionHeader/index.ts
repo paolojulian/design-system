@@ -1,1 +1,5 @@
-export { default as PSectionHeader } from './PSectionHeader';
+export {
+  default as PSectionHeader,
+  type PSectionHeaderProps,
+  type PSectionHeaderVariant,
+} from './PSectionHeader';

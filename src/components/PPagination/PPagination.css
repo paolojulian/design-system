@@ -1,0 +1,231 @@
+.p-pagination {
+  --p-pagination-bg: var(--p-color-surface);
+  --p-pagination-bg-muted: var(--p-color-neutral-50);
+  --p-pagination-bg-hover: var(--p-color-surface-subtle);
+  --p-pagination-bg-active: var(--p-color-surface-inverse);
+  --p-pagination-text: var(--p-color-text);
+  --p-pagination-text-muted: var(--p-color-text-muted);
+  --p-pagination-text-active: var(--p-color-text-inverse);
+  --p-pagination-border: var(--p-color-border-strong);
+  --p-pagination-border-subtle: var(--p-color-border-subtle);
+  --p-pagination-ring: var(--p-focus-ring-color);
+  --p-pagination-radius: var(--p-radius-sm);
+  --p-pagination-height: var(--p-size-control-md);
+  --p-pagination-padding-x: var(--p-space-3);
+  --p-pagination-gap: var(--p-space-2);
+  --p-pagination-font-size: var(--p-font-size-body-sm);
+  --p-pagination-line-height: var(--p-line-height-body-sm);
+  --p-pagination-caption-size: var(--p-font-size-caption);
+  --p-pagination-caption-line-height: var(--p-line-height-caption);
+
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  gap: var(--p-space-3);
+  align-items: center;
+  width: 100%;
+  color: var(--p-pagination-text);
+  font-family: var(--p-font-family-sans);
+}
+
+.p-pagination--compact {
+  --p-pagination-height: var(--p-size-control-sm);
+  --p-pagination-padding-x: var(--p-space-2);
+  --p-pagination-gap: var(--p-space-1);
+  --p-pagination-font-size: var(--p-font-size-caption);
+  --p-pagination-line-height: var(--p-line-height-caption);
+}
+
+.p-pagination__summary {
+  min-width: 0;
+  color: var(--p-pagination-text-muted);
+  font-size: var(--p-pagination-caption-size);
+  line-height: var(--p-pagination-caption-line-height);
+}
+
+.p-pagination__controls {
+  display: inline-flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: center;
+  gap: var(--p-pagination-gap);
+}
+
+.p-pagination__pages {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--p-pagination-gap) / 2);
+  padding: calc(var(--p-space-1) / 2);
+  border: 1px solid var(--p-pagination-border-subtle);
+  border-radius: var(--p-pagination-radius);
+  background: var(--p-pagination-bg-muted);
+}
+
+.p-pagination__button {
+  display: inline-flex;
+  min-width: var(--p-pagination-height);
+  height: var(--p-pagination-height);
+  align-items: center;
+  justify-content: center;
+  gap: var(--p-space-1);
+  padding: 0 var(--p-pagination-padding-x);
+  border: 1px solid var(--p-pagination-border);
+  border-radius: var(--p-pagination-radius);
+  background: var(--p-pagination-bg);
+  color: var(--p-pagination-text);
+  font-family: var(--p-font-family-sans);
+  font-size: var(--p-pagination-font-size);
+  line-height: var(--p-pagination-line-height);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: var(--p-control-transition);
+}
+
+.p-pagination__button:hover:not(:disabled) {
+  background: var(--p-pagination-bg-hover);
+}
+
+.p-pagination__button:focus-visible {
+  outline: var(--p-focus-outline-width) solid var(--p-pagination-ring);
+  outline-offset: var(--p-focus-ring-offset);
+}
+
+.p-pagination__button:disabled {
+  cursor: not-allowed;
+  opacity: var(--p-opacity-disabled);
+}
+
+.p-pagination__button svg {
+  width: var(--p-size-icon-sm);
+  height: var(--p-size-icon-sm);
+  flex: 0 0 auto;
+}
+
+.p-pagination__page {
+  min-width: var(--p-pagination-height);
+  padding-inline: var(--p-space-2);
+  border-color: transparent;
+  background: transparent;
+}
+
+.p-pagination__page--current,
+.p-pagination__page--current:disabled {
+  border-color: var(--p-pagination-bg-active);
+  background: var(--p-pagination-bg-active);
+  color: var(--p-pagination-text-active);
+  opacity: 1;
+}
+
+.p-pagination__ellipsis,
+.p-pagination__cursor-page {
+  display: inline-flex;
+  min-width: var(--p-pagination-height);
+  height: var(--p-pagination-height);
+  align-items: center;
+  justify-content: center;
+  color: var(--p-pagination-text-muted);
+  font-size: var(--p-pagination-font-size);
+  line-height: var(--p-pagination-line-height);
+}
+
+.p-pagination__cursor-page {
+  padding-inline: var(--p-pagination-padding-x);
+  border: 1px solid var(--p-pagination-border-subtle);
+  border-radius: var(--p-pagination-radius);
+  background: var(--p-pagination-bg-muted);
+}
+
+.p-pagination__page-size {
+  display: inline-flex;
+  align-items: center;
+  justify-content: end;
+  gap: var(--p-space-2);
+  color: var(--p-pagination-text-muted);
+  font-size: var(--p-pagination-caption-size);
+  line-height: var(--p-pagination-caption-line-height);
+  white-space: nowrap;
+}
+
+.p-pagination__page-size select {
+  height: var(--p-pagination-height);
+  min-width: 4.75rem;
+  padding-inline: var(--p-space-2);
+  border: 1px solid var(--p-pagination-border);
+  border-radius: var(--p-pagination-radius);
+  background: var(--p-pagination-bg);
+  color: var(--p-pagination-text);
+  font: inherit;
+}
+
+.p-pagination__page-size select:focus-visible {
+  outline: var(--p-focus-outline-width) solid var(--p-pagination-ring);
+  outline-offset: var(--p-focus-ring-offset);
+}
+
+.p-pagination__page-size select:disabled {
+  cursor: not-allowed;
+  opacity: var(--p-opacity-disabled);
+}
+
+.p-pagination--loading .p-pagination__summary::after {
+  content: ' Updating';
+}
+
+@media (max-width: 63.99rem) {
+  .p-pagination {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .p-pagination__page-size {
+    grid-column: 1 / -1;
+    justify-content: start;
+  }
+}
+
+@media (max-width: 47.99rem) {
+  .p-pagination {
+    grid-template-columns: 1fr;
+    gap: var(--p-space-2);
+  }
+
+  .p-pagination__summary {
+    order: 1;
+  }
+
+  .p-pagination__controls {
+    order: 2;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 100%;
+  }
+
+  .p-pagination__button {
+    min-height: var(--p-size-touch-min);
+  }
+
+  .p-pagination__button--previous,
+  .p-pagination__button--next {
+    width: 100%;
+  }
+
+  .p-pagination__pages,
+  .p-pagination__cursor-page {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    justify-self: center;
+    max-width: 100%;
+  }
+
+  .p-pagination__button--previous,
+  .p-pagination__button--next {
+    grid-row: 2;
+  }
+
+  .p-pagination__pages {
+    overflow-x: auto;
+  }
+
+  .p-pagination__page-size {
+    order: 3;
+    grid-column: auto;
+  }
+}
