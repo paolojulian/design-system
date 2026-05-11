@@ -1,45 +1,43 @@
 @layer components {
-.p-section-header {
-    color: var(--p-color-text);
-    font-family: var(--p-font-family-sans);
-}
+    .p-section-header {
+        color: var(--p-color-text);
+        font-family: var(--p-font-family-sans);
+    }
 
-.p-section-header--default {
-    padding-block-start: var(--p-space-2);
-    border-block-start: 1px solid currentColor;
-}
+    .p-section-header--default {
+        padding-block-start: var(--p-space-2);
+        border-block-start: 1px solid currentColor;
+    }
 
-.p-section-header__title {
-    margin: 0;
-}
+    .p-section-header__title {
+        margin: 0;
+    }
 
-.p-section-header--indexed {
-    display: inline-grid;
-    grid-auto-flow: column;
-    grid-auto-columns: max-content;
-    align-items: baseline;
-    gap: var(--p-space-2);
-    min-width: 0;
-    color: var(--p-color-text);
-}
+    .p-section-header--indexed {
+        display: inline-grid;
+        grid-auto-flow: column;
+        grid-auto-columns: max-content;
+        align-items: baseline;
+        gap: var(--p-space-2);
+        min-width: 0;
+        color: var(--p-color-text);
+    }
 
-.p-section-header--indexed .p-section-header__mark {
-    color: var(--p-color-text-muted);
-}
+    .p-section-header--indexed .p-section-header__mark {
+        color: var(--p-color-border-subtle);
+    }
 
-.p-section-header--indexed .p-section-header__index {
-    color: var(--p-color-text);
-    font-weight: var(--p-font-weight-medium);
-}
+    .p-section-header--indexed .p-section-header__index {
+        color: var(--p-color-text);
+        font-weight: var(--p-font-weight-medium);
+    }
 
-.p-section-header--indexed .p-section-header__divider {
-    color: var(--p-color-border-subtle);
-    font-weight: var(--p-font-weight-medium);
-}
+    .p-section-header--indexed .p-section-header__divider {
+        color: var(--p-color-border-subtle);
+    }
 
-.p-section-header--indexed .p-section-header__title {
-    margin-left: var(--p-space-2);
-    font-weight: var(--p-font-weight-medium);
-}
-
+    .p-section-header--indexed .p-section-header__title {
+        color: var(--p-color-text);
+        font-weight: var(--p-font-weight-medium);
+    }
 }

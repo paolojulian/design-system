@@ -44,7 +44,7 @@ export default function PSectionHeader({
           variant="body"
           aria-hidden="true"
         >
-          /
+          |
         </PTypography>
         <PTypography as="h2" className="p-section-header__title" variant="body">
           {title}
