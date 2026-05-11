@@ -1,5 +1,6 @@
 import { CSSProperties, FC, ReactNode } from 'react';
 import cn from '../../../utils/cn';
+import './Row.css';
 
 export type RowProps = {
   children: ReactNode;
@@ -18,7 +19,7 @@ const Row: FC<RowProps> = ({
 }) => {
   return (
     <div
-      className={cn('flex flex-row', className)}
+      className={cn('p-row', className)}
       style={{
         gap,
         alignItems,

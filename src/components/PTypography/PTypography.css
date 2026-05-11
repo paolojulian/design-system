@@ -1,21 +1,21 @@
-.p-typography {
+:where(.p-typography) {
   font-family: var(--p-font-family-sans);
   font-weight: var(--p-font-weight-regular);
   letter-spacing: var(--p-letter-spacing-default);
 }
 
-.p-typography--serif {
+:where(.p-typography--serif) {
   font-family: var(--p-font-family-serif);
   font-size: var(--p-font-size-body-md);
   line-height: var(--p-line-height-body-md);
 }
 
-.p-typography--body {
+:where(.p-typography--body) {
   font-size: var(--p-font-size-body-md);
   line-height: var(--p-line-height-body-md);
 }
 
-.p-typography--body-wide {
+:where(.p-typography--body-wide) {
   font-size: var(--p-font-size-body-sm);
   font-weight: var(--p-font-weight-medium);
   letter-spacing: var(--p-letter-spacing-wide);
@@ -23,21 +23,21 @@
   text-transform: uppercase;
 }
 
-.p-typography--heading {
+:where(.p-typography--heading) {
   font-size: var(--p-font-size-heading-md);
   font-weight: var(--p-font-weight-medium);
   letter-spacing: var(--p-letter-spacing-heading);
   line-height: var(--p-line-height-heading-md);
 }
 
-.p-typography--heading-lg {
+:where(.p-typography--heading-lg) {
   font-size: var(--p-font-size-heading-lg);
   font-weight: var(--p-font-weight-medium);
   letter-spacing: var(--p-letter-spacing-heading);
   line-height: var(--p-line-height-heading-lg);
 }
 
-.p-typography--heading-xl {
+:where(.p-typography--heading-xl) {
   font-size: var(--p-font-size-heading-xl);
   font-weight: var(--p-font-weight-medium);
   letter-spacing: var(--p-letter-spacing-heading);
@@ -45,17 +45,17 @@
 }
 
 @media (min-width: 48rem) {
-  .p-typography--heading {
+  :where(.p-typography--heading) {
     font-size: var(--p-font-size-heading-md-desktop);
     line-height: var(--p-line-height-heading-md-desktop);
   }
 
-  .p-typography--heading-lg {
+  :where(.p-typography--heading-lg) {
     font-size: var(--p-font-size-display-md);
     line-height: var(--p-line-height-display-md);
   }
 
-  .p-typography--heading-xl {
+  :where(.p-typography--heading-xl) {
     font-size: var(--p-font-size-display-sm);
     line-height: var(--p-line-height-display-sm);
   }

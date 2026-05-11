@@ -1,5 +1,6 @@
 import { CSSProperties, FC, ReactNode } from 'react';
 import cn from '../../../utils/cn';
+import './Stack.css';
 
 export type StackProps = {
   children: ReactNode;
@@ -18,7 +19,7 @@ const Stack: FC<StackProps> = ({
 }) => {
   return (
     <div
-      className={cn('flex flex-col', className)}
+      className={cn('p-stack', className)}
       style={{
         gap,
         alignItems,
