@@ -39,6 +39,17 @@ export const Body: Story = {
   },
 };
 
+export const BodyMedium: Story = {
+  name: 'Body Medium',
+  args: {
+    variant: 'body-medium',
+    children: `Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+               Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+               Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris 
+               nisi ut aliquip ex ea commodo consequat.`,
+  },
+};
+
 export const BodyWide: Story = {
   name: 'Body Wide',
   args: {

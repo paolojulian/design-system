@@ -15,6 +15,12 @@
   line-height: var(--p-line-height-body-md);
 }
 
+:where(.p-typography--body-medium) {
+  font-size: var(--p-font-size-body-md);
+  font-weight: var(--p-font-weight-medium);
+  line-height: var(--p-line-height-body-md);
+}
+
 :where(.p-typography--body-wide) {
   font-size: var(--p-font-size-body-sm);
   font-weight: var(--p-font-weight-medium);

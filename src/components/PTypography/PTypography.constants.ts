@@ -3,6 +3,7 @@ import { cva } from 'class-variance-authority';
 type FontVariants =
   | 'serif'
   | 'body'
+  | 'body-medium'
   | 'body-wide'
   | 'heading'
   | 'heading-lg'
@@ -11,6 +12,7 @@ type FontVariants =
 const fontVariantsMap = {
   serif: 'p-typography--serif',
   body: 'p-typography--body',
+  'body-medium': 'p-typography--body-medium',
   'body-wide': 'p-typography--body-wide',
   heading: 'p-typography--heading',
   'heading-lg': 'p-typography--heading-lg',
