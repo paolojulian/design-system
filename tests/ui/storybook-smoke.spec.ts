@@ -59,6 +59,9 @@ test.describe('Storybook smoke tests', () => {
       'true',
     );
 
+    await gotoStory(page, 'components-pbutton--pinging');
+    await expect(page.getByRole('button', { name: 'Review now' })).toHaveClass(/p-button--pinging/);
+
     await gotoStory(page, 'components-pbutton--link');
     await expect(page.getByRole('link', { name: 'Open details' })).toBeVisible();
   });
@@ -73,6 +76,9 @@ test.describe('Storybook smoke tests', () => {
     await gotoStory(page, 'components-pbadge--with-icon');
     await expect(page.getByText('Online')).toBeVisible();
     await expect(page.locator('.p-badge__icon')).toHaveCount(1);
+
+    await gotoStory(page, 'components-pbadge--pinging');
+    await expect(page.locator('.p-badge', { hasText: 'Live' })).toHaveClass(/p-badge--pinging/);
 
     await gotoStory(page, 'components-pbadge--truncated');
     const truncatedBadge = page.locator('.p-badge').first();
@@ -232,7 +238,15 @@ test.describe('Storybook smoke tests', () => {
     await gotoStory(page, 'components-ptable--standard');
     await expect(page.locator('.p-table__viewport')).toBeVisible();
     await expect(page.locator('.p-table__mobile-list')).toBeHidden();
-    await expect(page.locator('.p-table__head-cell', { hasText: 'Risk' })).toBeHidden();
+    await expect(page.getByRole('columnheader', { name: 'Risk' })).toBeAttached();
+    const tabletViewportBox = await page.locator('.p-table__viewport').boundingBox();
+    const tabletTableBox = await page.locator('.p-table__table').boundingBox();
+    expect(tabletTableBox?.width).toBeGreaterThan(tabletViewportBox?.width ?? 0);
+    await expect(page.locator('.p-table__scroll-shadow')).toHaveCount(0);
+    const documentWidth = await page.evaluate(() =>
+      Math.max(document.documentElement.scrollWidth, document.body.scrollWidth),
+    );
+    expect(documentWidth).toBeLessThanOrEqual(768);
     const tabletAccountHeaderBox = await page.getByRole('columnheader', { name: 'Account' }).boundingBox();
     const tabletAccountCellBox = await page.getByRole('cell', { name: 'Acme Industrial' }).boundingBox();
     expect(Math.abs((tabletAccountHeaderBox?.x ?? 0) - (tabletAccountCellBox?.x ?? 0))).toBeLessThanOrEqual(1);
@@ -274,6 +288,7 @@ test.describe('Storybook smoke tests', () => {
       'aria-current',
       'page',
     );
+    await expect(page.getByRole('combobox', { name: 'Rows per page' })).toBeVisible();
     await page.getByRole('button', { name: 'Go to next page' }).click();
     await expect(page.getByText('Showing 121-140 of 476 records')).toBeVisible();
     await page.getByRole('combobox', { name: 'Rows per page' }).selectOption('50');
@@ -285,6 +300,9 @@ test.describe('Storybook smoke tests', () => {
     const previousButton = await page.getByRole('button', { name: 'Go to previous page' }).boundingBox();
     expect(paginationControls?.width).toBeLessThanOrEqual(390);
     expect(previousButton?.height).toBeGreaterThanOrEqual(44);
+
+    await gotoStory(page, 'components-ppagination--without-rows-per-page');
+    await expect(page.getByRole('combobox', { name: 'Rows per page' })).toHaveCount(0);
 
     await page.setViewportSize({ width: 1024, height: 768 });
     await gotoStory(page, 'components-pcardgrid--four-cards');
@@ -530,11 +548,13 @@ test.describe('Storybook accessibility checks', () => {
     'components-pbadge--variants',
     'components-pbadge--appearances',
     'components-pbadge--with-icon',
+    'components-pbadge--pinging',
     'components-pbutton--primary',
     'components-pbutton--secondary',
     'components-pbutton--danger',
     'components-pbutton--loading',
     'components-pbutton--active',
+    'components-pbutton--pinging',
     'components-pbutton--mobile',
     'components-psectionheader--default',
     'components-psectionheader--indexed',

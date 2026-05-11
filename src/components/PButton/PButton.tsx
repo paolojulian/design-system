@@ -19,6 +19,7 @@ type PButtonBaseProps = {
   fullWidth?: boolean;
   isActive?: boolean;
   isLoading?: boolean;
+  isPinging?: boolean;
   leftIcon?: ReactNode;
   rightIcon?: ReactNode;
   children: ReactNode;
@@ -49,6 +50,7 @@ export const PButton = forwardRef<PButtonRef, PButtonProps>(
       fullWidth = false,
       isActive = false,
       isLoading = false,
+      isPinging = false,
       leftIcon,
       rightIcon,
       children,
@@ -64,6 +66,7 @@ export const PButton = forwardRef<PButtonRef, PButtonProps>(
       `p-button--${size}`,
       fullWidth && 'p-button--full-width',
       isActive && 'p-button--active',
+      isPinging && 'p-button--pinging',
       className,
     );
     const content = (

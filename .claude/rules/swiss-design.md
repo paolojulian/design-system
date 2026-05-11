@@ -58,7 +58,38 @@ Anti-patterns:
 
 ---
 
-## 3. Grid And Alignment
+## 3. Cohesion Contract
+
+Every new or modified component must look like it belongs to the same system as the existing components. Before adding a visual treatment, compare against nearby primitives such as `PCard`, `PButton`, `PTextInput`, `PBadge`, `PTable`, and `PPagination`.
+
+Default component surfaces should share the same neutral language:
+
+- Use `--p-color-surface` or an established surface token for component backgrounds.
+- Use `--p-color-border` for normal component borders, matching `PCard` and default controls.
+- Reserve `--p-color-border-strong` for intentional emphasis, not default outlines.
+- Use `--p-radius-sm` for framed controls and cards unless a component already has a named radius token.
+- Use the shared focus ring tokens for focus-visible states.
+- Use `--p-control-*` tokens for form-like controls before inventing component-specific values.
+
+Controls that sit together should be designed as a group, not as unrelated pieces:
+
+- Segmented controls, pagination, grouped cards, toolbars, and table action groups should share border weight, radius, spacing, and active-state treatment.
+- If adjacent elements touch, decide explicitly whether they share a single divider, separate borders, or a gap. Do not leave doubled borders or accidental gray backgrounds unless the component contract calls for them.
+- Active/selected states should use semantic action tokens consistently; passive controls should stay neutral.
+- Helper text, captions, summaries, and table metadata should use the same muted text and margin rhythm.
+
+When changing one component token that affects shared language, audit sibling components that use the same role. For example, changing table borders should be checked against cards, inputs, comboboxes, date pickers, and pagination.
+
+Anti-patterns:
+
+- A component using darker borders than cards/inputs without a state or hierarchy reason.
+- A new gray panel, shadow, fade, or decorative background that does not exist elsewhere in the system.
+- One component inventing unique spacing, radius, icon sizing, or active color while adjacent components already have a pattern.
+- Fixing mobile/tablet by squeezing content instead of choosing a responsive pattern.
+
+---
+
+## 4. Grid And Alignment
 
 Layouts must feel engineered, not arranged by eye.
 
@@ -78,7 +109,7 @@ Challenge any layout where:
 
 ---
 
-## 4. Typography
+## 5. Typography
 
 Typography carries most of the design.
 
@@ -99,7 +130,7 @@ Anti-patterns:
 
 ---
 
-## 5. Color And Contrast
+## 6. Color And Contrast
 
 Swiss design does not mean colorless. It means color is controlled and meaningful.
 
@@ -119,7 +150,7 @@ Challenge any screen or component where:
 
 ---
 
-## 6. Component Behavior
+## 7. Component Behavior
 
 Components must be quiet, precise, and complete.
 
@@ -152,7 +183,7 @@ Anti-patterns:
 
 ---
 
-## 7. Mobile And Touch
+## 8. Mobile And Touch
 
 Mobile is a separate layout problem, not a smaller desktop.
 
@@ -172,7 +203,7 @@ Challenge any mobile implementation where:
 
 ---
 
-## 8. Enterprise Usage
+## 9. Enterprise Usage
 
 Enterprise UI should be calm, dense enough for work, and fast to scan.
 
@@ -191,7 +222,7 @@ Anti-patterns:
 
 ---
 
-## 9. Storybook And Documentation
+## 10. Storybook And Documentation
 
 Storybook is part of the design system contract.
 
@@ -218,7 +249,7 @@ Required stories where applicable:
 
 ---
 
-## 10. Challenger Review Checklist
+## 11. Challenger Review Checklist
 
 Before finishing a design-system change, challenge it with these questions:
 
@@ -231,4 +262,3 @@ Before finishing a design-system change, challenge it with these questions:
 - What decorative element can be removed without reducing usability?
 
 If the answer is unclear, tighten the implementation before shipping.
-

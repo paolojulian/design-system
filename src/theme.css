@@ -178,9 +178,9 @@
   --p-control-bg-readonly: var(--p-color-surface-subtle);
   --p-control-text: var(--p-color-text);
   --p-control-text-muted: var(--p-color-text-muted);
-  --p-control-border: var(--p-color-border-strong);
-  --p-control-border-hover: var(--p-color-border-strong);
-  --p-control-border-focus: var(--p-color-border-strong);
+  --p-control-border: var(--p-color-border);
+  --p-control-border-hover: var(--p-color-border);
+  --p-control-border-focus: var(--p-color-border);
   --p-control-border-error: var(--p-color-danger);
   --p-control-ring: var(--p-focus-ring-color);
   --p-control-radius: var(--p-radius-sm);

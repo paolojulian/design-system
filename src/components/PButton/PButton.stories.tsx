@@ -65,6 +65,9 @@ const meta: Meta<typeof PButton> = {
     isLoading: {
       description: 'Shows a spinner and disables interaction while preserving the label.',
     },
+    isPinging: {
+      description: 'Adds a border ping animation for attention-seeking actions.',
+    },
     href: {
       description: 'When provided, renders the component as an anchor with button styling.',
     },
@@ -137,6 +140,15 @@ export const Active: Story = {
   args: {
     isActive: true,
     children: 'Current view',
+  },
+};
+
+export const Pinging: Story = {
+  name: 'Pinging',
+  args: {
+    variant: 'secondary',
+    isPinging: true,
+    children: 'Review now',
   },
 };
 

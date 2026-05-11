@@ -1,12 +1,12 @@
 import {
   forwardRef,
   type ButtonHTMLAttributes,
-  type ChangeEvent,
   type HTMLAttributes,
   type ReactNode,
 } from 'react';
 import { ChevronLeftIcon, ChevronRightIcon } from '../../icons';
 import cn from '../../utils/cn';
+import { PSelect } from '../PSelect';
 import './PPagination.css';
 
 export type PPaginationRef = HTMLElement;
@@ -27,6 +27,7 @@ export type PPaginationProps = {
   isLoading?: boolean;
   hasPreviousPage?: boolean;
   hasNextPage?: boolean;
+  showRowsPerPage?: boolean;
   onPageChange?: (page: number) => void;
   onPageSizeChange?: (pageSize: number) => void;
   className?: string;
@@ -49,7 +50,12 @@ function getRange(start: number, end: number) {
   return Array.from({ length: end - start + 1 }, (_, index) => start + index);
 }
 
-function getPaginationItems(page: number, pageCount: number, siblingCount: number, boundaryCount: number) {
+function getPaginationItems(
+  page: number,
+  pageCount: number,
+  siblingCount: number,
+  boundaryCount: number,
+): PPaginationItem[] {
   const normalizedPageCount = Math.max(1, pageCount);
   const normalizedPage = clampPage(page, normalizedPageCount);
   const normalizedSiblingCount = Math.max(0, Math.trunc(siblingCount));
@@ -60,32 +66,30 @@ function getPaginationItems(page: number, pageCount: number, siblingCount: numbe
     return getRange(1, normalizedPageCount);
   }
 
-  const leftSibling = Math.max(normalizedPage - normalizedSiblingCount, normalizedBoundaryCount + 2);
-  const rightSibling = Math.min(
-    normalizedPage + normalizedSiblingCount,
-    normalizedPageCount - normalizedBoundaryCount - 1,
-  );
+  const edgeWindowCount = totalVisible - normalizedBoundaryCount - 1;
   const startPages = getRange(1, normalizedBoundaryCount);
   const endPages = getRange(normalizedPageCount - normalizedBoundaryCount + 1, normalizedPageCount);
-  const items: PPaginationItem[] = [...startPages];
+  const startWindowEnd = edgeWindowCount;
+  const endWindowStart = normalizedPageCount - edgeWindowCount + 1;
 
-  if (leftSibling > normalizedBoundaryCount + 2) {
-    items.push('ellipsis');
-  } else {
-    items.push(...getRange(normalizedBoundaryCount + 1, leftSibling - 1));
+  if (normalizedPage <= startWindowEnd - normalizedSiblingCount) {
+    return [...getRange(1, startWindowEnd), 'ellipsis' as const, ...endPages];
   }
 
-  items.push(...getRange(leftSibling, rightSibling));
-
-  if (rightSibling < normalizedPageCount - normalizedBoundaryCount - 1) {
-    items.push('ellipsis');
-  } else {
-    items.push(...getRange(rightSibling + 1, normalizedPageCount - normalizedBoundaryCount));
+  if (normalizedPage >= endWindowStart + normalizedSiblingCount) {
+    return [...startPages, 'ellipsis' as const, ...getRange(endWindowStart, normalizedPageCount)];
   }
 
-  items.push(...endPages);
+  const middleStart = normalizedPage - normalizedSiblingCount;
+  const middleEnd = normalizedPage + normalizedSiblingCount;
 
-  return items;
+  return [
+    ...startPages,
+    'ellipsis' as const,
+    ...getRange(middleStart, middleEnd),
+    'ellipsis' as const,
+    ...endPages,
+  ];
 }
 
 function getDefaultSummary(
@@ -141,6 +145,7 @@ export const PPagination = forwardRef<PPaginationRef, PPaginationProps>(
       isLoading = false,
       hasPreviousPage,
       hasNextPage,
+      showRowsPerPage = true,
       onPageChange,
       onPageSizeChange,
       className,
@@ -158,7 +163,9 @@ export const PPagination = forwardRef<PPaginationRef, PPaginationProps>(
     const pageItems = normalizedPageCount
       ? getPaginationItems(currentPage, normalizedPageCount, siblingCount, boundaryCount)
       : [];
-    const shouldShowPageSize = Boolean(pageSize && pageSizeOptions?.length && onPageSizeChange);
+    const shouldShowRowsPerPage = Boolean(
+      showRowsPerPage && pageSize && pageSizeOptions?.length && onPageSizeChange,
+    );
     const summaryText =
       summary ?? getDefaultSummary(currentPage, normalizedPageCount, totalItems, pageSize, itemLabel);
 
@@ -174,12 +181,6 @@ export const PPagination = forwardRef<PPaginationRef, PPaginationProps>(
       }
 
       onPageChange?.(clampedNextPage);
-    };
-
-    const handlePageSizeChange = (event: ChangeEvent<HTMLSelectElement>) => {
-      const { value: nextPageSize } = event.currentTarget as unknown as { value: string };
-
-      onPageSizeChange?.(Number(nextPageSize));
     };
 
     return (
@@ -248,22 +249,19 @@ export const PPagination = forwardRef<PPaginationRef, PPaginationProps>(
           </PaginationButton>
         </div>
 
-        {shouldShowPageSize ? (
-          <label className="p-pagination__page-size">
-            <span>Rows</span>
-            <select
-              value={pageSize}
-              disabled={isUnavailable}
-              aria-label="Rows per page"
-              onChange={handlePageSizeChange}
-            >
-              {pageSizeOptions?.map((option) => (
-                <option key={option} value={option}>
-                  {option}
-                </option>
-              ))}
-            </select>
-          </label>
+        {shouldShowRowsPerPage ? (
+          <PSelect
+            className="p-pagination__page-size"
+            label="Rows per page"
+            placeholder=""
+            density="compact"
+            variant="inline"
+            hideLabel
+            value={pageSize}
+            disabled={isUnavailable}
+            options={pageSizeOptions?.map((option) => ({ value: option, label: `${option} / page` })) ?? []}
+            onValueChange={(nextPageSize) => onPageSizeChange?.(Number(nextPageSize))}
+          />
         ) : null}
       </nav>
     );

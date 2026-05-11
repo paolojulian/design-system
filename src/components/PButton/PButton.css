@@ -4,6 +4,8 @@
   --p-button-bg-active: var(--p-color-action-primary-hover);
   --p-button-border: var(--p-color-action-primary);
   --p-button-border-hover: var(--p-color-action-primary-hover);
+  --p-button-ping-shadow: #f59e0b4d;
+  --p-button-ping-shadow-transparent: #f59e0b00;
   --p-button-text: var(--p-color-text-inverse);
   --p-button-ring: var(--p-focus-ring-color);
   --p-button-radius: var(--p-radius-sm);
@@ -55,6 +57,16 @@
 
 .p-button:active {
   background: var(--p-button-bg-active);
+}
+
+.p-button--pinging::after {
+  position: absolute;
+  inset: calc(var(--p-button-border-width) * -1);
+  border-radius: inherit;
+  animation: p-button-ping 1.4s cubic-bezier(0, 0, 0.2, 1) infinite;
+  box-shadow: 0 0 var(--p-button-ping-shadow);
+  content: '';
+  pointer-events: none;
 }
 
 .p-button--active {
@@ -190,6 +202,10 @@
   .p-button__spinner {
     animation-duration: 1.2s;
   }
+
+  .p-button--pinging::after {
+    animation-duration: 2.4s;
+  }
 }
 
 @media (max-width: 40rem) {
@@ -214,5 +230,16 @@
 @keyframes p-button-spin {
   to {
     transform: rotate(360deg);
+  }
+}
+
+@keyframes p-button-ping {
+  0%,
+  100% {
+    box-shadow: 0 0 var(--p-button-ping-shadow);
+  }
+
+  50% {
+    box-shadow: 0 0 0 6px var(--p-button-ping-shadow-transparent);
   }
 }

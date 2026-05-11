@@ -39,6 +39,9 @@ const meta = {
     hasNextPage: {
       description: 'Overrides next availability for cursor-based APIs.',
     },
+    showRowsPerPage: {
+      description: 'Controls whether the rows-per-page select is shown when page-size props are available.',
+    },
     density: {
       control: 'select',
       options: ['standard', 'compact'],
@@ -121,6 +124,18 @@ export const Loading: Story = {
     totalItems: 476,
     pageSize: 20,
     pageSizeOptions: [10, 20, 50, 100],
+  },
+};
+
+export const WithoutRowsPerPage: Story = {
+  name: 'Without Rows Per Page',
+  args: {
+    page: 6,
+    pageCount: 24,
+    totalItems: 476,
+    pageSize: 20,
+    pageSizeOptions: [10, 20, 50, 100],
+    showRowsPerPage: false,
   },
 };
 

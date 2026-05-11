@@ -5,7 +5,7 @@
   --p-table-text: var(--p-color-text);
   --p-table-text-muted: var(--p-color-text-muted);
   --p-table-border: var(--p-color-border-subtle);
-  --p-table-border-strong: var(--p-color-border-strong);
+  --p-table-border-strong: var(--p-color-border);
   --p-table-accent: var(--p-color-action-primary);
   --p-table-radius: var(--p-radius-sm);
   --p-table-cell-padding-x: var(--p-space-4);
@@ -17,8 +17,11 @@
   --p-table-caption-line-height: var(--p-line-height-body-md);
   --p-table-shadow: var(--p-shadow-sm);
   --p-table-actions-width: 14rem;
+  --p-table-min-width: 72rem;
 
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
   color: var(--p-table-text);
   font-family: var(--p-font-family-sans);
 }
@@ -80,10 +83,13 @@
 .p-table__viewport {
   position: relative;
   overflow: auto;
+  width: 100%;
+  max-width: 100%;
   border: 1px solid var(--p-table-border-strong);
   border-radius: var(--p-table-radius);
   background: var(--p-table-bg);
   box-shadow: var(--p-table-shadow);
+  overscroll-behavior-inline: contain;
 }
 
 .p-table__viewport::before {
@@ -98,7 +104,7 @@
 
 .p-table__table {
   width: 100%;
-  min-width: 48rem;
+  min-width: var(--p-table-min-width);
   border-collapse: separate;
   border-spacing: 0;
   table-layout: fixed;
@@ -297,7 +303,7 @@
 }
 
 .p-table__actions-cell > * {
-  width: 100%;
+  min-width: 6.5rem;
   max-width: 100%;
 }
 
@@ -358,7 +364,7 @@
 
 @media (max-width: 63.99rem) {
   .p-table__table {
-    min-width: 48rem;
+    min-width: var(--p-table-min-width);
   }
 
   .p-table__col--hide-tablet {

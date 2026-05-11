@@ -1,5 +1,5 @@
-import { type Meta, type StoryObj } from '@storybook/react';
-import { PBadge } from '.';
+import { type Meta, type StoryObj } from "@storybook/react";
+import { PBadge } from ".";
 
 function DotIcon() {
   return (
@@ -10,42 +10,46 @@ function DotIcon() {
 }
 
 const meta: Meta<typeof PBadge> = {
-  title: 'Components/PBadge',
+  title: "Components/PBadge",
   component: PBadge,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   parameters: {
-    layout: 'centered',
+    layout: "centered",
   },
   args: {
-    children: 'Active',
-    variant: 'neutral',
-    size: 'sm',
-    appearance: 'subtle',
+    children: "Active",
+    variant: "neutral",
+    size: "sm",
+    appearance: "subtle",
   },
   argTypes: {
     as: {
-      description: 'Rendered element. Defaults to span for inline status text.',
+      description: "Rendered element. Defaults to span for inline status text.",
     },
     variant: {
-      control: 'select',
-      options: ['primary', 'danger', 'warning', 'success', 'info', 'neutral'],
-      description: 'Semantic status color.',
+      control: "select",
+      options: ["primary", "danger", "warning", "success", "info", "neutral"],
+      description: "Semantic status color.",
     },
     size: {
-      control: 'select',
-      options: ['sm', 'md'],
-      description: 'Badge density.',
+      control: "select",
+      options: ["sm", "md"],
+      description: "Badge density.",
     },
     appearance: {
-      control: 'select',
-      options: ['subtle', 'solid', 'outline'],
-      description: 'Visual treatment for the badge.',
+      control: "select",
+      options: ["subtle", "solid", "outline"],
+      description: "Visual treatment for the badge.",
+    },
+    isPinging: {
+      description:
+        "Adds a border ping animation for live or attention-seeking status.",
     },
     leftIcon: {
-      description: 'Decorative icon rendered before the label.',
+      description: "Decorative icon rendered before the label.",
     },
     rightIcon: {
-      description: 'Decorative icon rendered after the label.',
+      description: "Decorative icon rendered after the label.",
     },
   },
 };
@@ -53,13 +57,13 @@ const meta: Meta<typeof PBadge> = {
 type Story = StoryObj<typeof PBadge>;
 
 export const Default: Story = {
-  name: 'Default',
+  name: "Default",
 };
 
 export const Variants: Story = {
-  name: 'Variants',
+  name: "Variants",
   render: () => (
-    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
+    <div style={{ display: "flex", flexWrap: "wrap", gap: "0.75rem" }}>
       <PBadge variant="primary">Primary</PBadge>
       <PBadge variant="success">Approved</PBadge>
       <PBadge variant="warning">Pending</PBadge>
@@ -71,9 +75,9 @@ export const Variants: Story = {
 };
 
 export const Appearances: Story = {
-  name: 'Appearances',
+  name: "Appearances",
   render: () => (
-    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
+    <div style={{ display: "flex", flexWrap: "wrap", gap: "0.75rem" }}>
       <PBadge variant="success" appearance="subtle">
         Subtle
       </PBadge>
@@ -88,9 +92,9 @@ export const Appearances: Story = {
 };
 
 export const Sizes: Story = {
-  name: 'Sizes',
+  name: "Sizes",
   render: () => (
-    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+    <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
       <PBadge size="sm">Small</PBadge>
       <PBadge size="md">Medium</PBadge>
     </div>
@@ -98,16 +102,26 @@ export const Sizes: Story = {
 };
 
 export const WithIcon: Story = {
-  name: 'With Icon',
+  name: "With Icon",
   args: {
-    variant: 'success',
+    variant: "success",
     leftIcon: <DotIcon />,
-    children: 'Online',
+    children: "Online",
+  },
+};
+
+export const Pinging: Story = {
+  name: "Pinging",
+  args: {
+    variant: "success",
+    leftIcon: <DotIcon />,
+    isPinging: true,
+    children: "Live",
   },
 };
 
 export const Truncated: Story = {
-  name: 'Truncated',
+  name: "Truncated",
   decorators: [
     (Story) => (
       <div style={{ width: 120 }}>
@@ -116,9 +130,9 @@ export const Truncated: Story = {
     ),
   ],
   args: {
-    variant: 'info',
-    children: 'Long status label',
-    style: { width: '100%' },
+    variant: "info",
+    children: "Long status label",
+    style: { width: "100%" },
   },
 };
 

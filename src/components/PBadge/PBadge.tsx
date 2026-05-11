@@ -17,6 +17,7 @@ export type PBadgeProps = {
   variant?: PBadgeVariant;
   size?: PBadgeSize;
   appearance?: PBadgeAppearance;
+  isPinging?: boolean;
   leftIcon?: ReactNode;
   rightIcon?: ReactNode;
   children: ReactNode;
@@ -30,6 +31,7 @@ export const PBadge = forwardRef<PBadgeRef, PBadgeProps>(
       variant = 'neutral',
       size = 'sm',
       appearance = 'subtle',
+      isPinging = false,
       leftIcon,
       rightIcon,
       children,
@@ -46,6 +48,7 @@ export const PBadge = forwardRef<PBadgeRef, PBadgeProps>(
         `p-badge--${variant}`,
         `p-badge--${size}`,
         `p-badge--${appearance}`,
+        isPinging && 'p-badge--pinging',
         className,
       )}
     >

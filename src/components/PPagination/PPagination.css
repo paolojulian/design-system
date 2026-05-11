@@ -1,18 +1,18 @@
 .p-pagination {
   --p-pagination-bg: var(--p-color-surface);
-  --p-pagination-bg-muted: var(--p-color-neutral-50);
+  --p-pagination-bg-muted: var(--p-color-surface-subtle);
   --p-pagination-bg-hover: var(--p-color-surface-subtle);
-  --p-pagination-bg-active: var(--p-color-surface-inverse);
+  --p-pagination-bg-active: var(--p-color-action-primary);
   --p-pagination-text: var(--p-color-text);
   --p-pagination-text-muted: var(--p-color-text-muted);
   --p-pagination-text-active: var(--p-color-text-inverse);
-  --p-pagination-border: var(--p-color-border-strong);
+  --p-pagination-border: var(--p-color-border);
   --p-pagination-border-subtle: var(--p-color-border-subtle);
   --p-pagination-ring: var(--p-focus-ring-color);
   --p-pagination-radius: var(--p-radius-sm);
   --p-pagination-height: var(--p-size-control-md);
   --p-pagination-padding-x: var(--p-space-3);
-  --p-pagination-gap: var(--p-space-2);
+  --p-pagination-gap: 0;
   --p-pagination-font-size: var(--p-font-size-body-sm);
   --p-pagination-line-height: var(--p-line-height-body-sm);
   --p-pagination-caption-size: var(--p-font-size-caption);
@@ -20,7 +20,7 @@
 
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto auto;
-  gap: var(--p-space-3);
+  gap: var(--p-space-4);
   align-items: center;
   width: 100%;
   color: var(--p-pagination-text);
@@ -47,17 +47,21 @@
   min-width: 0;
   align-items: center;
   justify-content: center;
-  gap: var(--p-pagination-gap);
+  gap: 0;
+  overflow: hidden;
+  border: 1px solid var(--p-pagination-border);
+  border-radius: var(--p-pagination-radius);
+  background: var(--p-pagination-bg);
 }
 
 .p-pagination__pages {
-  display: inline-flex;
+  display: inline-grid;
+  grid-auto-columns: var(--p-pagination-height);
+  grid-auto-flow: column;
   align-items: center;
-  gap: calc(var(--p-pagination-gap) / 2);
-  padding: calc(var(--p-space-1) / 2);
-  border: 1px solid var(--p-pagination-border-subtle);
-  border-radius: var(--p-pagination-radius);
-  background: var(--p-pagination-bg-muted);
+  gap: 0;
+  border-inline: 1px solid var(--p-pagination-border);
+  background: var(--p-pagination-bg);
 }
 
 .p-pagination__button {
@@ -68,8 +72,8 @@
   justify-content: center;
   gap: var(--p-space-1);
   padding: 0 var(--p-pagination-padding-x);
-  border: 1px solid var(--p-pagination-border);
-  border-radius: var(--p-pagination-radius);
+  border: 0;
+  border-radius: 0;
   background: var(--p-pagination-bg);
   color: var(--p-pagination-text);
   font-family: var(--p-font-family-sans);
@@ -85,8 +89,10 @@
 }
 
 .p-pagination__button:focus-visible {
+  position: relative;
+  z-index: 1;
   outline: var(--p-focus-outline-width) solid var(--p-pagination-ring);
-  outline-offset: var(--p-focus-ring-offset);
+  outline-offset: calc(var(--p-focus-ring-offset) * -1);
 }
 
 .p-pagination__button:disabled {
@@ -101,18 +107,23 @@
 }
 
 .p-pagination__page {
-  min-width: var(--p-pagination-height);
-  padding-inline: var(--p-space-2);
-  border-color: transparent;
+  width: 100%;
+  min-width: 0;
+  padding-inline: 0;
   background: transparent;
+}
+
+.p-pagination__button--previous,
+.p-pagination__button--next {
+  min-width: 6.25rem;
 }
 
 .p-pagination__page--current,
 .p-pagination__page--current:disabled {
-  border-color: var(--p-pagination-bg-active);
   background: var(--p-pagination-bg-active);
   color: var(--p-pagination-text-active);
   opacity: 1;
+  cursor: default;
 }
 
 .p-pagination__ellipsis,
@@ -129,41 +140,38 @@
 
 .p-pagination__cursor-page {
   padding-inline: var(--p-pagination-padding-x);
-  border: 1px solid var(--p-pagination-border-subtle);
-  border-radius: var(--p-pagination-radius);
-  background: var(--p-pagination-bg-muted);
+  border-inline: 1px solid var(--p-pagination-border);
+  background: var(--p-pagination-bg);
 }
 
 .p-pagination__page-size {
-  display: inline-flex;
-  align-items: center;
-  justify-content: end;
-  gap: var(--p-space-2);
+  justify-self: end;
+  width: auto;
+  color: var(--p-pagination-text-muted);
+  --p-select-min-height: var(--p-pagination-height);
+  --p-select-text: var(--p-pagination-text-muted);
+  --p-select-text-muted: var(--p-pagination-text-muted);
+  --p-select-ring: var(--p-pagination-ring);
+}
+
+.p-pagination__page-size .p-select__field {
+  justify-content: flex-end;
+  min-height: var(--p-pagination-height);
+  padding-inline: var(--p-space-2);
+}
+
+.p-pagination__page-size .p-select__control {
   color: var(--p-pagination-text-muted);
   font-size: var(--p-pagination-caption-size);
   line-height: var(--p-pagination-caption-line-height);
-  white-space: nowrap;
 }
 
-.p-pagination__page-size select {
-  height: var(--p-pagination-height);
-  min-width: 4.75rem;
-  padding-inline: var(--p-space-2);
-  border: 1px solid var(--p-pagination-border);
-  border-radius: var(--p-pagination-radius);
-  background: var(--p-pagination-bg);
+.p-pagination__page-size .p-select__control:hover {
   color: var(--p-pagination-text);
-  font: inherit;
 }
 
-.p-pagination__page-size select:focus-visible {
-  outline: var(--p-focus-outline-width) solid var(--p-pagination-ring);
-  outline-offset: var(--p-focus-ring-offset);
-}
-
-.p-pagination__page-size select:disabled {
-  cursor: not-allowed;
-  opacity: var(--p-opacity-disabled);
+.p-pagination__page-size .p-select__chevron {
+  color: currentColor;
 }
 
 .p-pagination--loading .p-pagination__summary::after {
@@ -173,11 +181,13 @@
 @media (max-width: 63.99rem) {
   .p-pagination {
     grid-template-columns: minmax(0, 1fr) auto;
+    gap: var(--p-space-2) var(--p-space-3);
   }
 
   .p-pagination__page-size {
     grid-column: 1 / -1;
-    justify-content: start;
+    justify-self: end;
+    width: auto;
   }
 }
 
@@ -196,15 +206,22 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     width: 100%;
+    overflow: visible;
+    border: 0;
+    background: transparent;
+    gap: var(--p-space-2);
   }
 
   .p-pagination__button {
     min-height: var(--p-size-touch-min);
+    border: 1px solid var(--p-pagination-border);
+    border-radius: var(--p-pagination-radius);
   }
 
   .p-pagination__button--previous,
   .p-pagination__button--next {
     width: 100%;
+    min-width: 0;
   }
 
   .p-pagination__pages,
@@ -213,6 +230,8 @@
     grid-row: 1;
     justify-self: center;
     max-width: 100%;
+    border: 1px solid var(--p-pagination-border);
+    border-radius: var(--p-pagination-radius);
   }
 
   .p-pagination__button--previous,
@@ -227,5 +246,11 @@
   .p-pagination__page-size {
     order: 3;
     grid-column: auto;
+    justify-self: start;
+    width: auto;
+  }
+
+  .p-pagination__page-size .p-select__field {
+    padding-inline: 0 var(--p-space-2);
   }
 }
