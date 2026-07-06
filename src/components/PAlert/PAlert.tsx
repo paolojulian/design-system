@@ -1,15 +1,10 @@
 import { forwardRef, type HTMLAttributes, type ReactNode } from 'react';
 import './PAlert.css';
 import cn from '../../utils/cn';
-import {
-  CheckCircleIcon,
-  CloseIcon,
-  ExclamationCircleIcon,
-  InfoCircleIcon,
-  WarningTriangleIcon,
-} from '../../icons';
+import { CloseIcon } from '../../icons';
+import { FEEDBACK_ICONS, FEEDBACK_ROLE, type FeedbackVariant } from '../feedback/statusIcons';
 
-export type PAlertVariant = 'info' | 'success' | 'warning' | 'danger';
+export type PAlertVariant = FeedbackVariant;
 
 export type PAlertAction = {
   /** Visible label for the action control. Doubles as its accessible name. */
@@ -44,20 +39,6 @@ export type PAlertProps = {
   className?: string;
 } & Omit<HTMLAttributes<HTMLDivElement>, 'className' | 'title' | 'role' | 'children'>;
 
-const VARIANT_ICON: Record<PAlertVariant, ReactNode> = {
-  info: <InfoCircleIcon />,
-  success: <CheckCircleIcon />,
-  warning: <WarningTriangleIcon />,
-  danger: <ExclamationCircleIcon />,
-};
-
-const DEFAULT_ROLE: Record<PAlertVariant, 'alert' | 'status'> = {
-  info: 'status',
-  success: 'status',
-  warning: 'alert',
-  danger: 'alert',
-};
-
 export const PAlert = forwardRef<PAlertRef, PAlertProps>(
   (
     {
@@ -74,7 +55,7 @@ export const PAlert = forwardRef<PAlertRef, PAlertProps>(
     },
     ref,
   ) => {
-    const resolvedRole = role ?? DEFAULT_ROLE[variant];
+    const resolvedRole = role ?? FEEDBACK_ROLE[variant];
 
     return (
       <div
@@ -84,7 +65,7 @@ export const PAlert = forwardRef<PAlertRef, PAlertProps>(
         className={cn('p-alert', `p-alert--${variant}`, className)}
       >
         <span className="p-alert__icon" aria-hidden="true">
-          {icon ?? VARIANT_ICON[variant]}
+          {icon ?? FEEDBACK_ICONS[variant]}
         </span>
 
         <div className="p-alert__body">

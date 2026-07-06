@@ -1,0 +1,196 @@
+@layer components {
+/* Region: portaled, fixed above app chrome. Desktop = top-right stack. */
+.p-toast-region {
+  position: fixed;
+  z-index: var(--p-toast-z-index);
+  top: var(--p-toast-inset);
+  right: var(--p-toast-inset);
+  display: flex;
+  flex-direction: column;
+  gap: var(--p-toast-gap);
+  width: var(--p-toast-width);
+  max-width: calc(100vw - (2 * var(--p-toast-inset)));
+  /* The region spans the corner but must not block clicks where it is empty. */
+  pointer-events: none;
+}
+
+.p-toast-region > * {
+  pointer-events: auto;
+}
+
+/* Mobile: bottom, full-width minus gutter, above the safe-area inset. */
+@media (max-width: 40rem) {
+  .p-toast-region {
+    top: auto;
+    right: var(--p-toast-inset);
+    left: var(--p-toast-inset);
+    bottom: calc(var(--p-toast-inset) + env(safe-area-inset-bottom, 0px));
+    width: auto;
+    max-width: none;
+    flex-direction: column-reverse;
+  }
+}
+
+.p-toast {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--p-feedback-gap);
+  padding-block: var(--p-feedback-padding-y);
+  padding-inline: var(--p-feedback-padding-x);
+  border: 1px solid var(--p-feedback-border);
+  border-radius: var(--p-feedback-radius);
+  border-inline-start-width: 3px;
+  border-inline-start-color: var(--p-feedback-accent);
+  background: var(--p-toast-surface);
+  box-shadow: var(--p-toast-shadow);
+  color: var(--p-feedback-text);
+  font-family: var(--p-font-family-sans);
+  font-size: var(--p-feedback-font-size);
+  line-height: var(--p-feedback-line-height);
+  touch-action: pan-y;
+  animation: p-toast-in var(--p-toast-duration) var(--p-toast-ease);
+}
+
+/* Spring back after an incomplete swipe; suppressed while actively dragging. */
+.p-toast:not(.p-toast--dragging) {
+  transition:
+    transform var(--p-toast-duration) var(--p-toast-ease),
+    opacity var(--p-toast-duration) var(--p-toast-ease);
+}
+
+.p-toast--info {
+  --p-feedback-accent: var(--p-color-info);
+  --p-feedback-border: var(--p-color-info-border);
+}
+
+.p-toast--success {
+  --p-feedback-accent: var(--p-color-success);
+  --p-feedback-border: var(--p-color-success-border);
+}
+
+.p-toast--warning {
+  --p-feedback-accent: var(--p-color-warning);
+  --p-feedback-border: var(--p-color-warning-border);
+}
+
+.p-toast--danger {
+  --p-feedback-accent: var(--p-color-danger);
+  --p-feedback-border: var(--p-color-danger-border);
+}
+
+.p-toast__icon {
+  display: inline-flex;
+  flex: none;
+  width: var(--p-feedback-icon-size);
+  height: var(--p-feedback-icon-size);
+  margin-block-start: calc((var(--p-feedback-line-height) - var(--p-feedback-icon-size)) / 2);
+  color: var(--p-feedback-accent);
+}
+
+.p-toast__icon > svg {
+  width: 100%;
+  height: 100%;
+}
+
+.p-toast__body {
+  display: flex;
+  min-width: 0;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: calc(var(--p-space-1) / 2);
+}
+
+.p-toast__title {
+  font-size: var(--p-feedback-title-font-size);
+  font-weight: var(--p-feedback-title-weight);
+  line-height: var(--p-feedback-line-height);
+}
+
+.p-toast__message {
+  color: var(--p-feedback-text-muted);
+  overflow-wrap: anywhere;
+}
+
+.p-toast__title:only-child,
+.p-toast__message:only-child {
+  color: var(--p-feedback-text);
+}
+
+.p-toast__action {
+  align-self: flex-start;
+  margin-block-start: calc(var(--p-space-1) / 2);
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--p-feedback-text);
+  font: inherit;
+  font-weight: var(--p-font-weight-medium);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+
+.p-toast__action:hover {
+  text-decoration: none;
+}
+
+.p-toast__action:focus-visible {
+  outline: none;
+  border-radius: var(--p-radius-xs);
+  box-shadow: 0 0 0 var(--p-focus-ring-width) var(--p-feedback-ring);
+}
+
+.p-toast__dismiss {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: var(--p-size-icon-md);
+  height: var(--p-size-icon-md);
+  margin-block-start: calc((var(--p-feedback-line-height) - var(--p-size-icon-md)) / 2);
+  padding: 0;
+  border: none;
+  border-radius: var(--p-radius-xs);
+  background: none;
+  color: var(--p-feedback-text-muted);
+  cursor: pointer;
+  transition: color var(--p-duration-fast) var(--p-ease-standard);
+}
+
+.p-toast__dismiss:hover {
+  color: var(--p-feedback-text);
+}
+
+.p-toast__dismiss:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 var(--p-focus-ring-width) var(--p-feedback-ring);
+}
+
+.p-toast__dismiss > svg {
+  width: 100%;
+  height: 100%;
+}
+
+@keyframes p-toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(-0.5rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .p-toast {
+    animation: none;
+  }
+
+  .p-toast:not(.p-toast--dragging) {
+    transition: none;
+  }
+}
+
+}

@@ -26,7 +26,29 @@ is required before any spec run reflects new stories/components.**
   `background: var(--p-color-background)` on the story's own wrapper. Opaque-surface components
   (overlay/modal) don't hit this; tinted-surface components do.
 
-## Next
-- PToastProvider + queue (max 3 visible, auto-dismiss ≥5s, pause on hover/focus, danger no auto-dismiss).
-- PToast component + imperative `toast.{success,error,info,warning}` API, portaled, aria-live.
-- Mobile: bottom, full-width minus gutter, safe-area inset, swipe-to-dismiss.
+## Done — PToast (all remaining tasks)
+- **Store** (`toastStore.ts`): module-level array + `useSyncExternalStore`; imperative
+  `toast(input)` plus `toast.{info,success,warning,error,dismiss,clear}` (`error` → `danger`).
+  `danger` defaults to `duration: null` (no auto-dismiss); others default 5000ms.
+- **Provider** (`PToastProvider.tsx`): portals a `role=region` `aria-live=polite` landmark to
+  `document.body`; shows first `max` (default 3), rest queue; pause on hover/focus via
+  `onMouseEnter/Leave` + `onFocusCapture/BlurCapture`.
+- **Timers** (`useToastTimers.ts`): per-toast setTimeout, pause banks *remaining* time so a
+  hover never cuts a toast short; `duration===null` never expires.
+- **PToast** (`PToast.tsx`): variant icon+accent (shared `feedback/statusIcons`), `role=alert`
+  for warning/danger else `status`; pointer-based swipe-to-dismiss (64px threshold), skips
+  drag when starting on a button/anchor.
+- Mobile CSS: region flips to bottom, full-width minus gutter, `env(safe-area-inset-bottom)`,
+  `column-reverse` so newest sits nearest the thumb.
+
+## Dead end / gotcha (axe, this session)
+- **Toast axe contrast flake:** `.p-toast__message` (muted `neutral-600 #57534e`) failed
+  color-contrast intermittently — reported foreground `#7e7b77` is the muted text composited at
+  ~0.77 opacity **mid `p-toast-in` fade-in**, not the settled color. Settled `#57534e` on
+  `#fefefe` surface ≈ 7:1 (passes). Fix is in the *test helper*, not the component:
+  `expectNoToastA11yViolations` now awaits `firstToast.getAnimations()[].finished` before
+  running axe, so it asserts the settled state. Deterministic across `--repeat-each=3`.
+
+## Result
+- 18/18 in `tests/ui/feedback-toast-alert.spec.ts`; `tsc --noEmit` + `eslint .` clean.
+- Exported from `src/components/index.ts`. Feature complete.
