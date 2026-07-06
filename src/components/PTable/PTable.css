@@ -1,7 +1,7 @@
 @layer components {
 .p-table {
   --p-table-bg: var(--p-color-surface);
-  --p-table-bg-muted: var(--p-color-neutral-50);
+  --p-table-bg-muted: var(--p-color-background);
   --p-table-bg-hover: var(--p-color-action-primary-subtle);
   --p-table-text: var(--p-color-text);
   --p-table-text-muted: var(--p-color-text-muted);

@@ -56,10 +56,74 @@ Use semantic tokens for product UI, then component tokens for focused overrides.
 }
 ```
 
-Theme switching is controlled with `data-theme="light"` or `data-theme="dark"`.
 The main `style.css` import does not include font files; import `fonts.css` when you want the packaged AvantGarde and Merriweather faces.
 Typed token references are also available from the constants entry:
 
 ```ts
 import { P_TOKENS } from '@paolojulian.dev/design-system/constants';
 ```
+
+## Theming
+
+Light and dark themes ship as CSS custom-property sets in `theme.css`. Theming
+is pure CSS driven by a `data-theme` attribute — the package has no JavaScript
+theme provider by design.
+
+### Applying a theme
+
+Set `data-theme` on `<html>` to theme the whole page:
+
+```html
+<html data-theme="dark">
+```
+
+`data-theme` also scopes to any container, so you can theme a single region
+without affecting the rest of the page:
+
+```html
+<aside data-theme="dark">
+  <!-- dark surfaces, buttons, and inputs inside here only -->
+</aside>
+```
+
+Supported values are `light` (default) and `dark`.
+
+### Following the OS preference
+
+The package stays CSS-only, so it does not read `prefers-color-scheme` for you —
+doing so would fight an explicit `data-theme`. Wire it up on the consumer side:
+resolve the stored choice and the OS preference, then write the attribute.
+
+```ts
+const stored = localStorage.getItem('theme'); // 'light' | 'dark' | null
+const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+document.documentElement.setAttribute('data-theme', stored ?? (prefersDark ? 'dark' : 'light'));
+
+// Keep following the OS until the user makes an explicit choice.
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (event) => {
+  if (localStorage.getItem('theme')) return; // stored choice wins
+  document.documentElement.setAttribute('data-theme', event.matches ? 'dark' : 'light');
+});
+```
+
+### Custom branding
+
+The supported override surface is the semantic action and focus tokens. Override
+them at `:root` (or any container) and every component follows:
+
+```css
+:root {
+  --p-color-action-primary: #2563eb;
+  --p-color-action-primary-hover: #1d4ed8;
+  --p-color-action-primary-subtle: #eff6ff;
+  --p-color-focus: #2563eb;
+}
+```
+
+Do not override base tokens (`--p-color-neutral-*`, `--p-color-brand-*`,
+`--p-color-red-*`, and the other raw scales). They are internal inputs to the
+semantic layer, not a stable API. For a single component, override that
+component's tokens through a class (for example `--p-highlight-bg`) rather than
+reaching for base values.
+

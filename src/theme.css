@@ -235,4 +235,8 @@
   --p-shadow-sm: 0 1px 2px rgb(0 0 0 / 0.32);
   --p-shadow-md: 0 8px 24px rgb(0 0 0 / 0.36);
   --p-shadow-lg: 0 16px 40px rgb(0 0 0 / 0.42);
+
+  /* Control hover must lighten (raise) in dark; the light value is a fixed
+     near-white base token that would flash bright on dark surfaces. */
+  --p-control-bg-hover: var(--p-color-neutral-800);
 }
