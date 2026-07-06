@@ -45,6 +45,9 @@ export {
   type PDateRangePickerRef,
   type PDateRangeValue,
 } from './PDateRangePicker';
+export { PDrawer, type PDrawerProps, type PDrawerSide } from './PDrawer';
+export { PModal, type PModalProps, type PModalSize } from './PModal';
+export { PSheet, type PSheetProps } from './PSheet';
 export {
   PFormField,
   useFormField,

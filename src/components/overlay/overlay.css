@@ -1,0 +1,329 @@
+@layer components {
+/*
+ * Shared overlay styling for PModal, PDrawer, and PSheet.
+ *
+ * The `<dialog>` fills the viewport and acts as a flex container so that a
+ * click on the empty area outside `.p-overlay__surface` reports the dialog as
+ * the event target (used for overlay-click-to-close). The scrim is drawn by the
+ * `::backdrop` pseudo-element. Enter/exit motion is pure CSS via `@starting-style`
+ * and `transition-behavior: allow-discrete` on `overlay`/`display`.
+ */
+.p-overlay {
+  width: 100vw;
+  height: 100dvh;
+  max-width: 100vw;
+  max-height: 100dvh;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--p-overlay-text);
+  overflow: hidden;
+  /*
+   * Closed: display:none so the full-viewport dialog stops covering the page.
+   * An author `display` value would override the UA `dialog:not([open])` rule,
+   * so we gate it on `[open]` ourselves. `allow-discrete` keeps it laid out
+   * through the exit transition.
+   */
+  display: none;
+  transition:
+    overlay var(--p-overlay-duration) allow-discrete,
+    display var(--p-overlay-duration) allow-discrete;
+}
+
+.p-overlay[open] {
+  display: flex;
+}
+
+.p-overlay::backdrop {
+  background: var(--p-overlay-backdrop);
+  opacity: 0;
+  transition:
+    opacity var(--p-overlay-duration) var(--p-overlay-ease),
+    overlay var(--p-overlay-duration) allow-discrete,
+    display var(--p-overlay-duration) allow-discrete;
+}
+
+.p-overlay[open]::backdrop {
+  opacity: 1;
+}
+
+@starting-style {
+  .p-overlay[open]::backdrop {
+    opacity: 0;
+  }
+}
+
+/* --- Surface -------------------------------------------------------------- */
+
+.p-overlay__surface {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  background: var(--p-overlay-surface);
+  color: var(--p-overlay-text);
+  box-shadow: var(--p-overlay-shadow);
+  font-family: var(--p-font-family-sans);
+  opacity: 0;
+  transition:
+    opacity var(--p-overlay-duration) var(--p-overlay-ease),
+    translate var(--p-overlay-duration) var(--p-overlay-ease),
+    scale var(--p-overlay-duration) var(--p-overlay-ease);
+}
+
+.p-overlay[open] .p-overlay__surface {
+  opacity: 1;
+  translate: 0 0;
+  scale: 1;
+}
+
+/* --- Header / body / footer ---------------------------------------------- */
+
+.p-overlay__header {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--p-space-4);
+  padding: var(--p-overlay-padding);
+  padding-bottom: var(--p-overlay-gap);
+}
+
+.p-overlay__heading {
+  display: flex;
+  flex-direction: column;
+  gap: var(--p-space-1);
+  min-width: 0;
+  flex: 1;
+}
+
+.p-overlay__title {
+  margin: 0;
+  color: var(--p-color-text);
+  font-size: var(--p-font-size-heading-sm);
+  line-height: var(--p-line-height-heading-sm);
+  font-weight: var(--p-font-weight-bold);
+  letter-spacing: var(--p-letter-spacing-heading);
+}
+
+.p-overlay__description {
+  margin: 0;
+  color: var(--p-color-text-muted);
+  font-size: var(--p-font-size-body-sm);
+  line-height: var(--p-line-height-body-sm);
+}
+
+.p-overlay__close {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--p-size-control-sm);
+  height: var(--p-size-control-sm);
+  margin: calc(var(--p-space-2) * -1);
+  padding: 0;
+  border: 0;
+  border-radius: var(--p-radius-sm);
+  background: transparent;
+  color: var(--p-color-text-muted);
+  cursor: pointer;
+  transition: var(--p-control-transition);
+}
+
+.p-overlay__close:hover {
+  background: var(--p-control-bg-hover);
+  color: var(--p-color-text);
+}
+
+.p-overlay__close:focus-visible {
+  outline: var(--p-focus-ring-width) solid var(--p-focus-ring-color);
+  outline-offset: var(--p-focus-ring-offset);
+}
+
+.p-overlay__close-icon {
+  width: var(--p-size-icon-md);
+  height: var(--p-size-icon-md);
+}
+
+.p-overlay__body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 0 var(--p-overlay-padding);
+  color: var(--p-color-text);
+  font-size: var(--p-font-size-body-md);
+  line-height: var(--p-line-height-body-md);
+}
+
+.p-overlay__footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--p-space-3);
+  padding: var(--p-overlay-gap) var(--p-overlay-padding) var(--p-overlay-padding);
+  /* Stays reachable while the body scrolls. */
+  position: sticky;
+  bottom: 0;
+  background: var(--p-overlay-surface);
+  border-top: 1px solid var(--p-overlay-border);
+  margin-top: var(--p-space-2);
+}
+
+/* --- Modal --------------------------------------------------------------- */
+
+.p-overlay--modal {
+  align-items: center;
+  justify-content: center;
+  padding: var(--p-space-4);
+}
+
+.p-overlay--modal .p-overlay__surface {
+  width: 100%;
+  max-width: var(--p-overlay-width-md);
+  max-height: calc(100dvh - var(--p-space-8));
+  border-radius: var(--p-overlay-radius);
+  scale: 0.96;
+}
+
+.p-overlay--modal-sm .p-overlay__surface {
+  max-width: var(--p-overlay-width-sm);
+}
+
+.p-overlay--modal-lg .p-overlay__surface {
+  max-width: var(--p-overlay-width-lg);
+}
+
+@starting-style {
+  .p-overlay--modal[open] .p-overlay__surface {
+    opacity: 0;
+    scale: 0.96;
+  }
+}
+
+/* --- Drawer -------------------------------------------------------------- */
+
+.p-overlay--drawer {
+  align-items: stretch;
+  justify-content: flex-end;
+}
+
+.p-overlay--drawer.p-overlay--drawer-left {
+  justify-content: flex-start;
+}
+
+.p-overlay--drawer .p-overlay__surface {
+  width: 100%;
+  max-width: var(--p-overlay-drawer-width);
+  height: 100%;
+  translate: 100% 0;
+}
+
+.p-overlay--drawer.p-overlay--drawer-left .p-overlay__surface {
+  translate: -100% 0;
+}
+
+@starting-style {
+  .p-overlay--drawer[open] .p-overlay__surface {
+    opacity: 1;
+    translate: 100% 0;
+  }
+  .p-overlay--drawer.p-overlay--drawer-left[open] .p-overlay__surface {
+    translate: -100% 0;
+  }
+}
+
+/* --- Sheet --------------------------------------------------------------- */
+
+.p-overlay--sheet {
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.p-overlay--sheet .p-overlay__surface {
+  width: 100%;
+  max-width: 40rem;
+  /* Snap to content height, capped so it never covers the whole screen. */
+  height: auto;
+  max-height: 90dvh;
+  border-top-left-radius: var(--p-overlay-radius);
+  border-top-right-radius: var(--p-overlay-radius);
+  translate: 0 100%;
+}
+
+@starting-style {
+  .p-overlay--sheet[open] .p-overlay__surface {
+    opacity: 1;
+    translate: 0 100%;
+  }
+}
+
+.p-overlay__handle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: var(--p-space-3) 0 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.p-overlay__handle::before {
+  content: '';
+  display: block;
+  width: 2.25rem;
+  height: 0.25rem;
+  border-radius: var(--p-radius-full);
+  background: var(--p-color-border-strong);
+  opacity: 0.6;
+  transition: opacity var(--p-duration-fast) var(--p-ease-standard);
+}
+
+.p-overlay__handle:hover::before {
+  opacity: 1;
+}
+
+.p-overlay__handle:focus-visible {
+  outline: var(--p-focus-ring-width) solid var(--p-focus-ring-color);
+  outline-offset: var(--p-focus-ring-offset);
+  border-radius: var(--p-radius-sm);
+}
+
+/* --- Responsive ---------------------------------------------------------- */
+
+@media (max-width: 40rem) {
+  /* md/lg modals become full-screen; sm stays centered. */
+  .p-overlay--modal:not(.p-overlay--modal-sm) {
+    padding: 0;
+  }
+
+  .p-overlay--modal:not(.p-overlay--modal-sm) .p-overlay__surface {
+    max-width: 100%;
+    width: 100%;
+    height: 100%;
+    max-height: 100dvh;
+    border-radius: 0;
+  }
+
+  /* Drawer becomes full-width. */
+  .p-overlay--drawer .p-overlay__surface {
+    max-width: 100%;
+  }
+}
+
+@media (min-width: 40rem) and (max-width: 64rem) {
+  /* Tablet: cap drawer width. */
+  .p-overlay--drawer .p-overlay__surface {
+    max-width: 30rem;
+  }
+}
+
+/* --- Reduced motion ------------------------------------------------------ */
+
+@media (prefers-reduced-motion: reduce) {
+  .p-overlay,
+  .p-overlay::backdrop,
+  .p-overlay__surface {
+    transition: none;
+  }
+}
+}
