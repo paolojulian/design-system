@@ -86,6 +86,12 @@
   text-align: left;
 }
 
+/* Bare mode (inside a PFormField): no floating label, so use symmetric
+   control padding instead of reserving space at the top. */
+.p-date-range-picker--bare .p-date-range-picker__trigger {
+  padding-block: var(--p-control-padding-y);
+}
+
 .p-date-range-picker__trigger--empty {
   color: var(--p-date-range-picker-text);
 }

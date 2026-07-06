@@ -57,6 +57,12 @@
   transition: var(--p-input-transition);
 }
 
+/* Bare mode (inside a PFormField): no floating label, so use symmetric
+   control padding instead of reserving space at the top. */
+.p-text-input__control--bare {
+  padding-block: var(--p-control-padding-y);
+}
+
 .p-text-input__control--adorned {
   padding-inline-end: var(--p-input-padding-right-adorned);
 }

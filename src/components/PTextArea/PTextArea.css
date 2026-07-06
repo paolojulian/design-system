@@ -49,6 +49,12 @@
   transition: var(--p-textarea-transition);
 }
 
+/* Bare mode (inside a PFormField): no floating label, so use symmetric
+   control padding instead of reserving space at the top. */
+.p-text-area__control--bare {
+  padding-block: var(--p-control-padding-y);
+}
+
 .p-text-area__control:focus {
   border-color: var(--p-textarea-border-focus);
   background: var(--p-textarea-bg-focus);

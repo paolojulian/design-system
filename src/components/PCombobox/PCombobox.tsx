@@ -16,6 +16,7 @@ import {
 } from 'react';
 import cn from '../../utils/cn';
 import './PCombobox.css';
+import { useFieldControl } from '../PFormField';
 
 export type PComboboxRef = HTMLDivElement;
 export type PComboboxFilterMode = 'local' | 'none';
@@ -32,7 +33,8 @@ export type PComboboxOption = {
 };
 
 export type PComboboxProps = {
-  label: string;
+  /** Visible label. Optional inside a `PFormField`, which owns the label. */
+  label?: string;
   options: PComboboxOption[];
   value?: string;
   defaultValue?: string;
@@ -208,12 +210,12 @@ export const PCombobox = forwardRef<PComboboxRef, PComboboxProps>(
       loadingMoreText = 'Loading more options...',
       loadMoreText = 'Load more options',
       helperText,
-      isError = false,
+      isError: isErrorProp = false,
       errorMessage,
       name,
-      disabled = false,
+      disabled: disabledProp = false,
       readOnly = false,
-      required = false,
+      required: requiredProp = false,
       clearable = true,
       className,
       inputClassName,
@@ -223,10 +225,25 @@ export const PCombobox = forwardRef<PComboboxRef, PComboboxProps>(
     },
     ref,
   ) => {
+    const field = useFieldControl({
+      id,
+      invalid: isErrorProp,
+      required: requiredProp,
+      disabled: disabledProp,
+    });
+    const { withinField } = field;
+    // Inside a PFormField the wrapper owns invalid/required/disabled/label.
+    const isError = field.invalid;
+    const disabled = field.disabled ?? false;
+    const required = field.required ?? false;
+
     const generatedId = useId();
     const rootId = id ?? generatedId;
-    const labelId = `${rootId}-label`;
-    const inputId = `${rootId}-input`;
+    // Label id used to name internal regions: the field's label when wrapped,
+    // otherwise the combobox's own floating label.
+    const ownLabelId = `${rootId}-label`;
+    const labelId = withinField ? field.labelId : ownLabelId;
+    const inputId = withinField ? field.id : `${rootId}-input`;
     const listboxId = `${rootId}-listbox`;
     const helperId = `${rootId}-helper`;
     const errorId = `${rootId}-error`;
@@ -256,7 +273,13 @@ export const PCombobox = forwardRef<PComboboxRef, PComboboxProps>(
     const activeOption = isOpen ? filteredOptions[activeIndex] : undefined;
     const activeOptionId = activeOption ? `${listboxId}-option-${activeIndex}` : undefined;
     const modalTitleId = `${rootId}-modal-title`;
-    const messageId = isError && errorMessage ? errorId : helperText ? helperId : undefined;
+    const messageId = withinField
+      ? field.describedBy
+      : isError && errorMessage
+        ? errorId
+        : helperText
+          ? helperId
+          : undefined;
     const hasSelection = Boolean(selectedOption);
     const canClear = clearable && hasSelection && !disabled && !readOnly;
     const inputValue = isOpen ? query : selectedOption?.label ?? query;
@@ -513,6 +536,8 @@ export const PCombobox = forwardRef<PComboboxRef, PComboboxProps>(
           isError && 'p-combobox--error',
           disabled && 'p-combobox--disabled',
           readOnly && 'p-combobox--readonly',
+          // Inside a field there is no floating label, so drop its top padding.
+          withinField && 'p-combobox--bare',
           className,
         )}
       >
@@ -542,23 +567,28 @@ export const PCombobox = forwardRef<PComboboxRef, PComboboxProps>(
             onKeyDown={handleInputKeyDown}
           />
 
-          <label
-            id={labelId}
-            htmlFor={inputId}
-            className={cn('p-combobox__label p-combobox__floating-label', isError && 'p-combobox__label--error')}
-          >
-            {label}
-          </label>
+          {/* Labels render only when standalone; inside a field the wrapper owns them. */}
+          {!withinField ? (
+            <>
+              <label
+                id={ownLabelId}
+                htmlFor={inputId}
+                className={cn('p-combobox__label p-combobox__floating-label', isError && 'p-combobox__label--error')}
+              >
+                {label}
+              </label>
 
-          <span aria-hidden="true" className="p-combobox__label p-combobox__placeholder-label">
-            {placeholder || label}
-          </span>
+              <span aria-hidden="true" className="p-combobox__label p-combobox__placeholder-label">
+                {placeholder || label}
+              </span>
+            </>
+          ) : null}
 
           {canClear ? (
             <button
               type="button"
               className="p-combobox__clear"
-              aria-label={`Clear ${label}`}
+              aria-label={label ? `Clear ${label}` : 'Clear selection'}
               onMouseDown={handleClear}
             >
               <XIcon />
@@ -577,8 +607,8 @@ export const PCombobox = forwardRef<PComboboxRef, PComboboxProps>(
               aria-labelledby={isModalViewport ? modalTitleId : undefined}
             >
               <div className="p-combobox__modal-header">
-                <div id={modalTitleId} className="p-combobox__modal-title">{label}</div>
-                <button type="button" className="p-combobox__modal-close" aria-label={`Close ${label}`} onClick={closeCombobox}>
+                <div id={modalTitleId} className="p-combobox__modal-title">{label ?? placeholder}</div>
+                <button type="button" className="p-combobox__modal-close" aria-label={label ? `Close ${label}` : 'Close'} onClick={closeCombobox}>
                   <XIcon />
                 </button>
               </div>
@@ -594,7 +624,7 @@ export const PCombobox = forwardRef<PComboboxRef, PComboboxProps>(
                   aria-controls={listboxId}
                   aria-expanded={isOpen}
                   aria-haspopup="listbox"
-                  aria-label={`Search ${label}`}
+                  aria-label={label ? `Search ${label}` : searchPlaceholder}
                   autoComplete="off"
                   className="p-combobox__modal-input"
                   onChange={handleInputChange}
@@ -707,13 +737,13 @@ export const PCombobox = forwardRef<PComboboxRef, PComboboxProps>(
           <div className="p-combobox__backdrop" aria-hidden="true" onMouseDown={closeCombobox} />
         ) : null}
 
-        {isError && errorMessage ? (
+        {!withinField && isError && errorMessage ? (
           <p id={errorId} role="alert" className="p-combobox__message p-combobox__message--error">
             {errorMessage}
           </p>
         ) : null}
 
-        {!isError && helperText ? (
+        {!withinField && !isError && helperText ? (
           <p id={helperId} className="p-combobox__message">
             {helperText}
           </p>

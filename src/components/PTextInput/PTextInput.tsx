@@ -1,6 +1,7 @@
-import { forwardRef, type InputHTMLAttributes, type ReactNode, useId, useState } from 'react';
+import { forwardRef, type InputHTMLAttributes, type ReactNode, useState } from 'react';
 import './PTextInput.css';
 import cn from '../../utils/cn';
+import { useFieldControl } from '../PFormField';
 
 export type PTextInputRef = HTMLInputElement;
 
@@ -13,8 +14,11 @@ export type PTextInputProps = {
   className?: string;
   /** Applied to the inner `<input>` element for layout / spacing overrides. */
   inputClassName?: string;
-  /** Visible label — doubles as the floating label and the placeholder. */
-  label: string;
+  /**
+   * Visible label — doubles as the floating label and the placeholder.
+   * Optional inside a `PFormField`, which owns the label.
+   */
+  label?: string;
   /** Shown below the field when there is no error. */
   helperText?: string;
   isError?: boolean;
@@ -92,10 +96,14 @@ export const PTextInput = forwardRef<PTextInputRef, PTextInputProps>(
     },
     ref,
   ) => {
-    const generatedId = useId();
-    const inputId = id ?? generatedId;
+    const field = useFieldControl({ id, invalid: isError, required: props.required, disabled });
+    const inputId = field.id;
     const errorId = `${inputId}-error`;
     const helperId = `${inputId}-helper`;
+    const { withinField } = field;
+    // Inside a PFormField the wrapper owns invalid/disabled/label/messages.
+    const invalid = field.invalid;
+    const controlDisabled = field.disabled;
 
     const isPassword = type === 'password';
     const hasRightAdornment = Boolean(rightAdornment) && !isPassword;
@@ -103,12 +111,14 @@ export const PTextInput = forwardRef<PTextInputRef, PTextInputProps>(
 
     const inputType = isPassword ? (showPassword ? 'text' : 'password') : (type ?? 'text');
 
-    const describedBy = [
-      isError && errorMessage ? errorId : null,
-      !isError && helperText ? helperId : null,
-    ]
-      .filter(Boolean)
-      .join(' ') || undefined;
+    const describedBy = withinField
+      ? field.describedBy
+      : [
+          isError && errorMessage ? errorId : null,
+          !isError && helperText ? helperId : null,
+        ]
+          .filter(Boolean)
+          .join(' ') || undefined;
 
     return (
       <div className={cn('p-text-input', className)} style={style}>
@@ -118,58 +128,68 @@ export const PTextInput = forwardRef<PTextInputRef, PTextInputProps>(
             id={inputId}
             ref={ref}
             type={inputType}
-            disabled={disabled}
+            disabled={controlDisabled}
             readOnly={readOnly}
             // Empty string required for the CSS peer-not-placeholder-shown trick.
             placeholder=" "
             // Accessibility
-            aria-invalid={isError || undefined}
+            aria-invalid={invalid || undefined}
             aria-describedby={describedBy}
-            aria-required={props.required}
-            aria-disabled={disabled}
+            aria-required={field.required}
+            aria-disabled={controlDisabled}
             aria-readonly={readOnly}
             autoComplete={props.autoComplete ?? (isPassword ? 'current-password' : undefined)}
             className={cn(
               'p-text-input__control',
+              // Inside a field there is no floating label, so drop its top padding.
+              withinField && 'p-text-input__control--bare',
               (isPassword || hasRightAdornment) && 'p-text-input__control--adorned',
-              isError && 'p-text-input__control--error',
+              invalid && 'p-text-input__control--error',
               hasRightAdornment && type === 'date' && 'p-text-input__control--date-adorned',
               inputClassName,
             )}
           />
 
           {/*
-           * Floating label — shown above the value when focused or filled.
-           * aria-hidden: the <label> below already provides the accessible name.
+           * Labels are rendered only when standalone. Inside a PFormField the
+           * wrapper owns the label, so the floating/placeholder labels are off.
            */}
-          <span
-            aria-hidden="true"
-            className={cn(
-              'p-text-input__label p-text-input__floating-label',
-              isError && 'p-text-input__label--error',
-            )}
-          >
-            {label}
-          </span>
+          {!withinField && (
+            <>
+              {/*
+               * Floating label — shown above the value when focused or filled.
+               * aria-hidden: the <label> below already provides the accessible name.
+               */}
+              <span
+                aria-hidden="true"
+                className={cn(
+                  'p-text-input__label p-text-input__floating-label',
+                  invalid && 'p-text-input__label--error',
+                )}
+              >
+                {label}
+              </span>
 
-          {/*
-           * Placeholder label — centered in the field when empty and unfocused.
-           * pointer-events-none lets clicks fall through to the input beneath;
-           * htmlFor still wires up the accessible name correctly.
-           */}
-          <label
-            htmlFor={inputId}
-            className="p-text-input__label p-text-input__placeholder-label"
-          >
-            {label}
-          </label>
+              {/*
+               * Placeholder label — centered in the field when empty and unfocused.
+               * pointer-events-none lets clicks fall through to the input beneath;
+               * htmlFor still wires up the accessible name correctly.
+               */}
+              <label
+                htmlFor={inputId}
+                className="p-text-input__label p-text-input__placeholder-label"
+              >
+                {label}
+              </label>
+            </>
+          )}
 
           {/* Password toggle */}
           {isPassword && (
             <button
               type="button"
               onClick={() => setShowPassword((v) => !v)}
-              disabled={disabled}
+              disabled={controlDisabled}
               className="p-text-input__action"
               aria-label={showPassword ? 'Hide password' : 'Show password'}
               aria-pressed={showPassword}
@@ -188,7 +208,7 @@ export const PTextInput = forwardRef<PTextInputRef, PTextInputProps>(
         </div>
 
         {/* Error message — announced immediately via role="alert" */}
-        {isError && errorMessage && (
+        {!withinField && isError && errorMessage && (
           <p
             id={errorId}
             role="alert"
@@ -199,7 +219,7 @@ export const PTextInput = forwardRef<PTextInputRef, PTextInputProps>(
         )}
 
         {/* Helper text — visible only when there is no error */}
-        {!isError && helperText && (
+        {!withinField && !isError && helperText && (
           <p
             id={helperId}
             className="p-text-input__message p-text-input__message--helper"

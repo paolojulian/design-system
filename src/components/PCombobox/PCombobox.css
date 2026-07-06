@@ -103,6 +103,12 @@
     transition: var(--p-combobox-transition);
 }
 
+/* Bare mode (inside a PFormField): no floating label, so use symmetric
+   control padding instead of reserving space at the top. */
+.p-combobox--bare .p-combobox__input {
+    padding-block: var(--p-control-padding-y);
+}
+
 .p-combobox__input--adorned {
     padding-inline-end: var(--p-space-16);
 }

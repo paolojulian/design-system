@@ -1,6 +1,5 @@
 import {
   forwardRef,
-  useId,
   useState,
   type ChangeEvent,
   type ReactNode,
@@ -8,6 +7,7 @@ import {
 } from 'react';
 import cn from '../../utils/cn';
 import './PSelect.css';
+import { useFieldControl } from '../PFormField';
 
 export type PSelectRef = HTMLSelectElement;
 export type PSelectDensity = 'standard' | 'compact';
@@ -23,7 +23,8 @@ export type PSelectOption = {
 export type PSelectProps = {
   className?: string;
   selectClassName?: string;
-  label: string;
+  /** Visible label. Optional inside a `PFormField`, which owns the label. */
+  label?: string;
   options: PSelectOption[];
   placeholder?: string;
   helperText?: string;
@@ -82,20 +83,26 @@ export const PSelect = forwardRef<PSelectRef, PSelectProps>(
     },
     ref,
   ) => {
-    const generatedId = useId();
-    const selectId = id ?? generatedId;
+    const field = useFieldControl({ id, invalid: isError, required, disabled });
+    const selectId = field.id;
     const errorId = `${selectId}-error`;
     const helperId = `${selectId}-helper`;
+    const { withinField } = field;
+    const invalid = field.invalid;
+    const controlDisabled = field.disabled;
+    const controlRequired = field.required;
     const isControlled = value !== undefined;
     const [internalValue, setInternalValue] = useState(getSelectValue(defaultValue));
     const selectedValue = getSelectValue(isControlled ? value : internalValue);
     const hasValue = selectedValue !== '';
-    const describedBy = [
-      isError && errorMessage ? errorId : null,
-      !isError && helperText ? helperId : null,
-    ]
-      .filter(Boolean)
-      .join(' ') || undefined;
+    const describedBy = withinField
+      ? field.describedBy
+      : [
+          isError && errorMessage ? errorId : null,
+          !isError && helperText ? helperId : null,
+        ]
+          .filter(Boolean)
+          .join(' ') || undefined;
 
     const groupedOptions = options.reduce<Array<{ group: string | null; options: PSelectOption[] }>>(
       (accumulator, option) => {
@@ -133,9 +140,11 @@ export const PSelect = forwardRef<PSelectRef, PSelectProps>(
           'p-select',
           `p-select--${density}`,
           `p-select--${variant}`,
+          // Inside a field there is no floating label, so drop its top padding.
+          withinField && 'p-select--bare',
           hasValue && 'p-select--filled',
-          isError && 'p-select--error',
-          disabled && 'p-select--disabled',
+          invalid && 'p-select--error',
+          controlDisabled && 'p-select--disabled',
           className,
         )}
         style={style}
@@ -147,13 +156,13 @@ export const PSelect = forwardRef<PSelectRef, PSelectProps>(
             ref={ref}
             value={value}
             defaultValue={value === undefined ? defaultValue ?? '' : undefined}
-            disabled={disabled}
-            required={required}
-            aria-invalid={isError || undefined}
+            disabled={controlDisabled}
+            required={controlRequired}
+            aria-invalid={invalid || undefined}
             aria-describedby={describedBy}
-            aria-required={required}
-            aria-disabled={disabled}
-            className={cn('p-select__control', isError && 'p-select__control--error', selectClassName)}
+            aria-required={controlRequired}
+            aria-disabled={controlDisabled}
+            className={cn('p-select__control', invalid && 'p-select__control--error', selectClassName)}
             onChange={handleChange}
           >
             {placeholder ? (
@@ -181,47 +190,49 @@ export const PSelect = forwardRef<PSelectRef, PSelectProps>(
             )}
           </select>
 
-          {variant === 'floating' ? (
-            <>
-              <span
-                aria-hidden="true"
-                className={cn(
-                  'p-select__label p-select__floating-label',
-                  hideLabel && 'p-select__label--hidden',
-                  isError && 'p-select__label--error',
-                )}
-              >
-                {label}
-              </span>
+          {/* Labels render only when standalone; inside a field the wrapper owns them. */}
+          {!withinField &&
+            (variant === 'floating' ? (
+              <>
+                <span
+                  aria-hidden="true"
+                  className={cn(
+                    'p-select__label p-select__floating-label',
+                    hideLabel && 'p-select__label--hidden',
+                    invalid && 'p-select__label--error',
+                  )}
+                >
+                  {label}
+                </span>
 
+                <label
+                  htmlFor={selectId}
+                  className={cn('p-select__label p-select__placeholder-label', hideLabel && 'p-select__label--hidden')}
+                >
+                  {placeholder || label}
+                </label>
+              </>
+            ) : (
               <label
                 htmlFor={selectId}
-                className={cn('p-select__label p-select__placeholder-label', hideLabel && 'p-select__label--hidden')}
+                className={cn('p-select__label p-select__inline-label', hideLabel && 'p-select__label--hidden')}
               >
-                {placeholder || label}
+                {label}
               </label>
-            </>
-          ) : (
-            <label
-              htmlFor={selectId}
-              className={cn('p-select__label p-select__inline-label', hideLabel && 'p-select__label--hidden')}
-            >
-              {label}
-            </label>
-          )}
+            ))}
 
           <span className="p-select__chevron" aria-hidden="true">
             <ChevronDownIcon />
           </span>
         </div>
 
-        {isError && errorMessage ? (
+        {!withinField && isError && errorMessage ? (
           <p id={errorId} role="alert" className="p-select__message p-select__message--error">
             {errorMessage}
           </p>
         ) : null}
 
-        {!isError && helperText ? (
+        {!withinField && !isError && helperText ? (
           <p id={helperId} className="p-select__message">
             {helperText}
           </p>

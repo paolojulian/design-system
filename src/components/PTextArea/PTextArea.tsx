@@ -1,6 +1,7 @@
-import { forwardRef, type TextareaHTMLAttributes, useId } from 'react';
+import { forwardRef, type TextareaHTMLAttributes } from 'react';
 import './PTextArea.css';
 import cn from '../../utils/cn';
+import { useFieldControl } from '../PFormField';
 
 export type PTextAreaRef = HTMLTextAreaElement;
 
@@ -13,8 +14,11 @@ export type PTextAreaProps = {
   className?: string;
   /** Applied to the inner `<textarea>` element for layout / spacing overrides. */
   textareaClassName?: string;
-  /** Visible label — doubles as the floating label and the placeholder. */
-  label: string;
+  /**
+   * Visible label — doubles as the floating label and the placeholder.
+   * Optional inside a `PFormField`, which owns the label.
+   */
+  label?: string;
   /** Shown below the field when there is no error. */
   helperText?: string;
   isError?: boolean;
@@ -45,17 +49,22 @@ export const PTextArea = forwardRef<PTextAreaRef, PTextAreaProps>(
     },
     ref,
   ) => {
-    const generatedId = useId();
-    const textareaId = id ?? generatedId;
+    const field = useFieldControl({ id, invalid: isError, required: props.required, disabled });
+    const textareaId = field.id;
     const errorId = `${textareaId}-error`;
     const helperId = `${textareaId}-helper`;
+    const { withinField } = field;
+    const invalid = field.invalid;
+    const controlDisabled = field.disabled;
 
-    const describedBy = [
-      isError && errorMessage ? errorId : null,
-      !isError && helperText ? helperId : null,
-    ]
-      .filter(Boolean)
-      .join(' ') || undefined;
+    const describedBy = withinField
+      ? field.describedBy
+      : [
+          isError && errorMessage ? errorId : null,
+          !isError && helperText ? helperId : null,
+        ]
+          .filter(Boolean)
+          .join(' ') || undefined;
 
     return (
       <div className={cn('p-text-area', className)} style={style}>
@@ -64,51 +73,61 @@ export const PTextArea = forwardRef<PTextAreaRef, PTextAreaProps>(
           id={textareaId}
           ref={ref}
           rows={rows}
-          disabled={disabled}
+          disabled={controlDisabled}
           readOnly={readOnly}
           // Empty string required for the CSS peer-not-placeholder-shown trick.
           placeholder=" "
           // Accessibility
-          aria-invalid={isError || undefined}
+          aria-invalid={invalid || undefined}
           aria-describedby={describedBy}
-          aria-required={props.required}
-          aria-disabled={disabled}
+          aria-required={field.required}
+          aria-disabled={controlDisabled}
           aria-readonly={readOnly}
           className={cn(
             'p-text-area__control',
-            isError && 'p-text-area__control--error',
+            // Inside a field there is no floating label, so drop its top padding.
+            withinField && 'p-text-area__control--bare',
+            invalid && 'p-text-area__control--error',
             textareaClassName,
           )}
         />
 
         {/*
-         * Floating label — shown above the value when focused or filled.
-         * aria-hidden: the <label> below already provides the accessible name.
+         * Labels are rendered only when standalone. Inside a PFormField the
+         * wrapper owns the label.
          */}
-        <span
-          aria-hidden="true"
-          className={cn(
-            'p-text-area__label p-text-area__floating-label',
-            isError && 'p-text-area__label--error',
-          )}
-        >
-          {label}
-        </span>
+        {!withinField && (
+          <>
+            {/*
+             * Floating label — shown above the value when focused or filled.
+             * aria-hidden: the <label> below already provides the accessible name.
+             */}
+            <span
+              aria-hidden="true"
+              className={cn(
+                'p-text-area__label p-text-area__floating-label',
+                invalid && 'p-text-area__label--error',
+              )}
+            >
+              {label}
+            </span>
 
-        {/*
-         * Placeholder label — sits near the top of the field when empty and unfocused.
-         * pointer-events-none lets clicks fall through to the textarea beneath;
-         * htmlFor still wires up the accessible name correctly.
-         */}
-        <label
-          htmlFor={textareaId}
-          className="p-text-area__label p-text-area__placeholder-label"
-        >
-          {label}
-        </label>
+            {/*
+             * Placeholder label — sits near the top of the field when empty and unfocused.
+             * pointer-events-none lets clicks fall through to the textarea beneath;
+             * htmlFor still wires up the accessible name correctly.
+             */}
+            <label
+              htmlFor={textareaId}
+              className="p-text-area__label p-text-area__placeholder-label"
+            >
+              {label}
+            </label>
+          </>
+        )}
 
         {/* Error message — announced immediately via role="alert" */}
-        {isError && errorMessage && (
+        {!withinField && isError && errorMessage && (
           <p
             id={errorId}
             role="alert"
@@ -119,7 +138,7 @@ export const PTextArea = forwardRef<PTextAreaRef, PTextAreaProps>(
         )}
 
         {/* Helper text — visible only when there is no error */}
-        {!isError && helperText && (
+        {!withinField && !isError && helperText && (
           <p
             id={helperId}
             className="p-text-area__message p-text-area__message--helper"

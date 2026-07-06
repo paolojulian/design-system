@@ -46,6 +46,21 @@ export {
   type PDateRangeValue,
 } from './PDateRangePicker';
 export {
+  PFormField,
+  useFormField,
+  useFieldControl,
+  type PFormFieldProps,
+  type FormFieldContextValue,
+  type FieldControlInput,
+  type FieldControlWiring,
+} from './PFormField';
+export {
+  PFormGrid,
+  PFormGridItem,
+  type PFormGridProps,
+  type PFormGridItemProps,
+} from './PFormGrid';
+export {
   PHighlight,
   type PHighlightAppearance,
   type PHighlightProps,

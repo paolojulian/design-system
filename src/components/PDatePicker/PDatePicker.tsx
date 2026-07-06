@@ -13,6 +13,7 @@ import {
 import { CalendarIcon, ChevronLeftIcon, ChevronRightIcon } from '../../icons';
 import cn from '../../utils/cn';
 import './PDatePicker.css';
+import { useFieldControl } from '../PFormField';
 
 export type PDatePickerRef = HTMLDivElement;
 export type PDatePickerChangeSource = 'preset' | 'calendar';
@@ -25,7 +26,8 @@ export type PDatePickerPreset = {
 };
 
 export type PDatePickerProps = {
-  label: string;
+  /** Visible label. Optional inside a `PFormField`, which owns the label. */
+  label?: string;
   value?: string;
   defaultValue?: string;
   onValueChange?: (
@@ -252,14 +254,14 @@ export const PDatePicker = forwardRef<PDatePickerRef, PDatePickerProps>(
       presetColumns = 'auto',
       placeholder = 'Select date',
       helperText,
-      isError = false,
+      isError: isErrorProp = false,
       errorMessage,
       min,
       max,
       name,
-      disabled = false,
+      disabled: disabledProp = false,
       readOnly = false,
-      required = false,
+      required: requiredProp = false,
       locale,
       weekStartsOn = 0,
       className,
@@ -269,9 +271,24 @@ export const PDatePicker = forwardRef<PDatePickerRef, PDatePickerProps>(
     },
     ref,
   ) => {
+    const field = useFieldControl({
+      id,
+      invalid: isErrorProp,
+      required: requiredProp,
+      disabled: disabledProp,
+    });
+    const { withinField } = field;
+    // Inside a PFormField the wrapper owns invalid/required/disabled/label.
+    const isError = field.invalid;
+    const disabled = field.disabled ?? false;
+    const required = field.required ?? false;
+
     const generatedId = useId();
     const rootId = id ?? generatedId;
-    const labelId = `${rootId}-label`;
+    const ownLabelId = `${rootId}-label`;
+    // Names internal regions: the field's label when wrapped, else our own.
+    const labelId = withinField ? field.labelId : ownLabelId;
+    const triggerId = withinField ? field.id : undefined;
     const panelId = `${rootId}-panel`;
     const helperId = `${rootId}-helper`;
     const errorId = `${rootId}-error`;
@@ -300,7 +317,13 @@ export const PDatePicker = forwardRef<PDatePickerRef, PDatePickerProps>(
         : ({
             '--p-date-picker-preset-columns': String(presetColumns),
           } as CSSProperties);
-    const messageId = isError && errorMessage ? errorId : helperText ? helperId : undefined;
+    const messageId = withinField
+      ? field.describedBy
+      : isError && errorMessage
+        ? errorId
+        : helperText
+          ? helperId
+          : undefined;
     const displayValue = selectedDate ? getDateLabel(selectedDate, locale) : placeholder;
     const selectedMatchesPreset = hasPresets
       ? presets.some((preset) => isSameDay(resolvePresetDate(preset), selectedDate))
@@ -447,11 +470,14 @@ export const PDatePicker = forwardRef<PDatePickerRef, PDatePickerProps>(
           hasPresets && 'p-date-picker--with-presets',
           isError && 'p-date-picker--error',
           disabled && 'p-date-picker--disabled',
+          // Inside a field there is no floating label, so drop its top padding.
+          withinField && 'p-date-picker--bare',
           className,
         )}
       >
-        {hasPresets ? (
-          <div id={labelId} className="p-date-picker__label">
+        {/* Label renders only when standalone; inside a field the wrapper owns it. */}
+        {!withinField && hasPresets ? (
+          <div id={ownLabelId} className="p-date-picker__label">
             <span>{label}</span>
             <span className={cn('p-date-picker__label-value', !selectedDate && 'p-date-picker__label-value--empty')}>
               {displayValue}
@@ -506,6 +532,7 @@ export const PDatePicker = forwardRef<PDatePickerRef, PDatePickerProps>(
         ) : (
           <button
             type="button"
+            id={triggerId}
             className={cn(
               'p-date-picker__trigger',
               !selectedDate && 'p-date-picker__trigger--empty',
@@ -517,29 +544,36 @@ export const PDatePicker = forwardRef<PDatePickerRef, PDatePickerProps>(
             aria-describedby={messageId}
             aria-expanded={isOpen}
             aria-haspopup="dialog"
-            aria-label={`${label}: ${displayValue}`}
+            // Standalone: name from label + value. Inside a field: the field
+            // label plus the value name the trigger via aria-labelledby.
+            aria-label={withinField ? undefined : `${label}: ${displayValue}`}
+            aria-labelledby={withinField ? `${labelId} ${rootId}-value` : undefined}
             onClick={(event) => (isOpen ? closeCalendar(true) : openCalendar(event.currentTarget))}
           >
-            <span
-              id={labelId}
-              className={cn(
-                'p-date-picker__trigger-label p-date-picker__trigger-floating-label',
-                isError && 'p-date-picker__trigger-label--error',
-              )}
-              aria-hidden="true"
-            >
-              {label}
-            </span>
-            <span
-              className={cn(
-                'p-date-picker__trigger-label p-date-picker__trigger-placeholder-label',
-                isError && 'p-date-picker__trigger-label--error',
-              )}
-              aria-hidden="true"
-            >
-              {label}
-            </span>
-            <span className="p-date-picker__trigger-value">{displayValue}</span>
+            {!withinField ? (
+              <>
+                <span
+                  id={ownLabelId}
+                  className={cn(
+                    'p-date-picker__trigger-label p-date-picker__trigger-floating-label',
+                    isError && 'p-date-picker__trigger-label--error',
+                  )}
+                  aria-hidden="true"
+                >
+                  {label}
+                </span>
+                <span
+                  className={cn(
+                    'p-date-picker__trigger-label p-date-picker__trigger-placeholder-label',
+                    isError && 'p-date-picker__trigger-label--error',
+                  )}
+                  aria-hidden="true"
+                >
+                  {label}
+                </span>
+              </>
+            ) : null}
+            <span id={`${rootId}-value`} className="p-date-picker__trigger-value">{displayValue}</span>
             <span className="p-date-picker__trigger-icon">
               <CalendarIcon />
             </span>
@@ -658,13 +692,13 @@ export const PDatePicker = forwardRef<PDatePickerRef, PDatePickerProps>(
           </div>
         )}
 
-        {isError && errorMessage ? (
+        {!withinField && isError && errorMessage ? (
           <p id={errorId} role="alert" className="p-date-picker__message p-date-picker__message--error">
             {errorMessage}
           </p>
         ) : null}
 
-        {!isError && helperText ? (
+        {!withinField && !isError && helperText ? (
           <p id={helperId} className="p-date-picker__message">
             {helperText}
           </p>

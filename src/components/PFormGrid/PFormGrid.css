@@ -1,0 +1,28 @@
+@layer components {
+.p-form-grid {
+  --p-form-grid-gap: var(--p-space-6);
+  --p-form-grid-columns: 1;
+
+  display: grid;
+  grid-template-columns: repeat(var(--p-form-grid-columns), minmax(0, 1fr));
+  gap: var(--p-form-grid-gap);
+}
+
+/* Tablet and up: two columns. Mobile stays single-column (labels above inputs,
+   full-width controls) per the responsive contract. */
+@media (min-width: 48rem) {
+  .p-form-grid {
+    --p-form-grid-columns: 2;
+  }
+}
+
+.p-form-grid__item {
+  min-width: 0;
+}
+
+/* Full-row fields span every column at all breakpoints. */
+.p-form-grid__item--full {
+  grid-column: 1 / -1;
+}
+
+}

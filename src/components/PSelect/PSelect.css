@@ -75,6 +75,12 @@
   cursor: pointer;
 }
 
+/* Bare mode (inside a PFormField): no floating label, so use symmetric
+   control padding instead of reserving space at the top. */
+.p-select--bare .p-select__control {
+  padding-block: var(--p-control-padding-y);
+}
+
 .p-select--inline .p-select__control {
   width: auto;
   min-width: 0;
