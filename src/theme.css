@@ -252,6 +252,35 @@
   --p-overlay-width-lg: 44rem;
   /* Side drawer width (capped to viewport on small screens). */
   --p-overlay-drawer-width: 30rem;
+
+  /* Feedback (PAlert, PToast) — status roles map 1:1 to semantic tokens.
+     A single `--p-feedback-*` triplet is switched per variant so both
+     components share one status language. Default is info. */
+  --p-feedback-surface: var(--p-color-info-surface);
+  --p-feedback-border: var(--p-color-info-border);
+  --p-feedback-accent: var(--p-color-info);
+  --p-feedback-text: var(--p-color-text);
+  --p-feedback-text-muted: var(--p-color-text-muted);
+  --p-feedback-radius: var(--p-radius-sm);
+  --p-feedback-icon-size: var(--p-size-icon-md);
+  --p-feedback-gap: var(--p-space-3);
+  --p-feedback-padding-y: var(--p-space-3);
+  --p-feedback-padding-x: var(--p-space-4);
+  --p-feedback-title-font-size: var(--p-font-size-body-sm);
+  --p-feedback-title-weight: var(--p-font-weight-medium);
+  --p-feedback-font-size: var(--p-font-size-body-sm);
+  --p-feedback-line-height: var(--p-line-height-body-sm);
+  --p-feedback-ring: var(--p-focus-ring-color);
+
+  /* Toast region — transient, portaled above app chrome. */
+  --p-toast-surface: var(--p-color-surface);
+  --p-toast-shadow: var(--p-shadow-lg);
+  --p-toast-width: 22rem;
+  --p-toast-gap: var(--p-space-3);
+  --p-toast-inset: var(--p-space-4);
+  --p-toast-z-index: 1000;
+  --p-toast-duration: var(--p-duration-normal);
+  --p-toast-ease: var(--p-ease-standard);
 }
 
 [data-theme='dark'] {

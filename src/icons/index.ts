@@ -1,7 +1,11 @@
 export { default as CalendarIcon } from './calendar-icon';
+export { default as CheckCircleIcon } from './check-circle-icon';
 export { default as ChevronLeftIcon } from './chevron-left-icon';
 export { default as CloseIcon } from './close-icon';
 export { default as ChevronRightIcon } from './chevron-right-icon';
+export { default as ExclamationCircleIcon } from './exclamation-circle-icon';
+export { default as InfoCircleIcon } from './info-circle-icon';
+export { default as WarningTriangleIcon } from './warning-triangle-icon';
 export { default as TriangleListIcon } from './triangle-list-icon';
 export { default as LinkedInIcon } from './linkedin-icon';
 export { default as MailIcon } from './mail-icon';

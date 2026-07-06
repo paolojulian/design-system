@@ -1,5 +1,12 @@
 export { Row, Stack } from './PContainers';
 export {
+  PAlert,
+  type PAlertAction,
+  type PAlertProps,
+  type PAlertRef,
+  type PAlertVariant,
+} from './PAlert';
+export {
   PBadge,
   type PBadgeAppearance,
   type PBadgeProps,

@@ -1,0 +1,140 @@
+@layer components {
+.p-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--p-feedback-gap);
+  padding-block: var(--p-feedback-padding-y);
+  padding-inline: var(--p-feedback-padding-x);
+  border: var(--p-control-border-width, 1px) solid var(--p-feedback-border);
+  border-radius: var(--p-feedback-radius);
+  background: var(--p-feedback-surface);
+  color: var(--p-feedback-text);
+  font-family: var(--p-font-family-sans);
+  font-size: var(--p-feedback-font-size);
+  line-height: var(--p-feedback-line-height);
+}
+
+/* Variants switch only the shared status triplet — no new hues. */
+.p-alert--info {
+  --p-feedback-surface: var(--p-color-info-surface);
+  --p-feedback-border: var(--p-color-info-border);
+  --p-feedback-accent: var(--p-color-info);
+}
+
+.p-alert--success {
+  --p-feedback-surface: var(--p-color-success-surface);
+  --p-feedback-border: var(--p-color-success-border);
+  --p-feedback-accent: var(--p-color-success);
+}
+
+.p-alert--warning {
+  --p-feedback-surface: var(--p-color-warning-surface);
+  --p-feedback-border: var(--p-color-warning-border);
+  --p-feedback-accent: var(--p-color-warning);
+}
+
+.p-alert--danger {
+  --p-feedback-surface: var(--p-color-danger-surface);
+  --p-feedback-border: var(--p-color-danger-border);
+  --p-feedback-accent: var(--p-color-danger);
+}
+
+.p-alert__icon {
+  display: inline-flex;
+  flex: none;
+  width: var(--p-feedback-icon-size);
+  height: var(--p-feedback-icon-size);
+  /* Optical alignment with the first line of text. */
+  margin-block-start: calc((var(--p-feedback-line-height) - var(--p-feedback-icon-size)) / 2);
+  color: var(--p-feedback-accent);
+}
+
+.p-alert__icon > svg {
+  width: 100%;
+  height: 100%;
+}
+
+.p-alert__body {
+  display: flex;
+  min-width: 0;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: calc(var(--p-space-1) / 2);
+}
+
+.p-alert__title {
+  font-size: var(--p-feedback-title-font-size);
+  font-weight: var(--p-feedback-title-weight);
+  line-height: var(--p-feedback-line-height);
+}
+
+.p-alert__message {
+  color: var(--p-feedback-text-muted);
+  overflow-wrap: anywhere;
+}
+
+/* Only a title, no body: keep the muted color off the title. */
+.p-alert__title:only-child {
+  color: var(--p-feedback-text);
+}
+
+/* Action uses full-contrast text + underline rather than the vivid status hue:
+   an amber/red link on its own light tint fails WCAG AA, and the underline
+   already carries the affordance, so color is never the sole signal. */
+.p-alert__action {
+  align-self: flex-start;
+  margin-block-start: calc(var(--p-space-1) / 2);
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--p-feedback-text);
+  font: inherit;
+  font-weight: var(--p-font-weight-medium);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+
+.p-alert__action:hover {
+  text-decoration: none;
+}
+
+.p-alert__action:focus-visible {
+  outline: none;
+  border-radius: var(--p-radius-xs);
+  box-shadow: 0 0 0 var(--p-focus-ring-width) var(--p-feedback-ring);
+}
+
+.p-alert__dismiss {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  /* Padding, not size, guarantees the 44px touch target without shifting layout. */
+  width: var(--p-size-icon-md);
+  height: var(--p-size-icon-md);
+  margin-block-start: calc((var(--p-feedback-line-height) - var(--p-size-icon-md)) / 2);
+  padding: 0;
+  border: none;
+  border-radius: var(--p-radius-xs);
+  background: none;
+  color: var(--p-feedback-text-muted);
+  cursor: pointer;
+  transition: color var(--p-duration-fast) var(--p-ease-standard);
+}
+
+.p-alert__dismiss:hover {
+  color: var(--p-feedback-text);
+}
+
+.p-alert__dismiss:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 var(--p-focus-ring-width) var(--p-feedback-ring);
+}
+
+.p-alert__dismiss > svg {
+  width: 100%;
+  height: 100%;
+}
+
+}
