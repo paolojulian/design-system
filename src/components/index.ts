@@ -17,6 +17,7 @@ export {
   type PCardGridRef,
   type PCardGridResponsiveColumns,
 } from './PCardGrid';
+export { PCheckbox, type PCheckboxProps, type PCheckboxRef } from './PCheckbox';
 export {
   PCombobox,
   type PComboboxFilterMode,
@@ -63,6 +64,8 @@ export {
   type PPaginationProps,
   type PPaginationRef,
 } from './PPagination';
+export { PRadio, type PRadioProps, type PRadioRef } from './PRadio';
+export { PRadioGroup, type PRadioGroupProps } from './PRadio';
 export {
   PSelect,
   type PSelectDensity,
@@ -85,6 +88,7 @@ export {
   type PTableState,
   type PTableStateTone,
 } from './PTable';
+export { PSwitch, type PSwitchProps, type PSwitchRef } from './PSwitch';
 export { PTypography, type PTypographyProps } from './PTypography';
 export {
   PSectionHeader,

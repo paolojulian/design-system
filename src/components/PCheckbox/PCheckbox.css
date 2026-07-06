@@ -1,0 +1,158 @@
+@layer components {
+.p-checkbox {
+  --p-checkbox-size: var(--p-selection-size);
+  --p-checkbox-bg: var(--p-selection-bg);
+  --p-checkbox-border: var(--p-selection-border);
+  --p-checkbox-border-hover: var(--p-selection-border-hover);
+  --p-checkbox-border-error: var(--p-selection-border-error);
+  --p-checkbox-checked-bg: var(--p-selection-checked-bg);
+  --p-checkbox-checked-border: var(--p-selection-checked-border);
+  --p-checkbox-checked-hover-bg: var(--p-selection-checked-hover-bg);
+  --p-checkbox-checked-hover-border: var(--p-selection-checked-hover-border);
+  --p-checkbox-mark: var(--p-selection-mark);
+  --p-checkbox-text: var(--p-selection-text);
+  --p-checkbox-text-muted: var(--p-selection-text-muted);
+  --p-checkbox-ring: var(--p-selection-ring);
+  --p-checkbox-radius: var(--p-selection-radius);
+  --p-checkbox-gap: var(--p-selection-gap);
+  --p-checkbox-touch-min: var(--p-selection-touch-min);
+  --p-checkbox-font-size: var(--p-selection-font-size);
+  --p-checkbox-line-height: var(--p-selection-line-height);
+  --p-checkbox-transition: var(--p-selection-transition);
+
+  display: flex;
+  flex-direction: column;
+}
+
+.p-checkbox__main {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--p-checkbox-gap);
+  /* Padding, not visual size, guarantees the 44px touch target. */
+  min-height: var(--p-checkbox-touch-min);
+  padding-block: var(--p-space-3);
+  cursor: pointer;
+}
+
+.p-checkbox--disabled .p-checkbox__main {
+  cursor: not-allowed;
+}
+
+.p-checkbox__control {
+  position: relative;
+  display: inline-flex;
+  flex: none;
+  /* Match the control box to the first line of label text so multi-line
+     labels stay top-aligned with the box. */
+  height: var(--p-checkbox-line-height);
+  align-items: center;
+}
+
+/* Native input kept in the DOM for semantics + keyboard, visually replaced
+   by the styled box below. Not display:none so it stays focusable. */
+.p-checkbox__input {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  width: var(--p-checkbox-size);
+  height: var(--p-checkbox-size);
+  top: 50%;
+  transform: translateY(-50%);
+  /* Keep the transparent native input above the visual box so it is the hit
+     target for pointer + assistive tooling, not the decorative overlay. */
+  z-index: 1;
+  opacity: 0;
+  cursor: inherit;
+}
+
+.p-checkbox__box {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--p-checkbox-size);
+  height: var(--p-checkbox-size);
+  border: var(--p-control-border-width) solid var(--p-checkbox-border);
+  border-radius: var(--p-checkbox-radius);
+  background: var(--p-checkbox-bg);
+  color: var(--p-checkbox-mark);
+  transition: var(--p-checkbox-transition);
+}
+
+.p-checkbox__box-icon {
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transform: scale(0.6);
+  transition: opacity var(--p-duration-fast) var(--p-ease-standard),
+    transform var(--p-duration-fast) var(--p-ease-standard);
+}
+
+.p-checkbox__main:hover .p-checkbox__input:not(:disabled):not(:checked):not(:indeterminate) ~ .p-checkbox__box {
+  border-color: var(--p-checkbox-border-hover);
+}
+
+.p-checkbox__input:checked ~ .p-checkbox__box,
+.p-checkbox__input:indeterminate ~ .p-checkbox__box {
+  background: var(--p-checkbox-checked-bg);
+  border-color: var(--p-checkbox-checked-border);
+}
+
+.p-checkbox__main:hover .p-checkbox__input:not(:disabled):checked ~ .p-checkbox__box,
+.p-checkbox__main:hover .p-checkbox__input:not(:disabled):indeterminate ~ .p-checkbox__box {
+  background: var(--p-checkbox-checked-hover-bg);
+  border-color: var(--p-checkbox-checked-hover-border);
+}
+
+.p-checkbox__input:checked ~ .p-checkbox__box .p-checkbox__check,
+.p-checkbox__input:indeterminate ~ .p-checkbox__box .p-checkbox__dash {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Indeterminate wins visually: hide the check even when also checked. */
+.p-checkbox__input:indeterminate ~ .p-checkbox__box .p-checkbox__check {
+  opacity: 0;
+}
+
+.p-checkbox__input:focus-visible ~ .p-checkbox__box {
+  outline: none;
+  box-shadow: 0 0 0 var(--p-focus-ring-width) var(--p-checkbox-ring);
+}
+
+.p-checkbox--error .p-checkbox__box {
+  border-color: var(--p-checkbox-border-error);
+}
+
+.p-checkbox--error .p-checkbox__input:focus-visible ~ .p-checkbox__box {
+  box-shadow: 0 0 0 var(--p-focus-ring-width) var(--p-checkbox-border-error);
+}
+
+.p-checkbox--disabled {
+  opacity: var(--p-opacity-disabled);
+}
+
+.p-checkbox__label {
+  color: var(--p-checkbox-text);
+  font-family: var(--p-font-family-sans);
+  font-size: var(--p-checkbox-font-size);
+  line-height: var(--p-checkbox-line-height);
+}
+
+.p-checkbox__message {
+  /* Align messages under the label, past the control + gap. */
+  margin-inline-start: calc(var(--p-checkbox-size) + var(--p-checkbox-gap));
+  margin-block-start: var(--p-selection-message-margin-top);
+  font-family: var(--p-font-family-sans);
+  font-size: var(--p-selection-message-font-size);
+  line-height: var(--p-selection-message-line-height);
+}
+
+.p-checkbox__message--description {
+  color: var(--p-checkbox-text-muted);
+}
+
+.p-checkbox__message--error {
+  color: var(--p-checkbox-border-error);
+}
+
+}

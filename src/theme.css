@@ -198,6 +198,40 @@
   --p-control-transition: border-color var(--p-duration-fast) var(--p-ease-standard),
     background-color var(--p-duration-fast) var(--p-ease-standard),
     box-shadow var(--p-duration-fast) var(--p-ease-standard);
+
+  /* Selection controls (PCheckbox, PRadio, PSwitch) */
+  --p-selection-size: 1.25rem;
+  --p-selection-bg: var(--p-color-surface);
+  --p-selection-border: var(--p-color-border);
+  --p-selection-border-hover: var(--p-color-border-strong);
+  --p-selection-border-error: var(--p-color-danger);
+  --p-selection-checked-bg: var(--p-color-action-primary);
+  --p-selection-checked-border: var(--p-color-action-primary);
+  --p-selection-checked-hover-bg: var(--p-color-action-primary-hover);
+  --p-selection-checked-hover-border: var(--p-color-action-primary-hover);
+  --p-selection-mark: var(--p-color-text-inverse);
+  --p-selection-text: var(--p-color-text);
+  --p-selection-text-muted: var(--p-color-text-muted);
+  --p-selection-ring: var(--p-focus-ring-color);
+  --p-selection-radius: var(--p-radius-xs);
+  --p-selection-gap: var(--p-space-3);
+  --p-selection-touch-min: var(--p-size-touch-min);
+  --p-selection-font-size: var(--p-control-font-size);
+  --p-selection-line-height: var(--p-control-line-height);
+  --p-selection-message-font-size: var(--p-control-message-font-size);
+  --p-selection-message-line-height: var(--p-control-message-line-height);
+  --p-selection-message-margin-top: var(--p-control-message-margin-top);
+  --p-selection-transition: var(--p-control-transition);
+
+  /* Switch track + thumb */
+  --p-switch-width: 2.75rem;
+  --p-switch-height: 1.5rem;
+  --p-switch-thumb-size: 1.125rem;
+  --p-switch-thumb-inset: 0.1875rem;
+  --p-switch-track-off: var(--p-color-neutral-300);
+  --p-switch-track-on: var(--p-color-action-primary);
+  --p-switch-track-on-hover: var(--p-color-action-primary-hover);
+  --p-switch-thumb: var(--p-color-neutral-0);
 }
 
 [data-theme='dark'] {
@@ -239,4 +273,8 @@
   /* Control hover must lighten (raise) in dark; the light value is a fixed
      near-white base token that would flash bright on dark surfaces. */
   --p-control-bg-hover: var(--p-color-neutral-800);
+
+  /* The off-track is a fixed light-gray base token in light mode; in dark it
+     would read as a bright bar, so raise it onto the dark neutral ramp. */
+  --p-switch-track-off: var(--p-color-neutral-700);
 }

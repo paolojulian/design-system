@@ -1,0 +1,162 @@
+@layer components {
+.p-radio-group {
+  --p-radio-size: var(--p-selection-size);
+  --p-radio-bg: var(--p-selection-bg);
+  --p-radio-border: var(--p-selection-border);
+  --p-radio-border-hover: var(--p-selection-border-hover);
+  --p-radio-border-error: var(--p-selection-border-error);
+  --p-radio-checked: var(--p-selection-checked-bg);
+  --p-radio-checked-hover: var(--p-selection-checked-hover-bg);
+  --p-radio-text: var(--p-selection-text);
+  --p-radio-text-muted: var(--p-selection-text-muted);
+  --p-radio-ring: var(--p-selection-ring);
+  --p-radio-gap: var(--p-selection-gap);
+  --p-radio-touch-min: var(--p-selection-touch-min);
+  --p-radio-font-size: var(--p-selection-font-size);
+  --p-radio-line-height: var(--p-selection-line-height);
+  --p-radio-transition: var(--p-selection-transition);
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--p-space-2);
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-inline-size: 0;
+}
+
+.p-radio-group__legend {
+  padding: 0;
+  color: var(--p-radio-text);
+  font-family: var(--p-font-family-sans);
+  font-size: var(--p-radio-font-size);
+  line-height: var(--p-radio-line-height);
+  font-weight: var(--p-font-weight-medium);
+}
+
+.p-radio-group__options {
+  display: flex;
+  flex-direction: column;
+}
+
+.p-radio-group__options--horizontal {
+  flex-direction: row;
+  flex-wrap: wrap;
+  column-gap: var(--p-space-6);
+}
+
+.p-radio {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--p-radio-gap);
+  /* Padding, not visual size, guarantees the 44px touch target. */
+  min-height: var(--p-radio-touch-min);
+  padding-block: var(--p-space-3);
+  cursor: pointer;
+}
+
+.p-radio--disabled {
+  cursor: not-allowed;
+  opacity: var(--p-opacity-disabled);
+}
+
+.p-radio__control {
+  position: relative;
+  display: inline-flex;
+  flex: none;
+  height: var(--p-radio-line-height);
+  align-items: center;
+}
+
+.p-radio__input {
+  position: absolute;
+  inset: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  margin: 0;
+  width: var(--p-radio-size);
+  height: var(--p-radio-size);
+  /* Keep the transparent native input above the visual circle so it is the
+     hit target for pointer + assistive tooling, not the decorative overlay. */
+  z-index: 1;
+  opacity: 0;
+  cursor: inherit;
+}
+
+.p-radio__circle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--p-radio-size);
+  height: var(--p-radio-size);
+  border: var(--p-control-border-width) solid var(--p-radio-border);
+  border-radius: var(--p-radius-full);
+  background: var(--p-radio-bg);
+  transition: var(--p-radio-transition);
+}
+
+.p-radio__dot {
+  width: 50%;
+  height: 50%;
+  border-radius: var(--p-radius-full);
+  background: var(--p-radio-checked);
+  transform: scale(0);
+  transition: transform var(--p-duration-fast) var(--p-ease-standard);
+}
+
+.p-radio:hover .p-radio__input:not(:disabled):not(:checked) ~ .p-radio__circle {
+  border-color: var(--p-radio-border-hover);
+}
+
+.p-radio__input:checked ~ .p-radio__circle {
+  border-color: var(--p-radio-checked);
+}
+
+.p-radio:hover .p-radio__input:not(:disabled):checked ~ .p-radio__circle {
+  border-color: var(--p-radio-checked-hover);
+}
+
+.p-radio__input:checked ~ .p-radio__circle .p-radio__dot {
+  transform: scale(1);
+}
+
+.p-radio:hover .p-radio__input:not(:disabled):checked ~ .p-radio__circle .p-radio__dot {
+  background: var(--p-radio-checked-hover);
+}
+
+.p-radio__input:focus-visible ~ .p-radio__circle {
+  outline: none;
+  box-shadow: 0 0 0 var(--p-focus-ring-width) var(--p-radio-ring);
+}
+
+.p-radio-group--error .p-radio__circle {
+  border-color: var(--p-radio-border-error);
+}
+
+.p-radio-group--error .p-radio__input:focus-visible ~ .p-radio__circle {
+  box-shadow: 0 0 0 var(--p-focus-ring-width) var(--p-radio-border-error);
+}
+
+.p-radio__label {
+  color: var(--p-radio-text);
+  font-family: var(--p-font-family-sans);
+  font-size: var(--p-radio-font-size);
+  line-height: var(--p-radio-line-height);
+}
+
+.p-radio-group__message {
+  margin: 0;
+  font-family: var(--p-font-family-sans);
+  font-size: var(--p-selection-message-font-size);
+  line-height: var(--p-selection-message-line-height);
+}
+
+.p-radio-group__message--description {
+  color: var(--p-radio-text-muted);
+}
+
+.p-radio-group__message--error {
+  color: var(--p-radio-border-error);
+}
+
+}

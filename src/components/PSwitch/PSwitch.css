@@ -1,0 +1,140 @@
+@layer components {
+.p-switch {
+  --p-switch-track-width: var(--p-switch-width);
+  --p-switch-track-height: var(--p-switch-height);
+  --p-switch-thumb: var(--p-switch-thumb);
+  --p-switch-thumb-size: var(--p-switch-thumb-size);
+  --p-switch-thumb-inset: var(--p-switch-thumb-inset);
+  --p-switch-off: var(--p-switch-track-off);
+  --p-switch-on: var(--p-switch-track-on);
+  --p-switch-on-hover: var(--p-switch-track-on-hover);
+  --p-switch-border-error: var(--p-selection-border-error);
+  --p-switch-ring: var(--p-selection-ring);
+  --p-switch-gap: var(--p-selection-gap);
+  --p-switch-touch-min: var(--p-selection-touch-min);
+  --p-switch-text: var(--p-selection-text);
+  --p-switch-text-muted: var(--p-selection-text-muted);
+  --p-switch-font-size: var(--p-selection-font-size);
+  --p-switch-line-height: var(--p-selection-line-height);
+  --p-switch-transition: var(--p-selection-transition);
+
+  display: flex;
+  flex-direction: column;
+}
+
+.p-switch__main {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--p-switch-gap);
+  /* Padding, not visual size, guarantees the 44px touch target. */
+  min-height: var(--p-switch-touch-min);
+  padding-block: var(--p-space-3);
+  cursor: pointer;
+}
+
+.p-switch--disabled .p-switch__main {
+  cursor: not-allowed;
+}
+
+.p-switch__control {
+  position: relative;
+  display: inline-flex;
+  flex: none;
+  height: var(--p-switch-line-height);
+  align-items: center;
+}
+
+.p-switch__input {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  width: var(--p-switch-track-width);
+  height: var(--p-switch-track-height);
+  top: 50%;
+  transform: translateY(-50%);
+  /* Keep the transparent native input above the visual track so it is the hit
+     target for pointer + assistive tooling, not the decorative overlay. */
+  z-index: 1;
+  opacity: 0;
+  cursor: inherit;
+}
+
+.p-switch__track {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  width: var(--p-switch-track-width);
+  height: var(--p-switch-track-height);
+  border-radius: var(--p-radius-full);
+  background: var(--p-switch-off);
+  transition: var(--p-switch-transition);
+}
+
+.p-switch__thumb {
+  position: absolute;
+  inset-inline-start: var(--p-switch-thumb-inset);
+  width: var(--p-switch-thumb-size);
+  height: var(--p-switch-thumb-size);
+  border-radius: var(--p-radius-full);
+  background: var(--p-switch-thumb);
+  box-shadow: var(--p-shadow-sm);
+  transition: transform var(--p-duration-normal) var(--p-ease-standard);
+}
+
+.p-switch__input:checked ~ .p-switch__track {
+  background: var(--p-switch-on);
+}
+
+.p-switch__main:hover .p-switch__input:not(:disabled):checked ~ .p-switch__track {
+  background: var(--p-switch-on-hover);
+}
+
+.p-switch__input:checked ~ .p-switch__track .p-switch__thumb {
+  transform: translateX(
+    calc(
+      var(--p-switch-track-width) - var(--p-switch-thumb-size) - (2 * var(--p-switch-thumb-inset))
+    )
+  );
+}
+
+.p-switch__input:focus-visible ~ .p-switch__track {
+  outline: none;
+  box-shadow: 0 0 0 var(--p-focus-ring-width) var(--p-switch-ring);
+}
+
+.p-switch--error .p-switch__track {
+  box-shadow: 0 0 0 var(--p-control-border-width) var(--p-switch-border-error);
+}
+
+.p-switch--error .p-switch__input:focus-visible ~ .p-switch__track {
+  box-shadow: 0 0 0 var(--p-focus-ring-width) var(--p-switch-border-error);
+}
+
+.p-switch--disabled {
+  opacity: var(--p-opacity-disabled);
+}
+
+.p-switch__label {
+  color: var(--p-switch-text);
+  font-family: var(--p-font-family-sans);
+  font-size: var(--p-switch-font-size);
+  line-height: var(--p-switch-line-height);
+}
+
+.p-switch__message {
+  margin-inline-start: calc(var(--p-switch-track-width) + var(--p-switch-gap));
+  margin-block-start: var(--p-selection-message-margin-top);
+  font-family: var(--p-font-family-sans);
+  font-size: var(--p-selection-message-font-size);
+  line-height: var(--p-selection-message-line-height);
+}
+
+.p-switch__message--description {
+  color: var(--p-switch-text-muted);
+}
+
+.p-switch__message--error {
+  color: var(--p-switch-border-error);
+}
+
+}
