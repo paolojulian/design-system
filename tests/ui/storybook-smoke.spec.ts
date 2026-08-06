@@ -4,8 +4,17 @@ import { expect, type Page, test } from '@playwright/test';
 const storyUrl = (id: string) => `/iframe.html?id=${id}&viewMode=story`;
 const lightControlTextColor = 'rgb(17, 17, 17)';
 
-function getCurrentMonthRangeLabel() {
-  const today = new Date();
+/**
+ * The single instant the date-picker specs treat as "now" — both the browser
+ * clock (via `pinClockToMay2026`) and the label helper below derive from it.
+ * They have to agree: the assertion runs in Node while the component reads the
+ * page's clock, so two independent `new Date()` calls would compare August
+ * against May the moment the suite is pinned.
+ */
+const PINNED_NOW = new Date('2026-05-10T12:00:00');
+
+function getPinnedMonthRangeLabel() {
+  const today = PINNED_NOW;
   const start = new Date(today.getFullYear(), today.getMonth(), 1);
   const end = new Date(today.getFullYear(), today.getMonth() + 1, 0);
   const formatter = new Intl.DateTimeFormat('en-US', {
@@ -26,8 +35,35 @@ async function gotoStory(page: Page, id: string) {
 }
 
 async function expectNoA11yViolations(page: Page) {
+  // Let the backgrounds addon's background-color transition finish first.
+  // Sampled mid-flight, the body reads as near-transparent and axe composites
+  // against a color that is never painted — a contrast failure that only exists
+  // for a few frames. Assert the settled state.
+  await page.evaluate(() =>
+    Promise.all(
+      document.body.getAnimations().map((animation) => animation.finished.catch(() => undefined)),
+    ),
+  );
   const results = await new AxeBuilder({ page }).include('#storybook-root').analyze();
   expect(results.violations).toEqual([]);
+}
+
+/**
+ * Freezes "today" inside the date-picker specs.
+ *
+ * The `--standard` stories pin a `defaultValue`, so their calendars always open
+ * on May 2026. The `--with-presets` and `--empty` stories do not: they open on
+ * whatever month it currently is, and the assertions below click hardcoded May
+ * 2026 cells. That passed while these were written and became a timeout the
+ * moment the real clock moved past May 2026 — the cells simply no longer exist.
+ *
+ * Pinning rather than rewriting the assertions to be relative, because the
+ * `today`/`yesterday` presets are clock-dependent by definition: a fixed clock
+ * is the only way those stay assertable. Midday avoids a date rollover in
+ * whichever timezone the suite runs in.
+ */
+async function pinClockToMay2026(page: Page) {
+  await page.clock.setFixedTime(PINNED_NOW);
 }
 
 async function expectGridColumnCount(page: Page, selector: string, count: number) {
@@ -103,8 +139,10 @@ test.describe('Storybook smoke tests', () => {
 
     await expect(page.getByText('01')).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Portfolio Health' })).toBeVisible();
-    await expect(page.locator('.p-section-header__mark')).toHaveText('-');
-    await expect(page.locator('.p-section-header__divider')).toHaveText('\\');
+    // Em dash and pipe — these are what PSectionHeader renders. The assertions
+    // predate that component and still expected a hyphen and a backslash.
+    await expect(page.locator('.p-section-header__mark')).toHaveText('—');
+    await expect(page.locator('.p-section-header__divider')).toHaveText('|');
   });
 
   test('keeps the Serif variant on the enterprise serif contract', async ({ page }) => {
@@ -333,6 +371,7 @@ test.describe('Storybook smoke tests', () => {
   });
 
   test('renders date picker standard and preset flows', async ({ page }) => {
+    await pinClockToMay2026(page);
     await gotoStory(page, 'components-pdatepicker--standard');
     await expect(page.getByLabel('Due date')).toBeVisible();
     await expect(page.getByRole('button', { name: 'Due date: May 10, 2026' })).toBeVisible();
@@ -392,6 +431,7 @@ test.describe('Storybook smoke tests', () => {
   });
 
   test('renders date range picker selection and presets', async ({ page }) => {
+    await pinClockToMay2026(page);
     await gotoStory(page, 'components-pdaterangepicker--standard');
     await expect(page.getByRole('button', { name: /Report range/ })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Report range: May 1, 2026 - May 10, 2026' })).toBeVisible();
@@ -435,7 +475,7 @@ test.describe('Storybook smoke tests', () => {
     await expectElementWidthAtLeast(page, '.p-date-range-picker', 350);
     await page.getByRole('button', { name: 'This month' }).click();
     await expect(page.locator('.p-date-range-picker__label-value')).toHaveText(
-      getCurrentMonthRangeLabel(),
+      getPinnedMonthRangeLabel(),
     );
     await page.getByRole('button', { name: 'Custom' }).click();
     await expect(page.getByRole('dialog')).toBeVisible();

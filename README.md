@@ -127,3 +127,75 @@ semantic layer, not a stable API. For a single component, override that
 component's tokens through a class (for example `--p-highlight-bg`) rather than
 reaching for base values.
 
+
+## Galleries
+
+Four components cover photo and video sets. All of them take a `renderImage` prop
+so the package stays framework-agnostic — the default is a plain lazy `<img>`:
+
+```tsx
+import { PPhotoMosaic } from '@paolojulian.dev/design-system';
+import Image from 'next/image';
+
+<PPhotoMosaic
+  photos={photos}
+  onPhotoClick={setOpenAt}
+  renderImage={(props) => <Image {...props} fill />}
+/>;
+```
+
+| Component | Use it for |
+| --- | --- |
+| `PPhotoMosaic` | Album preview — a wide lead tile over a row, rest summarised as "+N" |
+| `PPhotoGrid` | A uniform grid of cropped tiles |
+| `PVideoGallery` | A poster wall that mounts a player only for the clip that was played |
+| `PPhotoLightbox` | Full-screen viewer (separate entry — see below) |
+
+Photos carry two sources. Tiles paint `thumb`; only the lightbox reaches for `src`.
+
+```ts
+type PPhoto = { src: string; thumb?: string; alt: string };
+```
+
+`onPhotoClick` is optional throughout. Without it the tiles render as plain
+elements — no buttons, nothing focusable — so a static preview stays static.
+The `sizes` attribute is derived from the column configuration automatically.
+
+### Lightbox
+
+`PPhotoLightbox` ships from a separate entry because it is the one component with
+a dependency: `yet-another-react-lightbox`, declared as an **optional** peer.
+Importing the main entry pulls in none of it, and builds fine without the peer
+installed.
+
+```bash
+npm install yet-another-react-lightbox
+```
+
+```tsx
+import { PPhotoLightbox } from '@paolojulian.dev/design-system/gallery';
+
+// `null` is closed. Hold the index above the mosaic so the viewer spans the
+// whole set while the preview only knows about its own tiles.
+const [openAt, setOpenAt] = useState<number | null>(null);
+
+<>
+  <PPhotoMosaic photos={photos} onPhotoClick={setOpenAt} />
+  <PPhotoLightbox
+    photos={photos}
+    index={openAt}
+    onClose={() => setOpenAt(null)}
+    label="Jose Albin — Day 1"
+    archiveUrl="https://media.example.com/sets/jose-albin-day-1.zip"
+  />
+</>;
+```
+
+`archiveUrl` adds a whole-set download beside the single-photo one. It is a plain
+anchor to a pre-built archive, not a scripted download: a `.zip` is not something
+a browser renders, so a cross-origin `<a href>` saves it with no CORS, no fetch,
+no memory spike, and with resume support for free.
+
+The viewer is a dark room in both themes — a photograph is the content, and light
+chrome would tint it. Retheme it through `--p-photo-lightbox-backdrop`,
+`--p-photo-lightbox-control`, and `--p-photo-lightbox-control-active`.

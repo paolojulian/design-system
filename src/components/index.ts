@@ -83,6 +83,38 @@ export {
   type PHorizontalSliderRef,
 } from './PHorizontalSlider';
 export {
+  PPhotoGrid,
+  type PPhotoGridProps,
+  type PPhotoGridRef,
+} from './PPhotoGrid';
+export {
+  PPhotoMosaic,
+  type PPhotoMosaicLabels,
+  type PPhotoMosaicProps,
+  type PPhotoMosaicRef,
+} from './PPhotoMosaic';
+export {
+  PVideoGallery,
+  type PVideoGalleryLabels,
+  type PVideoGalleryProps,
+  type PVideoGalleryRef,
+} from './PVideoGallery';
+/**
+ * Shared media contract. `PPhotoLightbox` is deliberately absent — it needs the
+ * optional `yet-another-react-lightbox` peer, so it ships from the
+ * `@paolojulian.dev/design-system/gallery` entry instead.
+ */
+export {
+  renderMediaImage,
+  type PMediaColumns,
+  type PMediaGap,
+  type PMediaImageProps,
+  type PMediaImageRenderer,
+  type PMediaResponsiveColumns,
+  type PPhoto,
+  type PVideo,
+} from './media';
+export {
   PPagination,
   type PPaginationDensity,
   type PPaginationItem,

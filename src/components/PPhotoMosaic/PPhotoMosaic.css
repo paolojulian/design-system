@@ -1,0 +1,131 @@
+@layer components {
+.p-photo-mosaic {
+  --p-photo-mosaic-columns: 3;
+  --p-photo-mosaic-gap: var(--p-space-2);
+  --p-photo-mosaic-hero-aspect: 3 / 2;
+  --p-photo-mosaic-tile-aspect: 1 / 1;
+  --p-photo-mosaic-radius: var(--p-radius-none);
+  --p-photo-mosaic-placeholder: var(--p-color-surface-subtle);
+  --p-photo-mosaic-hover-scale: 1.05;
+  /* Fixed rather than tokenised: the scrim sits on a photograph, not on a
+     themed surface, so it must stay dark in both themes to keep the count
+     legible over a bright frame. */
+  --p-photo-mosaic-scrim: rgb(0 0 0 / 0.55);
+  --p-photo-mosaic-scrim-hover: rgb(0 0 0 / 0.45);
+  --p-photo-mosaic-overflow-color: #ffffff;
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--p-photo-mosaic-gap);
+  width: 100%;
+  min-width: 0;
+}
+
+.p-photo-mosaic--gap-none {
+  --p-photo-mosaic-gap: 0;
+}
+
+.p-photo-mosaic--gap-sm {
+  --p-photo-mosaic-gap: var(--p-space-2);
+}
+
+.p-photo-mosaic--gap-md {
+  --p-photo-mosaic-gap: var(--p-space-3);
+}
+
+.p-photo-mosaic--gap-lg {
+  --p-photo-mosaic-gap: var(--p-space-4);
+}
+
+.p-photo-mosaic__row {
+  display: grid;
+  grid-template-columns: repeat(var(--p-photo-mosaic-columns), minmax(0, 1fr));
+  gap: var(--p-photo-mosaic-gap);
+  min-width: 0;
+}
+
+.p-photo-mosaic__tile {
+  position: relative;
+  display: block;
+  width: 100%;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  border-radius: var(--p-photo-mosaic-radius);
+  background: var(--p-photo-mosaic-placeholder);
+}
+
+.p-photo-mosaic__tile--hero {
+  aspect-ratio: var(--p-photo-mosaic-hero-aspect);
+}
+
+.p-photo-mosaic__tile--row {
+  aspect-ratio: var(--p-photo-mosaic-tile-aspect);
+}
+
+.p-photo-mosaic__tile--interactive {
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.p-photo-mosaic__tile--interactive:focus-visible {
+  outline: var(--p-focus-outline-width) solid var(--p-focus-ring-color);
+  outline-offset: calc(var(--p-focus-outline-width) * -1);
+}
+
+.p-photo-mosaic__image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--p-duration-slow) var(--p-ease-standard);
+}
+
+.p-photo-mosaic__overflow {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--p-photo-mosaic-scrim);
+  color: var(--p-photo-mosaic-overflow-color);
+  font-family: var(--p-font-family-sans);
+  font-size: var(--p-font-size-heading-sm);
+  line-height: var(--p-line-height-heading-sm);
+  font-weight: var(--p-font-weight-bold);
+  transition: background-color var(--p-duration-fast) var(--p-ease-standard);
+}
+
+@media (hover: hover) {
+  .p-photo-mosaic__tile--interactive:hover .p-photo-mosaic__image {
+    transform: scale(var(--p-photo-mosaic-hover-scale));
+  }
+
+  .p-photo-mosaic__tile--interactive:hover .p-photo-mosaic__overflow {
+    background: var(--p-photo-mosaic-scrim-hover);
+  }
+}
+
+@media (min-width: 40rem) {
+  .p-photo-mosaic__overflow {
+    font-size: var(--p-font-size-heading-md);
+    line-height: var(--p-line-height-heading-md);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .p-photo-mosaic__image,
+  .p-photo-mosaic__overflow {
+    transition: none;
+  }
+
+  .p-photo-mosaic__tile--interactive:hover .p-photo-mosaic__image {
+    transform: none;
+  }
+}
+
+}

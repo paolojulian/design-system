@@ -1,0 +1,108 @@
+@layer components {
+.p-photo-grid {
+  --p-photo-grid-mobile-columns: 2;
+  --p-photo-grid-tablet-columns: 3;
+  --p-photo-grid-desktop-columns: 4;
+  --p-photo-grid-gap: var(--p-space-2);
+  --p-photo-grid-aspect: 1 / 1;
+  --p-photo-grid-radius: var(--p-radius-none);
+  /* Tiles sit on a neutral block until the image paints, so a slow set reads as
+     a grid loading rather than as holes in the page. */
+  --p-photo-grid-placeholder: var(--p-color-surface-subtle);
+  --p-photo-grid-hover-scale: 1.05;
+
+  display: grid;
+  grid-template-columns: repeat(var(--p-photo-grid-mobile-columns), minmax(0, 1fr));
+  gap: var(--p-photo-grid-gap);
+  width: 100%;
+  min-width: 0;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.p-photo-grid--gap-none {
+  --p-photo-grid-gap: 0;
+}
+
+.p-photo-grid--gap-sm {
+  --p-photo-grid-gap: var(--p-space-2);
+}
+
+.p-photo-grid--gap-md {
+  --p-photo-grid-gap: var(--p-space-3);
+}
+
+.p-photo-grid--gap-lg {
+  --p-photo-grid-gap: var(--p-space-4);
+}
+
+.p-photo-grid__item {
+  position: relative;
+  aspect-ratio: var(--p-photo-grid-aspect);
+  min-width: 0;
+  overflow: hidden;
+  border-radius: var(--p-photo-grid-radius);
+  background: var(--p-photo-grid-placeholder);
+}
+
+.p-photo-grid__button {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.p-photo-grid__button:focus-visible {
+  outline: var(--p-focus-outline-width) solid var(--p-focus-ring-color);
+  outline-offset: calc(var(--p-focus-outline-width) * -1);
+}
+
+.p-photo-grid__image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Cheap on the compositor and it keeps the crop anchored while scaling. */
+  transition: transform var(--p-duration-slow) var(--p-ease-standard);
+}
+
+/* Hover-only: on touch the scale sticks after a tap and reads as a stuck tile. */
+@media (hover: hover) {
+  .p-photo-grid__button:hover .p-photo-grid__image {
+    transform: scale(var(--p-photo-grid-hover-scale));
+  }
+}
+
+@media (min-width: 48rem) {
+  .p-photo-grid {
+    grid-template-columns: repeat(var(--p-photo-grid-tablet-columns), minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 64rem) {
+  .p-photo-grid {
+    grid-template-columns: repeat(var(--p-photo-grid-desktop-columns), minmax(0, 1fr));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .p-photo-grid__image {
+    transition: none;
+  }
+
+  .p-photo-grid__button:hover .p-photo-grid__image {
+    transform: none;
+  }
+}
+
+}

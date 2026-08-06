@@ -1,0 +1,176 @@
+@layer components {
+.p-video-gallery {
+  --p-video-gallery-mobile-columns: 1;
+  --p-video-gallery-tablet-columns: 2;
+  --p-video-gallery-desktop-columns: 3;
+  --p-video-gallery-gap: var(--p-space-3);
+  --p-video-gallery-aspect: 16 / 9;
+  --p-video-gallery-radius: var(--p-radius-none);
+  /* Letterboxed clips show this behind the frame, so it stays dark in both
+     themes rather than flashing a light band around a video. */
+  --p-video-gallery-stage: var(--p-color-neutral-950);
+  --p-video-gallery-scrim: rgb(0 0 0 / 0.25);
+  --p-video-gallery-scrim-hover: rgb(0 0 0 / 0.10);
+  --p-video-gallery-play-size: var(--p-size-control-md);
+  --p-video-gallery-play-bg: rgb(255 255 255 / 0.92);
+  --p-video-gallery-play-color: var(--p-color-neutral-950);
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--p-video-gallery-gap);
+  width: 100%;
+  min-width: 0;
+}
+
+.p-video-gallery--gap-none {
+  --p-video-gallery-gap: 0;
+}
+
+.p-video-gallery--gap-sm {
+  --p-video-gallery-gap: var(--p-space-2);
+}
+
+.p-video-gallery--gap-md {
+  --p-video-gallery-gap: var(--p-space-3);
+}
+
+.p-video-gallery--gap-lg {
+  --p-video-gallery-gap: var(--p-space-4);
+}
+
+.p-video-gallery__list {
+  display: grid;
+  grid-template-columns: repeat(var(--p-video-gallery-mobile-columns), minmax(0, 1fr));
+  gap: var(--p-video-gallery-gap);
+  min-width: 0;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.p-video-gallery__item {
+  position: relative;
+  aspect-ratio: var(--p-video-gallery-aspect);
+  min-width: 0;
+  overflow: hidden;
+  border-radius: var(--p-video-gallery-radius);
+  background: var(--p-video-gallery-stage);
+}
+
+.p-video-gallery__player {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  /* `contain`, not `cover`: a clip is the content here, and cropping it to fill
+     a 16/9 box would cut the top and bottom off anything shot vertically. */
+  object-fit: contain;
+}
+
+.p-video-gallery__poster {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.p-video-gallery__poster:focus-visible {
+  outline: var(--p-focus-outline-width) solid var(--p-focus-ring-color);
+  outline-offset: calc(var(--p-focus-outline-width) * -1);
+}
+
+.p-video-gallery__image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.p-video-gallery__play {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--p-video-gallery-scrim);
+  transition: background-color var(--p-duration-fast) var(--p-ease-standard);
+}
+
+.p-video-gallery__play svg {
+  width: var(--p-size-icon-lg);
+  height: var(--p-size-icon-lg);
+  /* Optical centring: a triangle's visual mass sits left of its bounding box,
+     so a mathematically centred glyph reads as nudged backwards. */
+  margin-inline-start: 0.125rem;
+  color: var(--p-video-gallery-play-color);
+  border-radius: var(--p-radius-full);
+  box-sizing: content-box;
+  padding: calc((var(--p-video-gallery-play-size) - var(--p-size-icon-lg)) / 2);
+  background: var(--p-video-gallery-play-bg);
+}
+
+@media (hover: hover) {
+  .p-video-gallery__poster:hover .p-video-gallery__play {
+    background: var(--p-video-gallery-scrim-hover);
+  }
+}
+
+.p-video-gallery__toggle {
+  align-self: flex-start;
+  padding: var(--p-space-2) var(--p-space-4);
+  border: var(--p-control-border-width) solid var(--p-color-border);
+  background: none;
+  color: var(--p-color-text-muted);
+  font-family: var(--p-font-family-sans);
+  font-size: var(--p-font-size-caption);
+  line-height: var(--p-line-height-caption);
+  font-weight: var(--p-font-weight-medium);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+  transition: var(--p-control-transition), color var(--p-duration-fast) var(--p-ease-standard);
+}
+
+@media (hover: hover) {
+  .p-video-gallery__toggle:hover {
+    border-color: var(--p-color-border-strong);
+    color: var(--p-color-text);
+  }
+}
+
+.p-video-gallery__toggle:focus-visible {
+  outline: var(--p-focus-outline-width) solid var(--p-focus-ring-color);
+  outline-offset: var(--p-focus-ring-offset);
+}
+
+@media (min-width: 48rem) {
+  .p-video-gallery__list {
+    grid-template-columns: repeat(var(--p-video-gallery-tablet-columns), minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 64rem) {
+  .p-video-gallery__list {
+    grid-template-columns: repeat(var(--p-video-gallery-desktop-columns), minmax(0, 1fr));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .p-video-gallery__play,
+  .p-video-gallery__toggle {
+    transition: none;
+  }
+}
+
+}

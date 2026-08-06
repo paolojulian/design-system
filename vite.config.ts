@@ -57,6 +57,7 @@ export default defineConfig({
     lib: {
       entry: {
         index: path.resolve(__dirname, "src/components/index.ts"),
+        gallery: path.resolve(__dirname, "src/gallery/index.ts"),
         constants: path.resolve(__dirname, "src/constants/index.ts"),
         icons: path.resolve(__dirname, "src/icons/index.ts"),
         utils: path.resolve(__dirname, "src/utils/index.ts"),
@@ -65,7 +66,21 @@ export default defineConfig({
       fileName: (format) => `[name].${format}.js`,
     },
     rollupOptions: {
-      external: ["react", "react/jsx-runtime", "react-dom", "tailwindcss"],
+      external: [
+        "react",
+        "react/jsx-runtime",
+        "react-dom",
+        "tailwindcss",
+        /**
+         * Matches subpaths too — the plugin modules and, importantly, the
+         * stylesheets. A bare "yet-another-react-lightbox" string would only
+         * externalise the root import, leaving Rollup to inline the library's
+         * CSS into our own bundle. Externalising the whole package keeps the
+         * `import '.../styles.css'` statements intact in the output, so the
+         * consumer's bundler resolves them from their own installed copy.
+         */
+        /^yet-another-react-lightbox(\/.*)?$/,
+      ],
       output: {
         globals: {
           react: "React",

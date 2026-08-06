@@ -42,6 +42,10 @@
 
 .p-text-input__control {
   display: block;
+  /* Without this the declared 100% excludes the 16px inline padding and 1px
+     border, so the control renders 34px wider than its container and pushes a
+     horizontal scrollbar onto the page at mobile widths. */
+  box-sizing: border-box;
   width: 100%;
   border-radius: var(--p-input-radius);
   min-height: var(--p-input-min-height);

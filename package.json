@@ -13,6 +13,11 @@
       "import": "./dist/index.es.js",
       "require": "./dist/index.cjs.js"
     },
+    "./gallery": {
+      "types": "./dist/gallery.d.ts",
+      "import": "./dist/gallery.es.js",
+      "require": "./dist/gallery.cjs.js"
+    },
     "./constants": {
       "types": "./dist/constants.d.ts",
       "import": "./dist/constants.es.js",
@@ -59,7 +64,13 @@
   },
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0",
-    "react-dom": "^18.0.0 || ^19.0.0"
+    "react-dom": "^18.0.0 || ^19.0.0",
+    "yet-another-react-lightbox": "^3.0.0"
+  },
+  "peerDependenciesMeta": {
+    "yet-another-react-lightbox": {
+      "optional": true
+    }
   },
   "dependencies": {
     "class-variance-authority": "^0.7.0",
@@ -94,7 +105,8 @@
     "typescript-eslint": "^8.0.1",
     "vite": "^5.4.1",
     "vite-plugin-dts": "^4.2.1",
-    "vite-plugin-static-copy": "^1.0.6"
+    "vite-plugin-static-copy": "^1.0.6",
+    "yet-another-react-lightbox": "^3.32.2"
   },
   "eslintConfig": {
     "extends": [

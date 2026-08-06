@@ -11,7 +11,26 @@ async function gotoStory(page: Page, id: string) {
   await expect(page.locator('.sb-errordisplay')).toBeHidden();
 }
 
+/**
+ * Waits for the backgrounds addon's background-color transition to settle.
+ *
+ * The dark-theme stories get their ground from that addon, which *animates* the
+ * change. Sampled mid-transition the body reads as `rgba(17, 17, 17, 0.035)` —
+ * near-transparent — so axe composites light-on-light and reports a contrast
+ * failure against a color that is never actually painted. This is the same
+ * class of bug as the toast fade-in flake: assert the settled state, not a
+ * frame partway into it.
+ */
+async function waitForBackgroundSettled(page: Page) {
+  await page.evaluate(() =>
+    Promise.all(
+      document.body.getAnimations().map((animation) => animation.finished.catch(() => undefined)),
+    ),
+  );
+}
+
 async function expectNoA11yViolations(page: Page) {
+  await waitForBackgroundSettled(page);
   const results = await new AxeBuilder({ page }).include('#storybook-root').analyze();
   expect(results.violations).toEqual([]);
 }

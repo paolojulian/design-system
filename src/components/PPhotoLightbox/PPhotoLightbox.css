@@ -1,0 +1,63 @@
+@layer components {
+/**
+ * Only the design-system-owned tokens and the archive action live here.
+ *
+ * Everything the library styles is reached through the `--yarl__*` variables set
+ * inline in PPhotoLightbox.tsx, because the library ships an unlayered
+ * stylesheet: rules outside a cascade layer beat every rule inside one, so a
+ * `@layer components` override of `.yarl__*` would silently lose. Setting the
+ * variables inline sidesteps the layer question entirely while still reading
+ * the tokens below.
+ *
+ * A viewer is a dark room in both themes — a photograph is the content, and a
+ * light chrome would tint the thing being looked at — so these values are fixed
+ * rather than mapped onto the light/dark surface tokens.
+ */
+.p-photo-lightbox {
+  --p-photo-lightbox-backdrop: rgb(0 0 0 / 0.92);
+  --p-photo-lightbox-control: rgb(255 255 255 / 0.8);
+  --p-photo-lightbox-control-active: #ffffff;
+  --p-photo-lightbox-action-padding: var(--p-space-2);
+  /* Matches the library's `--yarl__icon_size` default. The design system's own
+     icon scale tops out at 24px, which next to the built-in 32px toolbar icons
+     reads as a mistake rather than as a smaller button. */
+  --p-photo-lightbox-icon-size: 2rem;
+  /* Matches the library's button treatment so white icons stay legible when a
+     bright photo scrolls underneath the toolbar. */
+  --p-photo-lightbox-action-shadow: drop-shadow(2px 2px 2px rgb(0 0 0 / 0.8));
+}
+
+.p-photo-lightbox__action {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--p-photo-lightbox-action-padding);
+  line-height: 0;
+  color: var(--p-photo-lightbox-control);
+  filter: var(--p-photo-lightbox-action-shadow);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: color var(--p-duration-fast) var(--p-ease-standard);
+}
+
+.p-photo-lightbox__action svg {
+  width: var(--p-photo-lightbox-icon-size);
+  height: var(--p-photo-lightbox-icon-size);
+}
+
+.p-photo-lightbox__action:hover,
+.p-photo-lightbox__action:focus-visible {
+  color: var(--p-photo-lightbox-control-active);
+}
+
+.p-photo-lightbox__action:focus-visible {
+  outline: var(--p-focus-outline-width) solid var(--p-focus-ring-color);
+  outline-offset: calc(var(--p-focus-outline-width) * -1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .p-photo-lightbox__action {
+    transition: none;
+  }
+}
+
+}

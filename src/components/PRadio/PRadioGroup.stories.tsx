@@ -1,11 +1,17 @@
 import { type Meta, type StoryObj } from '@storybook/react';
+import { type ComponentType } from 'react';
 import { PRadio } from './PRadio';
 import { PRadioGroup } from './PRadioGroup';
 
 const meta: Meta<typeof PRadioGroup> = {
   title: 'Components/PRadioGroup',
   component: PRadioGroup,
-  subcomponents: { PRadio },
+  // Storybook types this map as `ComponentType<unknown>`, which nothing with
+  // required props satisfies — props are contravariant, so `unknown` is not
+  // assignable to PRadio's `{ value, label }`. The cast is the documented way
+  // to register a subcomponent for the autodocs props table; it affects the
+  // docs page only, never the rendered story.
+  subcomponents: { PRadio: PRadio as ComponentType<unknown> },
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',

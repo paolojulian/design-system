@@ -5,9 +5,6 @@ import { P_COLORS } from '../../constants';
 const meta: Meta<typeof PTypography> = {
   title: 'Components/PTypography',
   component: PTypography,
-  args: {
-    className: 'text-white',
-  },
   parameters: {
     backgrounds: {
       values: [{ name: 'Dark', value: P_COLORS.black }],
@@ -16,7 +13,22 @@ const meta: Meta<typeof PTypography> = {
   },
   decorators: [
     (Story) => (
-      <div style={{ backgroundColor: P_COLORS.black }}>
+      // Specimens sit on an inverted ground. This used to be a hardcoded black
+      // background plus a `text-white` class on every story, but the package
+      // ships tokens and component CSS — not Tailwind's utility layer — so the
+      // class resolved to nothing and every specimen rendered near-black on
+      // black: invisible, and a 1.11:1 axe contrast failure.
+      //
+      // `surface-inverse` and `text-inverse` are a matched pair that flip
+      // together, so this stays legible in dark mode too — where a fixed black
+      // ground would have reproduced exactly the same bug. `color` inherits, so
+      // it covers every variant without touching their args.
+      <div
+        style={{
+          backgroundColor: 'var(--p-color-surface-inverse)',
+          color: 'var(--p-color-text-inverse)',
+        }}
+      >
         <Story />
       </div>
     ),

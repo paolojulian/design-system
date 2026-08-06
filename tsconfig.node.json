@@ -1,7 +1,12 @@
 {
   "compilerOptions": {
     "target": "ES2022",
-    "lib": ["ES2023"],
+    /* DOM belongs here: this config drives the declaration emit for components
+       that touch `document`, `HTMLDialogElement.showModal`, pointer capture and
+       the like. Without it the build printed ~25 TS2812/TS2584 errors on every
+       run — non-fatal, since only declarations are emitted, but enough noise to
+       hide a real failure. */
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "skipLibCheck": true,
 
@@ -23,6 +28,7 @@
   },
   "include": [
     "src/components",
+    "src/gallery",
     "src/icons",
     "src/utils",
     "src/constants",

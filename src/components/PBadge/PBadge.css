@@ -18,6 +18,10 @@
 
     position: relative;
     display: inline-flex;
+    /* The package ships no global reset, so the browser default of content-box
+       applies: a caller setting `width: 100%` would get 100% *plus* the inline
+       padding and border, overflowing its container by 18px. */
+    box-sizing: border-box;
     max-width: 100%;
     min-width: 0;
     min-height: var(--p-badge-min-height);
