@@ -162,6 +162,31 @@ component's tokens through a class (for example `--p-highlight-bg`) rather than
 reaching for base values.
 
 
+## MCP server
+
+Let your AI agent look up this design system's components, props, and tokens instead of guessing them.
+
+**1. Build it** (once, and again after pulling changes):
+
+```bash
+cd mcp && npm install && npm run build
+```
+
+**2. Connect it** (Claude Code; run from the `mcp` folder):
+
+```bash
+claude mcp add design-system --scope user -- node "$(pwd)/dist/cli.js"
+```
+
+**3. Use it.** In any project, just ask:
+
+> Build a settings form with the design system. Look up the components first.
+
+That's it. Once the package is published to npm, steps 1–2 become a single command:
+`claude mcp add design-system --scope user -- npx -y @paolojulian.dev/design-system-mcp`
+
+Other clients (Cursor, Claude Desktop, VS Code) and the tool list: [`mcp/README.md`](./mcp/README.md).
+
 ## Galleries
 
 Four components cover photo and video sets. All of them take a `renderImage` prop

@@ -39,6 +39,11 @@ jobs:
       - name: Run UI tests
         run: npm run test:ui
 
+      # After the Storybook build so story links are checked against the real index.
+      - name: Test MCP server
+        run: npm ci && npm test
+        working-directory: mcp
+
       - name: Upload Storybook to Chromatic
         if: ${{ env.CHROMATIC_PROJECT_TOKEN != '' }}
         run: npm run test:visual:ci
