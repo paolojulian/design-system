@@ -62,3 +62,51 @@ assertions, unrelated to theming:
 - `:70` PBadge, `:335` PDatePicker, `:394` PDateRangePicker — pre-existing.
 
 Left for their own todos to avoid unrelated modifications.
+
+---
+
+# Follow-up (2026-09-18) — align theme switching with Mobbin
+
+Reference: how mobbin.com's app applies its theme, read from the public HTML of
+`/login` and `/discover/...` (the marketing homepage is a separate Framer site and is
+not representative). It is `next-themes` with:
+`attribute="class"`, `storageKey="mobbin:theme"`, `defaultTheme="system"`,
+`enableSystem`, `enableColorScheme` — injected as a blocking inline script at the top of
+`<body>`, with the `localStorage` read wrapped in `try/catch`.
+
+## Gaps found vs. what shipped above, and what changed
+
+- **Two-state → three-state.** Mobbin's preference is `light | dark | system`, default
+  `system`. Storybook toolbar gained a `System` item and `initialGlobals.theme` is now
+  `system`. `system` is resolved to `light|dark` before writing `data-theme`; theme.css
+  still only knows two values (no new tokens, no package JS — spec rules intact).
+- **No-flash application.** README snippet now says *where* to run: inline blocking script
+  in `<head>`. The old snippet was silent on this; run post-hydration it flashes light.
+- **Guarded, namespaced storage.** `try/catch` + `my-app:theme` key, unknown stored values
+  fall back to light.
+- **Already better than Mobbin, left alone:** `color-scheme` is declared in theme.css per
+  `data-theme` value, so it also works for scoped containers. Mobbin sets it from JS on
+  `<html>` only.
+
+## Decisions / tradeoffs
+
+- **Kept `data-theme`, did not move to Mobbin's `class`.** The attribute selector is what
+  makes scoped theming (`<aside data-theme="dark">`) work and is already public API;
+  switching would be a breaking change for zero user-visible gain. README documents the
+  `next-themes attribute="data-theme"` bridge instead.
+- **Did not add `@media (prefers-color-scheme)` to theme.css** (still a spec non-goal).
+  A CSS-only system fallback would need every dark token duplicated under the media query
+  and would still fight an explicit attribute on a scoped container.
+- **Storybook default is `system`, not `light`.** Risk considered: non-deterministic
+  snapshots. Chromatic `modes` pin the theme explicitly, and Playwright's default
+  `colorScheme` is `light`, so both stay deterministic. Full suite: 199/199 passing.
+
+## Surprises
+
+- `matchMedia` `change` fires asynchronously after `page.emulateMedia()`. Reading
+  `data-theme` on the next line gives the stale value — a false failure, not a bug. Assert
+  with a polling matcher (`toHaveAttribute` / `waitForFunction`).
+- The 6 "pre-existing failures" listed above no longer reproduce on `main` (199 passed).
+- Mobbin's official MCP (`https://api.mobbin.com/mcp`, OAuth, Pro plan+) returns *screens*,
+  not implementation — it cannot answer "how does Mobbin switch themes". That came from
+  reading their HTML. The MCP is useful for the visual side (dark palettes, theme pickers).

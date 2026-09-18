@@ -1,9 +1,11 @@
 import { expect, type Page, test } from '@playwright/test';
 
-const storyUrl = (id: string, theme: 'light' | 'dark') =>
-  `/iframe.html?id=${id}&viewMode=story&globals=theme:${theme}`;
+type ThemeGlobal = 'light' | 'dark' | 'system';
 
-async function gotoStory(page: Page, id: string, theme: 'light' | 'dark') {
+const storyUrl = (id: string, theme?: ThemeGlobal) =>
+  `/iframe.html?id=${id}&viewMode=story${theme ? `&globals=theme:${theme}` : ''}`;
+
+async function gotoStory(page: Page, id: string, theme?: ThemeGlobal) {
   await page.goto(storyUrl(id, theme));
   await expect(page.locator('#storybook-root')).toBeVisible();
   await expect(page.locator('#storybook-root')).not.toBeEmpty();
@@ -46,5 +48,34 @@ test.describe('Theme toolbar', () => {
     const darkControlHover = await resolveColorToken(page, '--p-control-bg-hover');
     // --p-color-neutral-800
     expect(darkControlHover).toBe('rgb(41, 37, 36)');
+  });
+
+  test('system follows the OS color scheme, including live changes', async ({ page }) => {
+    await page.emulateMedia({ colorScheme: 'dark' });
+    await gotoStory(page, 'components-pcard--default', 'system');
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+    expect(await resolveColorToken(page, '--p-color-background')).toBe('rgb(17, 17, 17)');
+
+    // No reload: the OS flipping while on `system` must re-resolve the attribute.
+    await page.emulateMedia({ colorScheme: 'light' });
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
+    expect(await resolveColorToken(page, '--p-color-background')).toBe('rgb(250, 250, 249)');
+  });
+
+  test('defaults to system when no theme global is set', async ({ page }) => {
+    await page.emulateMedia({ colorScheme: 'dark' });
+    await gotoStory(page, 'components-pcard--default');
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+  });
+
+  test('an explicit theme wins over the OS color scheme', async ({ page }) => {
+    await page.emulateMedia({ colorScheme: 'dark' });
+    await gotoStory(page, 'components-pcard--default', 'light');
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
+
+    // An OS change must not override an explicit choice.
+    await page.emulateMedia({ colorScheme: 'light' });
+    await page.emulateMedia({ colorScheme: 'dark' });
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
   });
 });

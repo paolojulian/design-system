@@ -91,21 +91,55 @@ Supported values are `light` (default) and `dark`.
 ### Following the OS preference
 
 The package stays CSS-only, so it does not read `prefers-color-scheme` for you —
-doing so would fight an explicit `data-theme`. Wire it up on the consumer side:
-resolve the stored choice and the OS preference, then write the attribute.
+doing so would fight an explicit `data-theme`. Wire it up on the consumer side.
 
-```ts
-const stored = localStorage.getItem('theme'); // 'light' | 'dark' | null
-const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+Store a three-state **preference** (`light`, `dark`, or `system`, defaulting to
+`system`) and resolve it to a **theme** before writing the attribute. `system`
+is never an attribute value; `data-theme` only accepts `light` and `dark`.
 
-document.documentElement.setAttribute('data-theme', stored ?? (prefersDark ? 'dark' : 'light'));
+Run the resolver as an inline, blocking script in `<head>` so the attribute is
+set before first paint. Running it after hydration (for example in a React
+effect) flashes the light theme at dark-mode users on every load.
 
-// Keep following the OS until the user makes an explicit choice.
-window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (event) => {
-  if (localStorage.getItem('theme')) return; // stored choice wins
-  document.documentElement.setAttribute('data-theme', event.matches ? 'dark' : 'light');
-});
+```html
+<head>
+  <script>
+    (function () {
+      var preference = 'system';
+      try {
+        // Namespace the key; storage throws in some private/blocked contexts.
+        preference = localStorage.getItem('my-app:theme') || 'system';
+      } catch (error) {}
+
+      var media = window.matchMedia('(prefers-color-scheme: dark)');
+      var apply = function () {
+        var theme = preference === 'system' ? (media.matches ? 'dark' : 'light') : preference;
+        document.documentElement.setAttribute('data-theme', theme === 'dark' ? 'dark' : 'light');
+      };
+
+      apply();
+      // Re-resolves only while on `system`; an explicit choice always wins.
+      media.addEventListener('change', apply);
+
+      // Call from your theme switcher: setThemePreference('light' | 'dark' | 'system')
+      window.setThemePreference = function (next) {
+        preference = next;
+        try {
+          localStorage.setItem('my-app:theme', next);
+        } catch (error) {}
+        apply();
+      };
+    })();
+  </script>
+</head>
 ```
+
+You do not need to set `color-scheme` yourself: `theme.css` declares it for each
+`data-theme` value, so native scrollbars and form controls follow the theme —
+including inside scoped containers.
+
+If you already use a theme library, point it at the attribute instead. With
+`next-themes`: `<ThemeProvider attribute="data-theme" defaultTheme="system" enableSystem>`.
 
 ### Custom branding
 
