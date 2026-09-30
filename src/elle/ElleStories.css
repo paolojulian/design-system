@@ -33,3 +33,10 @@
   color: var(--p-color-text);
   font-family: var(--p-font-family-sans);
 }
+
+.elle-canvas--page {
+  align-content: start;
+  place-items: stretch;
+  gap: var(--p-space-8);
+  padding-inline: 0;
+}

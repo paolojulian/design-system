@@ -1,0 +1,222 @@
+@layer components {
+    .e-list {
+        --e-list-bg: var(--p-color-surface);
+        --e-list-separator: var(--p-color-border-subtle);
+        --e-list-radius: var(--p-radius-md);
+        --e-list-margin-x: var(--p-space-4);
+        --e-list-padding-x: var(--p-space-4);
+        --e-list-caption: var(--p-color-text-muted);
+
+        display: grid;
+        gap: var(--p-space-2);
+        font-family: var(--p-font-family-sans);
+    }
+
+    .e-list--inset {
+        margin-inline: var(--e-list-margin-x);
+    }
+
+    .e-list__header,
+    .e-list__footer {
+        margin: 0;
+        padding-inline: var(--e-list-padding-x);
+        color: var(--e-list-caption);
+        font-size: var(--p-font-size-caption);
+        line-height: var(--p-line-height-caption);
+    }
+
+    .e-list__header {
+        text-transform: uppercase;
+        letter-spacing: var(--p-letter-spacing-wide);
+    }
+
+    .e-list__group {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        list-style: none;
+        background: var(--e-list-bg);
+    }
+
+    .e-list--inset .e-list__group {
+        border-radius: var(--e-list-radius);
+    }
+
+    .e-list--flush .e-list__group {
+        border-block: 1px solid var(--e-list-separator);
+    }
+
+    /* Rows */
+    .e-list-row {
+        --e-list-row-title: var(--p-color-text);
+        --e-list-row-muted: var(--p-color-text-muted);
+        --e-list-row-accessory: var(--p-color-text-subtle);
+        --e-list-row-pressed: var(--p-color-surface-subtle);
+        --e-list-row-ring: var(--p-focus-ring-color);
+    }
+
+    .e-list-row--destructive {
+        --e-list-row-title: var(--p-color-danger-hover);
+    }
+
+    .e-list-row__content {
+        display: flex;
+        width: 100%;
+        min-height: var(--p-size-touch-min);
+        box-sizing: border-box;
+        align-items: stretch;
+        gap: var(--p-space-3);
+        margin: 0;
+        border: 0;
+        padding: 0 0 0 var(--e-list-padding-x);
+        background: transparent;
+        color: var(--e-list-row-title);
+        font: inherit;
+        text-align: start;
+        text-decoration: none;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    a.e-list-row__content,
+    button.e-list-row__content {
+        cursor: pointer;
+        transition: background-color var(--p-duration-fast) var(--p-ease-standard);
+    }
+
+    a.e-list-row__content:active,
+    button.e-list-row__content:active {
+        background: var(--e-list-row-pressed);
+    }
+
+    @media (hover: hover) {
+        a.e-list-row__content:hover,
+        button.e-list-row__content:hover {
+            background: var(--e-list-row-pressed);
+            color: var(--e-list-row-title);
+        }
+    }
+
+    .e-list-row__content:focus {
+        outline: none;
+    }
+
+    /* Inset ring: the group clips its corners, so an outer ring would be cut off. */
+    .e-list-row__content:focus-visible {
+        box-shadow: inset 0 0 0 var(--p-focus-ring-width) var(--e-list-row-ring);
+        outline: var(--p-focus-outline-width) solid transparent;
+    }
+
+    .e-list-row--disabled .e-list-row__content {
+        cursor: default;
+        opacity: var(--p-opacity-disabled);
+        pointer-events: none;
+    }
+
+    .e-list-row__leading {
+        display: inline-flex;
+        flex: none;
+        align-items: center;
+        color: var(--p-color-action-primary);
+    }
+
+    .e-list-row__leading > svg {
+        width: var(--p-size-icon-lg);
+        height: var(--p-size-icon-lg);
+    }
+
+    /* The separator lives on the body, so it starts at the title, not under the icon. */
+    .e-list-row__body {
+        display: flex;
+        min-width: 0;
+        flex: 1;
+        align-items: center;
+        gap: var(--p-space-2);
+        border-bottom: 1px solid var(--e-list-separator);
+        padding: var(--p-space-3) var(--e-list-padding-x) var(--p-space-3) 0;
+    }
+
+    .e-list-row:last-child .e-list-row__body {
+        border-bottom-width: 0;
+    }
+
+    .e-list-row__text {
+        display: grid;
+        min-width: 0;
+        flex: 1;
+        gap: calc(var(--p-space-1) / 2);
+    }
+
+    .e-list-row__title {
+        color: var(--e-list-row-title);
+        font-size: var(--p-font-size-body-md);
+        line-height: var(--p-line-height-body-md);
+        overflow-wrap: anywhere;
+    }
+
+    .e-list-row__subtitle {
+        color: var(--e-list-row-muted);
+        font-size: var(--p-font-size-body-sm);
+        line-height: var(--p-line-height-body-sm);
+        overflow-wrap: anywhere;
+    }
+
+    .e-list-row__value {
+        flex: none;
+        max-width: 50%;
+        color: var(--e-list-row-muted);
+        font-size: var(--p-font-size-body-md);
+        line-height: var(--p-line-height-body-md);
+        text-align: end;
+        overflow-wrap: anywhere;
+    }
+
+    /* Reaches into the body's padding so a control keeps its 44px target without growing the row. */
+    .e-list-row__trailing {
+        display: inline-flex;
+        flex: none;
+        align-items: center;
+        margin-block: calc(-1 * var(--p-space-3));
+    }
+
+    /* A PSwitch in the trailing slot: the row title is its visible label. */
+    .e-list-row__trailing .p-switch__main {
+        align-items: center;
+        padding-block: 0;
+        gap: 0;
+    }
+
+    .e-list-row__trailing .p-switch__label {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+    }
+
+    .e-list-row__chevron {
+        width: var(--p-size-icon-sm);
+        height: var(--p-size-icon-sm);
+        flex: none;
+        color: var(--e-list-row-accessory);
+        stroke-width: 2.25;
+    }
+
+    .e-list-row__checkmark {
+        display: inline-flex;
+        flex: none;
+        color: var(--p-color-action-primary);
+    }
+
+    .e-list-row__checkmark > svg {
+        width: var(--p-size-icon-md);
+        height: var(--p-size-icon-md);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        a.e-list-row__content,
+        button.e-list-row__content {
+            transition: none;
+        }
+    }
+}

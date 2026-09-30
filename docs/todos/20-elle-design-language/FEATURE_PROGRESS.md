@@ -21,8 +21,8 @@ boundary. Do not reorder phases or tasks.
 - [x] `ESegmentedControl` (`src/elle/ESegmentedControl/`): tests, then component — radiogroup semantics, roving tabindex, arrows select, sliding thumb, form `name`, reduced motion; stories `Elle/ESegmentedControl` (requirement 7)
 
 ## Phase 3: Grouped list
-- [ ] `EList` + `EListRow` (`src/elle/EList/`): tests, then components — link / button / static rows, leading, subtitle, value, accessory, `trailing` control, destructive tone, inset separators, 44px rows, dev-time conflict warning (requirement 8)
-- [ ] Stories `Elle/EList`: default, with icons, with `PSwitch` trailing, destructive row, long text wrapping, edge-to-edge (`inset={false}`), mobile viewport; axe in light + dark
+- [x] `EList` + `EListRow` (`src/elle/EList/`): tests, then components — link / button / static rows, leading, subtitle, value, accessory, `trailing` control, destructive tone, inset separators, 44px rows, dev-time conflict warning (requirement 8)
+- [x] Stories `Elle/EList`: default, with icons, with `PSwitch` trailing, destructive row, long text wrapping, edge-to-edge (`inset={false}`), mobile viewport; axe in light + dark
 
 ## Phase 4: Bars + example screen
 - [ ] `src/elle/elle-material.css` exactly as in the design, with a test for the opaque fallback under `prefers-reduced-transparency` / `prefers-contrast` (requirement 10)
@@ -63,3 +63,10 @@ Deviations from the design, and why:
   so the browser's default canvas (white / `#121212`) showed instead of `#f2f2f7` / `#000`.
 - Dev warnings (`src/elle/devWarning.ts`) use `import.meta.env.DEV` as designed. Vite's library build replaces it
   statically, so the published package never warns; they only fire inside this repo (Storybook, tests).
+
+**2026-09-30 — Phase 3.** Found and fixed a pre-existing Pipz bug on the way (own commit, `fix(switch)`): `PSwitch`
+had no visible thumb in any theme, because `.p-switch` re-declared three tokens as `var()` of themselves. The
+`EList` switch rows exposed it. The dev-time `EListRow` conflict warning is not asserted in Playwright: the static
+build is a production build, so `import.meta.env.DEV` is false there; the test asserts the safe fallback instead.
+A `PSwitch` in `trailing` keeps its label for assistive tech; `EList.css` hides it visually because the row title
+already labels it.
