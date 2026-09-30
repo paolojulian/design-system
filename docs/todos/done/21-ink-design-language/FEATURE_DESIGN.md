@@ -9,7 +9,7 @@ redesign it.
 rejected) and `docs/design-languages/elle.md` (the dev-vs-build cascade bug and how to verify). Do not re-derive
 either.
 
-**Prerequisite:** Elle's phase 1 (`docs/todos/20-elle-design-language`) must be **committed** first. Ink reuses:
+**Prerequisite:** Elle's phase 1 (`docs/todos/done/20-elle-design-language`) must be **committed** first. Ink reuses:
 - the `design` Storybook global and the `data-design` decorator in `.storybook/preview.ts`;
 - the `Pipz/*` story ids;
 - `tests/ui/elle-theme.spec.ts`'s `PAIRS`, `resolveColors` and `gotoStory` (Elle's phase 2 moves those into

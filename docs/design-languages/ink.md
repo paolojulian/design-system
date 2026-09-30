@@ -13,7 +13,7 @@ import '@paolojulian.dev/design-system/theme-ink.css'; // opt-in
 <html data-design="ink" data-theme="light">  <!-- or "dark" -->
 ```
 
-Status: **built** (`docs/todos/21-ink-design-language`). Storybook: `Ink/Theme` (`Tokens`, `Components`), and the
+Status: **built** (`docs/todos/done/21-ink-design-language`). Storybook: `Ink/Theme` (`Tokens`, `Components`), and the
 **Design → Ink** toolbar item previews any Pipz component in Ink. Tests: `tests/ui/ink-theme.spec.ts`.
 
 ## The idea in one line
