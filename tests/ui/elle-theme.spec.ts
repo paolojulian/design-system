@@ -1,9 +1,6 @@
-import { readFileSync } from 'node:fs';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test } from '@playwright/test';
-import { contrast, expectElleApplied, gotoStory, PAIRS, resolveColors } from './elle-helpers';
+import { contrast, declaredIn, expectElleApplied, gotoStory, PAIRS, readCss, resolveColors } from './elle-helpers';
 
 const PIPZ_STORY = 'pipz-pcard--default';
 
@@ -134,18 +131,6 @@ test.describe('Elle design language', () => {
 // ---------------------------------------------------------------------------
 // Contract checks on the stylesheets themselves (no browser needed).
 // ---------------------------------------------------------------------------
-
-const SRC = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..', 'src');
-const readCss = (file: string) => readFileSync(path.join(SRC, file), 'utf8');
-
-/** Custom properties declared in the rule whose selector list contains `selector`. */
-function declaredIn(css: string, selector: string): Set<string> {
-  const index = css.indexOf(selector);
-  if (index === -1) throw new Error(`Selector not found: ${selector}`);
-  const open = css.indexOf('{', index);
-  const close = css.indexOf('}', open);
-  return new Set([...css.slice(open, close).matchAll(/(--p-[\w-]+)\s*:/g)].map((match) => match[1]));
-}
 
 test.describe('Elle token contract', () => {
   const pipz = readCss('theme.css');

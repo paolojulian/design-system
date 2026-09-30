@@ -1,0 +1,11 @@
+/* Ink-only additions to the shared design-language doc styles. Tokens only. */
+
+/* Shadows need a surface to fall on and room to spread; the swatch card is the page here. */
+.ink-doc__shadow-swatch {
+  background: var(--p-color-background);
+}
+
+.ink-doc__floating {
+  border-color: transparent;
+  border-radius: var(--p-radius-md);
+}

@@ -46,11 +46,11 @@ waiting to be saved. Step two is a small set of **Apple-pattern components** tha
 - Teaching the AI assistant connection (the MCP server) Elle's color values.
 
 ## Done when
-- [ ] The Elle look is saved in the project history, not just sitting on one machine.
-- [ ] Switching the Storybook toolbar to Elle re-styles any Pipz component, in light and dark.
-- [ ] The Elle folder in Storybook shows the theme pages plus the five components.
-- [ ] Each Elle component works with keyboard only, passes the automated accessibility check, and is comfortable to
+- [x] The Elle look is saved in the project history, not just sitting on one machine.
+- [x] Switching the Storybook toolbar to Elle re-styles any Pipz component, in light and dark.
+- [x] The Elle folder in Storybook shows the theme pages plus the five components.
+- [x] Each Elle component works with keyboard only, passes the automated accessibility check, and is comfortable to
       tap on a phone.
-- [ ] A short example screen (a settings page) is built only from Elle components and looks right in light and dark.
+- [x] A short example screen (a settings page) is built only from Elle components and looks right in light and dark.
 
 *Implementation contract for the factory: FEATURE_DESIGN.md.*

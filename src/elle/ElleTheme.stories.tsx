@@ -1,7 +1,7 @@
 import { type Meta, type StoryObj } from '@storybook/react';
-import { useEffect, useRef, useState } from 'react';
 import { PAlert, PBadge, PButton, PCheckbox, PSelect, PSwitch, PTextInput } from '../components';
-import './ElleTheme.css';
+import { TokenValue } from '../storybook/TokenValue';
+import '../storybook/design-language-doc.css';
 
 /**
  * Elle is a design language, not a component set (yet): it re-values the
@@ -78,41 +78,18 @@ const TYPE_STYLES: { label: string; token: string }[] = [
 const RADII = ['xs', 'sm', 'md', 'lg', 'full'];
 const SHADOWS = ['sm', 'md', 'lg'];
 
-/** Reads the live computed value so the page cannot drift from the stylesheet it documents. */
-function TokenValue({ token }: { token: string }) {
-  const ref = useRef<HTMLSpanElement>(null);
-  const [value, setValue] = useState('');
-
-  useEffect(() => {
-    const read = () => {
-      if (ref.current) setValue(getComputedStyle(ref.current).getPropertyValue(token).trim());
-    };
-    read();
-    // The theme toolbar changes attributes on <html> without remounting the story.
-    const observer = new MutationObserver(read);
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'data-design'] });
-    return () => observer.disconnect();
-  }, [token]);
-
-  return (
-    <span ref={ref} className="elle-doc__value">
-      {value}
-    </span>
-  );
-}
-
 export const Tokens: Story = {
   render: () => (
-    <div className="elle-doc">
+    <div className="dl-doc">
       {COLOR_GROUPS.map((group) => (
-        <section key={group.heading} className="elle-doc__section">
-          <h2 className="elle-doc__heading">{group.heading}</h2>
-          <p className="elle-doc__note">{group.note}</p>
-          <div className="elle-doc__grid">
+        <section key={group.heading} className="dl-doc__section">
+          <h2 className="dl-doc__heading">{group.heading}</h2>
+          <p className="dl-doc__note">{group.note}</p>
+          <div className="dl-doc__grid">
             {group.tokens.map((token) => (
-              <div key={token} className="elle-doc__swatch">
-                <div className="elle-doc__chip" style={{ background: `var(${token})` }} />
-                <span className="elle-doc__token">{token}</span>
+              <div key={token} className="dl-doc__swatch">
+                <div className="dl-doc__chip" style={{ background: `var(${token})` }} />
+                <span className="dl-doc__token">{token}</span>
                 <TokenValue token={token} />
               </div>
             ))}
@@ -120,20 +97,20 @@ export const Tokens: Story = {
         </section>
       ))}
 
-      <section className="elle-doc__section">
-        <h2 className="elle-doc__heading">Type</h2>
-        <p className="elle-doc__note">
+      <section className="dl-doc__section">
+        <h2 className="dl-doc__heading">Type</h2>
+        <p className="dl-doc__note">
           iOS text styles at the default Dynamic Type size, set in the system font. Apple does not allow San Francisco
           to be embedded, so other platforms fall back to their own system face.
         </p>
         <div>
           {TYPE_STYLES.map((style) => (
-            <div key={style.token} className="elle-doc__type-row">
-              <span className="elle-doc__token">
+            <div key={style.token} className="dl-doc__type-row">
+              <span className="dl-doc__token">
                 {style.label} · <TokenValue token={`--p-font-size-${style.token}`} />
               </span>
               <p
-                className="elle-doc__type-sample"
+                className="dl-doc__type-sample"
                 style={{
                   fontSize: `var(--p-font-size-${style.token})`,
                   lineHeight: `var(--p-line-height-${style.token})`,
@@ -146,23 +123,23 @@ export const Tokens: Story = {
         </div>
       </section>
 
-      <section className="elle-doc__section">
-        <h2 className="elle-doc__heading">Shape and elevation</h2>
-        <div className="elle-doc__grid">
+      <section className="dl-doc__section">
+        <h2 className="dl-doc__heading">Shape and elevation</h2>
+        <div className="dl-doc__grid">
           {RADII.map((radius) => (
-            <div key={radius} className="elle-doc__swatch">
-              <div className="elle-doc__shape" style={{ borderRadius: `var(--p-radius-${radius})` }} />
-              <span className="elle-doc__token">--p-radius-{radius}</span>
+            <div key={radius} className="dl-doc__swatch">
+              <div className="dl-doc__shape" style={{ borderRadius: `var(--p-radius-${radius})` }} />
+              <span className="dl-doc__token">--p-radius-{radius}</span>
               <TokenValue token={`--p-radius-${radius}`} />
             </div>
           ))}
           {SHADOWS.map((shadow) => (
-            <div key={shadow} className="elle-doc__swatch">
+            <div key={shadow} className="dl-doc__swatch">
               <div
-                className="elle-doc__shape"
+                className="dl-doc__shape"
                 style={{ borderRadius: 'var(--p-radius-md)', boxShadow: `var(--p-shadow-${shadow})` }}
               />
-              <span className="elle-doc__token">--p-shadow-{shadow}</span>
+              <span className="dl-doc__token">--p-shadow-{shadow}</span>
             </div>
           ))}
         </div>
@@ -174,21 +151,21 @@ export const Tokens: Story = {
 /** The existing primitives, unchanged, rendered through Elle's tokens. */
 export const Components: Story = {
   render: () => (
-    <div className="elle-doc">
-      <section className="elle-doc__section">
-        <h2 className="elle-doc__heading">Existing components in Elle</h2>
-        <p className="elle-doc__note">
+    <div className="dl-doc">
+      <section className="dl-doc__section">
+        <h2 className="dl-doc__heading">Existing components in Elle</h2>
+        <p className="dl-doc__note">
           Nothing below is an Elle component. These are the Pipz primitives picking up Elle’s tokens, which is what a
           product gets by switching `data-design` today.
         </p>
-        <div className="elle-doc__panel">
-          <div className="elle-doc__row">
+        <div className="dl-doc__panel">
+          <div className="dl-doc__row">
             <PButton>Continue</PButton>
             <PButton variant="secondary">Not now</PButton>
             <PButton variant="tertiary">Learn more</PButton>
             <PButton variant="danger">Delete</PButton>
           </div>
-          <div className="elle-doc__row">
+          <div className="dl-doc__row">
             <PBadge variant="primary">New</PBadge>
             <PBadge variant="success">Active</PBadge>
             <PBadge variant="warning">Pending</PBadge>
@@ -196,7 +173,7 @@ export const Components: Story = {
             <PBadge variant="info">Beta</PBadge>
             <PBadge>Draft</PBadge>
           </div>
-          <div className="elle-doc__fields">
+          <div className="dl-doc__fields">
             <PTextInput label="Full name" helperText="As it appears on your ID." />
             <PTextInput label="Email" isError errorMessage="Enter a valid email address." />
             <PSelect
@@ -207,7 +184,7 @@ export const Components: Story = {
               ]}
             />
           </div>
-          <div className="elle-doc__fields">
+          <div className="dl-doc__fields">
             <PSwitch label="Notifications" description="Alerts for mentions and replies." defaultChecked />
             <PCheckbox label="Remember this device" defaultChecked />
           </div>

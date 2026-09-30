@@ -3,11 +3,14 @@
  * re-values the same `--p-*` contract). Kept out of the spec files so each
  * language's suite asserts the same contrast matrix the same way.
  */
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import AxeBuilder from '@axe-core/playwright';
 import { expect, type Page } from '@playwright/test';
 
 export type Theme = 'light' | 'dark';
-export type Design = 'pipz' | 'elle';
+export type Design = 'pipz' | 'elle' | 'ink';
 export type Rgba = [number, number, number, number];
 
 const storyUrl = (id: string, design: Design | undefined, theme: Theme) =>
@@ -127,4 +130,20 @@ export async function expectNoAxeViolations(page: Page) {
   await waitForBackgroundSettled(page);
   const results = await new AxeBuilder({ page }).include('#storybook-root').analyze();
   expect(results.violations.map((violation) => `${violation.id}: ${violation.nodes.length} node(s)`)).toEqual([]);
+}
+
+// ---------------------------------------------------------------------------
+// Contract checks on the stylesheets themselves (no browser needed).
+// ---------------------------------------------------------------------------
+
+const SRC = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..', 'src');
+export const readCss = (file: string) => readFileSync(path.join(SRC, file), 'utf8');
+
+/** Custom properties declared in the rule whose selector list contains `selector`. */
+export function declaredIn(css: string, selector: string): Set<string> {
+  const index = css.indexOf(selector);
+  if (index === -1) throw new Error(`Selector not found: ${selector}`);
+  const open = css.indexOf('{', index);
+  const close = css.indexOf('}', open);
+  return new Set([...css.slice(open, close).matchAll(/(--p-[\w-]+)\s*:/g)].map((match) => match[1]));
 }

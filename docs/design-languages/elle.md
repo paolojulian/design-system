@@ -1,7 +1,7 @@
 # Elle — Apple-inspired design language
 
-Elle is the second design language in this system. **Pipz** is the original (Swiss, AvantGarde, red brand) and stays
-the default. Elle is opt-in and has two parts:
+Elle is the second design language in this system (the third is Ink, `ink.md`). **Pipz** is the original (Swiss,
+AvantGarde, red brand) and stays the default. Elle is opt-in and has two parts:
 
 1. **Theming.** It re-values the existing `--p-*` token contract, so every current component renders in Elle
    without code changes.

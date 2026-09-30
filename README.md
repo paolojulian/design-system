@@ -164,7 +164,7 @@ reaching for base values.
 
 ## Design languages
 
-The system ships two looks over one token contract:
+The system ships three looks over one token contract:
 
 - **Pipz** — the default. Nothing to do.
 - **Elle** — Apple-inspired. Opt in with one import and one attribute:
@@ -187,6 +187,21 @@ import { EButton, ESegmentedControl, EList, EListRow, ENavigationBar, ETabBar } 
 ```
 
 Sources, measurements, and limits: [`docs/design-languages/elle.md`](./docs/design-languages/elle.md).
+
+- **Ink** — near-black ink on warm white, after Airbnb: one accent (ink), 8px corners (16px on sheets and modals), no
+  in-page shadows. Everything else, neutrals, status colors, font and spacing, stays Pipz. Opt in the same way:
+
+```ts
+import '@paolojulian.dev/design-system/theme.css';
+import '@paolojulian.dev/design-system/theme-ink.css';
+```
+
+```html
+<html data-design="ink" data-theme="light">
+```
+
+Ink is theming only: no tokens and no components of its own. Values, sources, and contrast:
+[`docs/design-languages/ink.md`](./docs/design-languages/ink.md).
 
 ## MCP server
 

@@ -31,6 +31,10 @@ const staticAssetTargets = [
     dest: path.resolve(__dirname, "dist/theme-elle.css"),
   },
   {
+    src: path.resolve(__dirname, "src/theme-ink.css"),
+    dest: path.resolve(__dirname, "dist/theme-ink.css"),
+  },
+  {
     src: path.resolve(__dirname, "vite.config.ts"),
     dest: path.resolve(__dirname, "dist/vite-config/vite.config.ts"),
   },

@@ -1,8 +1,9 @@
 /// <reference types="vite/client" />
 import '../src/fonts.css';
 import '../src/index.css';
-// After index.css: Elle re-values the tokens theme.css declares.
+// After index.css: Elle and Ink re-value the tokens theme.css declares.
 import '../src/theme-elle.css';
+import '../src/theme-ink.css';
 import type { Decorator, Preview } from '@storybook/react';
 
 type ThemePreference = 'light' | 'dark' | 'system';
@@ -31,8 +32,9 @@ const withTheme: Decorator = (Story, context) => {
   if (typeof document !== 'undefined') {
     // Design language is a second axis, independent of light/dark. Pipz is the
     // default and needs no attribute, so its stories render exactly as before.
-    if (context.globals.design === 'elle') {
-      document.documentElement.setAttribute('data-design', 'elle');
+    const design = context.globals.design;
+    if (design === 'elle' || design === 'ink') {
+      document.documentElement.setAttribute('data-design', design);
     } else {
       document.documentElement.removeAttribute('data-design');
     }
@@ -60,6 +62,7 @@ const preview: Preview = {
         items: [
           { value: 'pipz', title: 'Pipz' },
           { value: 'elle', title: 'Elle' },
+          { value: 'ink', title: 'Ink' },
         ],
         dynamicTitle: true,
       },
