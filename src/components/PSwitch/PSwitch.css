@@ -2,9 +2,6 @@
 .p-switch {
   --p-switch-track-width: var(--p-switch-width);
   --p-switch-track-height: var(--p-switch-height);
-  --p-switch-thumb: var(--p-switch-thumb);
-  --p-switch-thumb-size: var(--p-switch-thumb-size);
-  --p-switch-thumb-inset: var(--p-switch-thumb-inset);
   --p-switch-off: var(--p-switch-track-off);
   --p-switch-on: var(--p-switch-track-on);
   --p-switch-on-hover: var(--p-switch-track-on-hover);

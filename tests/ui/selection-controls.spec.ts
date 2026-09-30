@@ -123,6 +123,17 @@ test.describe('Selection controls — radio group', () => {
 });
 
 test.describe('Selection controls — switch', () => {
+  test('renders a visible thumb that moves when checked', async ({ page }) => {
+    await gotoStory(page, 'pipz-pswitch--default');
+    const thumb = page.locator('.p-switch__thumb').first();
+    // Regression: self-referencing component tokens once resolved the thumb to 0px and transparent.
+    await expect(thumb).toHaveCSS('width', '18px');
+    await expect(thumb).toHaveCSS('background-color', 'rgb(255, 255, 255)');
+    const before = (await thumb.boundingBox())!.x;
+    await page.getByRole('switch').first().click();
+    await expect.poll(async () => (await thumb.boundingBox())!.x).toBeGreaterThan(before);
+  });
+
   test('has switch role and toggles by click and keyboard', async ({ page }) => {
     await gotoStory(page, 'pipz-pswitch--default');
     const toggle = page.getByRole('switch', { name: 'Enable desktop notifications' });
