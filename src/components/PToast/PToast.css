@@ -31,16 +31,18 @@
   }
 }
 
+/* A neutral floating card, like Airbnb's and Apple's notices: depth from the
+   shadow, status color only in the icon badge. No colored stripe or border. */
 .p-toast {
+  --p-toast-line-offset: calc((var(--p-feedback-badge-size) - var(--p-feedback-line-height)) / 2);
+
   display: flex;
+  box-sizing: border-box;
   align-items: flex-start;
   gap: var(--p-feedback-gap);
-  padding-block: var(--p-feedback-padding-y);
-  padding-inline: var(--p-feedback-padding-x);
-  border: 1px solid var(--p-feedback-border);
-  border-radius: var(--p-feedback-radius);
-  border-inline-start-width: 3px;
-  border-inline-start-color: var(--p-feedback-accent);
+  padding: var(--p-toast-padding);
+  border: 1px solid var(--p-toast-border);
+  border-radius: var(--p-toast-radius);
   background: var(--p-toast-surface);
   box-shadow: var(--p-toast-shadow);
   color: var(--p-feedback-text);
@@ -60,36 +62,22 @@
 
 .p-toast--info {
   --p-feedback-accent: var(--p-color-info);
-  --p-feedback-border: var(--p-color-info-border);
+  --p-feedback-surface: var(--p-color-info-surface);
 }
 
 .p-toast--success {
   --p-feedback-accent: var(--p-color-success);
-  --p-feedback-border: var(--p-color-success-border);
+  --p-feedback-surface: var(--p-color-success-surface);
 }
 
 .p-toast--warning {
   --p-feedback-accent: var(--p-color-warning);
-  --p-feedback-border: var(--p-color-warning-border);
+  --p-feedback-surface: var(--p-color-warning-surface);
 }
 
 .p-toast--danger {
   --p-feedback-accent: var(--p-color-danger);
-  --p-feedback-border: var(--p-color-danger-border);
-}
-
-.p-toast__icon {
-  display: inline-flex;
-  flex: none;
-  width: var(--p-feedback-icon-size);
-  height: var(--p-feedback-icon-size);
-  margin-block-start: calc((var(--p-feedback-line-height) - var(--p-feedback-icon-size)) / 2);
-  color: var(--p-feedback-accent);
-}
-
-.p-toast__icon > svg {
-  width: 100%;
-  height: 100%;
+  --p-feedback-surface: var(--p-color-danger-surface);
 }
 
 .p-toast__body {
@@ -98,9 +86,13 @@
   flex: 1 1 auto;
   flex-direction: column;
   gap: calc(var(--p-space-1) / 2);
+  /* The first line sits on the badge's center line. */
+  padding-block-start: var(--p-toast-line-offset);
 }
 
 .p-toast__title {
+  /* No UA or host-page paragraph margins: the title aligns with the icon. */
+  margin: 0;
   font-size: var(--p-feedback-title-font-size);
   font-weight: var(--p-feedback-title-weight);
   line-height: var(--p-feedback-line-height);
@@ -147,7 +139,7 @@
   justify-content: center;
   width: var(--p-size-icon-md);
   height: var(--p-size-icon-md);
-  margin-block-start: calc((var(--p-feedback-line-height) - var(--p-size-icon-md)) / 2);
+  margin-block-start: calc((var(--p-feedback-badge-size) - var(--p-size-icon-md)) / 2);
   padding: 0;
   border: none;
   border-radius: var(--p-radius-xs);

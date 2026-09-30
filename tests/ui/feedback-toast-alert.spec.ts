@@ -164,3 +164,71 @@ test.describe('Feedback — PToast', () => {
     });
   }
 });
+
+test('PAlert title lines up with its icon even when the host page styles <p>', async ({ page }) => {
+  // The docs page adds paragraph margins, like any page without a CSS reset.
+  await page.goto('/iframe.html?id=pipz-palert--docs&viewMode=docs');
+  const alert = page.locator('.p-alert').first();
+  await expect(alert).toBeVisible();
+  const icon = (await alert.locator('.p-alert__icon').boundingBox())!;
+  const title = (await alert.locator('.p-alert__title').boundingBox())!;
+  const message = (await alert.locator('.p-alert__message').boundingBox())!;
+  // Icon is vertically centered on the title's (single) line.
+  expect(Math.abs(icon.y + icon.height / 2 - (title.y + title.height / 2))).toBeLessThanOrEqual(1);
+  // Title and message sit together: only the 2px body gap between them.
+  expect(message.y - (title.y + title.height)).toBeLessThanOrEqual(3);
+});
+
+// Status color lives only in the badge, so the icon must hold 3:1 (non-text)
+// against its tint, composited over the card. Dark tints are translucent.
+test.describe('Feedback status badges keep 3:1 icon contrast', () => {
+  const lum = ([r, g, b]: number[]) => {
+    const c = (v: number) => ((v /= 255) <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4);
+    return 0.2126 * c(r) + 0.7152 * c(g) + 0.0722 * c(b);
+  };
+  const over = (fg: number[], bg: number[]) => fg.slice(0, 3).map((v, k) => v * (fg[3] / 255) + bg[k] * (1 - fg[3] / 255));
+
+  for (const story of ['pipz-palert--all-variants', 'pipz-ptoast--variants']) {
+    for (const design of ['pipz', 'elle', 'ink']) {
+      for (const theme of ['light', 'dark']) {
+        test(`${story} ${design} ${theme}`, async ({ page }) => {
+          await page.goto(`/iframe.html?id=${story}&viewMode=story&globals=design:${design};theme:${theme}`);
+          await expect(page.locator('.p-feedback-badge')).toHaveCount(4);
+          await page.evaluate(() =>
+            Promise.all(document.getAnimations().map((animation) => animation.finished.catch(() => undefined))),
+          );
+          const rows = await page.locator('.p-feedback-badge').evaluateAll((badges) => {
+            const ctx = document.createElement('canvas').getContext('2d', { willReadFrequently: true })!;
+            const rgba = (color: string) => {
+              ctx.clearRect(0, 0, 1, 1);
+              ctx.fillStyle = color;
+              ctx.fillRect(0, 0, 1, 1);
+              return [...ctx.getImageData(0, 0, 1, 1).data];
+            };
+            return badges.map((badge) => ({
+              icon: rgba(getComputedStyle(badge).color),
+              badge: rgba(getComputedStyle(badge).backgroundColor),
+              card: rgba(getComputedStyle(badge.closest('.p-alert, .p-toast')!).backgroundColor),
+            }));
+          });
+          for (const row of rows) {
+            const bg = over(row.badge, row.card);
+            const [lighter, darker] = [lum(over(row.icon, bg)), lum(bg)].sort((a, b) => b - a);
+            expect((lighter + 0.05) / (darker + 0.05)).toBeGreaterThanOrEqual(3);
+          }
+        });
+      }
+    }
+  }
+
+  test('toasts carry no colored stripe or status border', async ({ page }) => {
+    await page.goto('/iframe.html?id=pipz-ptoast--variants&viewMode=story');
+    const toast = page.locator('.p-toast--danger');
+    await expect(toast).toHaveCSS('border-left-width', '1px');
+    const [left, top] = await toast.evaluate((element) => {
+      const style = getComputedStyle(element);
+      return [style.borderLeftColor, style.borderTopColor];
+    });
+    expect(left).toBe(top);
+  });
+});

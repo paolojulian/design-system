@@ -5,6 +5,7 @@ import {
   InfoCircleIcon,
   WarningTriangleIcon,
 } from '../../icons';
+import './feedback.css';
 
 /** Status roles shared by feedback surfaces (PAlert, PToast). */
 export type FeedbackVariant = 'info' | 'success' | 'warning' | 'danger';

@@ -64,7 +64,7 @@ export const PAlert = forwardRef<PAlertRef, PAlertProps>(
         role={resolvedRole}
         className={cn('p-alert', `p-alert--${variant}`, className)}
       >
-        <span className="p-alert__icon" aria-hidden="true">
+        <span className="p-alert__icon p-feedback-badge" aria-hidden="true">
           {icon ?? FEEDBACK_ICONS[variant]}
         </span>
 

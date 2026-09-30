@@ -68,7 +68,7 @@ export function PToast({
       onPointerUp={endDrag}
       onPointerCancel={endDrag}
     >
-      <span className="p-toast__icon" aria-hidden="true">
+      <span className="p-toast__icon p-feedback-badge" aria-hidden="true">
         {FEEDBACK_ICONS[toast.variant]}
       </span>
 

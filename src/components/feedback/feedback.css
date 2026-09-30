@@ -1,0 +1,22 @@
+@layer components {
+/*
+ * Status badge shared by PAlert and PToast. The host sets the
+ * `--p-feedback-surface` / `--p-feedback-accent` pair for its variant.
+ */
+.p-feedback-badge {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: var(--p-feedback-badge-size);
+  height: var(--p-feedback-badge-size);
+  border-radius: var(--p-radius-full);
+  background: var(--p-feedback-surface);
+  color: var(--p-feedback-accent);
+}
+
+.p-feedback-badge > svg {
+  width: var(--p-feedback-badge-icon-size);
+  height: var(--p-feedback-badge-icon-size);
+}
+}

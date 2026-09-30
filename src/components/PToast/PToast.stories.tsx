@@ -38,7 +38,18 @@ function Stage({ children }: { children?: ReactNode }) {
 
 function Caption({ children }: { children: ReactNode }) {
   return (
-    <p style={{ maxWidth: '32rem', margin: 0, color: 'var(--p-color-text-muted)' }}>{children}</p>
+    <p
+      style={{
+        maxWidth: '32rem',
+        margin: 0,
+        color: 'var(--p-color-text-muted)',
+        fontFamily: 'var(--p-font-family-sans)',
+        fontSize: 'var(--p-font-size-body-sm)',
+        lineHeight: 'var(--p-line-height-body-sm)',
+      }}
+    >
+      {children}
+    </p>
   );
 }
 
@@ -99,7 +110,7 @@ export const Variants: Story = {
   render: () => (
     <Demo
       max={4}
-      caption="One toast per status role. Icon + colored accent bar communicate state together."
+      caption="One toast per status role. The icon and its tinted badge communicate state together."
       items={VARIANT_ITEMS}
     />
   ),

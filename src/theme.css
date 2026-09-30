@@ -283,8 +283,22 @@
   --p-feedback-line-height: var(--p-line-height-body-sm);
   --p-feedback-ring: var(--p-focus-ring-color);
 
+  /* Status badge shared by PAlert and PToast: the icon on a round tint of its
+     status surface. It is the only place status color appears on either. */
+  --p-feedback-badge-size: var(--p-space-8);
+  --p-feedback-badge-icon-size: var(--p-size-icon-md);
+
+  /* PAlert: a neutral card, so it reads as calm content, not a colored box. */
+  --p-alert-surface: var(--p-color-surface);
+  --p-alert-border: var(--p-color-border);
+  --p-alert-radius: var(--p-radius-md);
+  --p-alert-padding: var(--p-space-4);
+
   /* Toast region — transient, portaled above app chrome. */
-  --p-toast-surface: var(--p-color-surface);
+  --p-toast-surface: var(--p-color-surface-raised);
+  --p-toast-border: var(--p-color-border);
+  --p-toast-radius: var(--p-radius-lg);
+  --p-toast-padding: var(--p-space-4);
   --p-toast-shadow: var(--p-shadow-lg);
   --p-toast-width: 22rem;
   --p-toast-gap: var(--p-space-3);
