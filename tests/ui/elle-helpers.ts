@@ -79,6 +79,8 @@ export const PAIRS: [string, string, number][] = [
   ['--p-color-action-primary', '--p-color-background', TEXT],
   ['--p-color-action-primary', '--p-color-surface', TEXT],
   ['--p-color-action-primary', '--p-color-action-primary-subtle', TEXT],
+  // Gray EButtons: action text on the neutral fill.
+  ['--p-color-action-primary', '--p-color-surface-subtle', TEXT],
   // Alerts: body and muted text on the status tint; the accent is an icon.
   ...STATUSES.flatMap((status): [string, string, number][] => [
     ['--p-color-text', `--p-color-${status}-surface`, TEXT],

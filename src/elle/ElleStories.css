@@ -1,0 +1,31 @@
+/* Layout helpers for Elle component stories only. Tokens only. */
+.elle-story {
+  display: grid;
+  gap: var(--p-space-4);
+}
+
+.elle-story__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--p-space-3);
+}
+
+/* A white card on the grouped page: where Apple places gray buttons and lists. */
+.elle-story--surface {
+  padding: var(--p-space-5);
+  border-radius: var(--p-radius-lg);
+  background: var(--p-color-surface);
+}
+
+.elle-story--narrow {
+  width: min(24rem, 100%);
+}
+
+/* Fullscreen stories paint the grouped page background themselves. */
+.elle-story--page {
+  min-height: 100vh;
+  background: var(--p-color-background);
+  color: var(--p-color-text);
+  font-family: var(--p-font-family-sans);
+}
