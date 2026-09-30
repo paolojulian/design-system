@@ -16,6 +16,8 @@ type DateRangeMonthProps = {
   previewRange: DayRange | null;
   focusedDate: Date;
   isOutOfBounds: (date: Date) => boolean;
+  /** Unavailable days: focusable (so the grid stays navigable) but not selectable. */
+  isBlocked?: (date: Date) => boolean;
   dayRefs: MutableRefObject<Record<string, FocusableElement | null>>;
   onDayClick: (date: Date) => void;
   onDayKeyDown: (date: Date, event: KeyboardEvent<HTMLButtonElement>) => void;
@@ -60,6 +62,7 @@ export function DateRangeMonth({
   previewRange,
   focusedDate,
   isOutOfBounds,
+  isBlocked,
   dayRefs,
   onDayClick,
   onDayKeyDown,
@@ -94,6 +97,7 @@ export function DateRangeMonth({
               }
 
               const isEdge = isSameDay(date, range.start) || isSameDay(date, range.end);
+              const isDayBlocked = Boolean(isBlocked?.(date));
 
               return (
                 <button
@@ -104,8 +108,12 @@ export function DateRangeMonth({
                   type="button"
                   role="gridcell"
                   data-date={isoDate}
-                  className={getDayClassName(date, today, range, previewRange)}
+                  className={cn(
+                    getDayClassName(date, today, range, previewRange),
+                    isDayBlocked && 'p-date-range-picker__day--blocked',
+                  )}
                   disabled={isOutOfBounds(date)}
+                  aria-disabled={isDayBlocked || undefined}
                   aria-label={getDayLabel(date, locale)}
                   aria-selected={isEdge}
                   tabIndex={isSameDay(date, focusedDate) ? 0 : -1}

@@ -4,7 +4,14 @@ import cn from '../../utils/cn';
 import { useMediaQuery } from '../../utils/useMediaQuery';
 import { PButton } from '../PButton';
 import { DateRangeCalendar } from '../PDateRangePicker/DateRangeCalendar';
-import { getRangeDates, getToday, normalizeRange, toIsoDate, toLocalDate } from '../PDateRangePicker/dateRangeUtils';
+import {
+  getRangeDates,
+  getToday,
+  normalizeRange,
+  toDateBlocker,
+  toIsoDate,
+  toLocalDate,
+} from '../PDateRangePicker/dateRangeUtils';
 import type { DayRange } from '../PDateRangePicker/rangeSelection';
 import type { PDateRangePickerSummaryUnit, PDateRangeValue } from '../PDateRangePicker/types';
 import '../PDateRangePicker/PDateRangePicker.css';
@@ -21,6 +28,14 @@ export type PDateRangeCalendarProps = {
   max?: string;
   locale?: string;
   weekStartsOn?: 0 | 1 | 2 | 3 | 4 | 5 | 6;
+  /** ISO dates (`YYYY-MM-DD`) that can't be picked, e.g. `['2026-11-01', '2026-11-02']`. */
+  disabledDates?: string[];
+  /**
+   * A rule for unavailable days (every Sunday, holidays…), combined with
+   * `disabledDates`. Blocked days are shown struck through, not selectable,
+   * and no range may include one. Keep it cheap and stable (memoize); it runs per day.
+   */
+  isDateDisabled?: (date: Date) => boolean;
   /** Months side by side from the `md` breakpoint. Defaults to 2; one month below it. */
   numberOfMonths?: 1 | 2;
   /** How the header counts a range: inclusive `days` (default) or `nights`. */
@@ -49,6 +64,8 @@ export const PDateRangeCalendar = forwardRef<PDateRangeCalendarRef, PDateRangeCa
       max,
       locale,
       weekStartsOn = 0,
+      disabledDates,
+      isDateDisabled,
       numberOfMonths = 2,
       summaryUnit = 'days',
       showClear = true,
@@ -67,6 +84,7 @@ export const PDateRangeCalendar = forwardRef<PDateRangeCalendarRef, PDateRangeCa
     const selectedValue = isControlled ? value : internalValue;
     const { startDate, endDate } = getRangeDates(selectedValue);
     const today = useMemo(getToday, []);
+    const dateBlocker = useMemo(() => toDateBlocker(disabledDates, isDateDisabled), [disabledDates, isDateDisabled]);
     const isWide = useMediaQuery(`(min-width: ${P_TOKEN_VALUES.breakpoint.md})`);
     const monthCount = isWide ? numberOfMonths : 1;
 
@@ -100,6 +118,7 @@ export const PDateRangeCalendar = forwardRef<PDateRangeCalendarRef, PDateRangeCa
           maxDate={toLocalDate(max)}
           locale={locale}
           weekStartsOn={weekStartsOn}
+          isDateDisabled={dateBlocker}
           summaryUnit={summaryUnit}
           onRangeChange={handleRangeChange}
           autoFocus={false}

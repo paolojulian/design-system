@@ -7,6 +7,7 @@
     --p-date-picker-border-active: var(--p-control-border-focus);
     --p-date-picker-text: var(--p-control-text);
     --p-date-picker-text-muted: var(--p-control-text-muted);
+    --p-date-picker-text-unavailable: var(--p-color-text-subtle);
     --p-date-picker-label-focus: var(--p-date-picker-text);
     --p-date-picker-accent: var(--p-color-action-primary);
     --p-date-picker-accent-hover: var(--p-color-action-primary-hover);
@@ -405,6 +406,18 @@
 }
 
 /* Keep the selected fill on hover; the generic day hover would wash it out. */
+/* Unavailable (disabledDates / isDateDisabled), drawn like Airbnb's: a light gray,
+   struck-through number with no fill, hover or pointer. The strike carries the
+   meaning without color; disabled controls are exempt from WCAG text contrast. */
+.p-date-picker__day--blocked,
+.p-date-picker__day--blocked:hover {
+    border-color: transparent;
+    background: transparent;
+    color: var(--p-date-picker-text-unavailable);
+    cursor: not-allowed;
+    text-decoration: line-through;
+}
+
 .p-date-picker__day--selected:hover {
     border-color: var(--p-date-picker-accent-hover);
     background: var(--p-date-picker-accent-hover);

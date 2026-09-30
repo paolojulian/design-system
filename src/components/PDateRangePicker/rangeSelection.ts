@@ -20,6 +20,29 @@ export function getNextEdge(range: DayRange): RangeEdge | null {
   return range.end ? null : 'end';
 }
 
+/** Consumer rule for unavailable days (booked, holidays…). */
+export type DateBlocker = (date: Date) => boolean;
+
+function addDay(date: Date, days: number) {
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate() + days);
+}
+
+/** Whether any day from `start` to `end` (inclusive) is blocked. */
+export function spansBlockedDate(range: DayRange, isBlocked?: DateBlocker) {
+  if (!isBlocked || !range.start) {
+    return false;
+  }
+
+  const end = range.end ?? range.start;
+  for (let day = range.start; day <= end; day = addDay(day, 1)) {
+    if (isBlocked(day)) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 /**
  * Where a click lands the selection. Returns `null` when the click changes
  * nothing. A click before the start moves the start; any later click moves
@@ -32,10 +55,18 @@ export function getNextEdge(range: DayRange): RangeEdge | null {
  * - Inside the range: moves the end in (1–9, click 5 = 1–5).
  * - After the end: extends the end (4–6, click 8 = 4–8).
  * - The start or end day itself: ignored.
+ *
+ * With `isBlocked`: a blocked day is ignored, and a range may not include
+ * one (as in Airbnb): a click that would span a blocked day starts a new
+ * range at the clicked day instead.
  */
-export function getClickedRange(range: DayRange, date: Date): DayRange | null {
+export function getClickedRange(range: DayRange, date: Date, isBlocked?: DateBlocker): DayRange | null {
   const start = range.start ?? range.end;
   const end = range.start ? range.end : null;
+
+  if (isBlocked?.(date)) {
+    return null;
+  }
 
   if (!start) {
     return { start: date, end: null };
@@ -45,11 +76,8 @@ export function getClickedRange(range: DayRange, date: Date): DayRange | null {
     return null;
   }
 
-  if (!end) {
-    return orderRange(start, date);
-  }
-
-  return date < start ? { start: date, end } : { start, end: date };
+  const next = !end ? orderRange(start, date) : date < start ? { start: date, end } : { start, end: date };
+  return spansBlockedDate(next, isBlocked) ? { start: date, end: null } : next;
 }
 
 /**
@@ -73,6 +101,23 @@ export function getDragAnchor(range: DayRange, pressed: Date): Date {
   return pressed;
 }
 
-export function getDragRange(anchor: Date, hover: Date): DayRange {
-  return orderRange(anchor, hover);
+/**
+ * The range a drag covers. With `isBlocked`, it stops at the last free day
+ * before a blocked one, so a drag can never span an unavailable day.
+ */
+export function getDragRange(anchor: Date, hover: Date, isBlocked?: DateBlocker): DayRange {
+  if (!isBlocked) {
+    return orderRange(anchor, hover);
+  }
+
+  const step = hover < anchor ? -1 : 1;
+  let reach = anchor;
+  for (let day = addDay(anchor, step); step > 0 ? day <= hover : day >= hover; day = addDay(day, step)) {
+    if (isBlocked(day)) {
+      break;
+    }
+    reach = day;
+  }
+
+  return orderRange(anchor, reach);
 }

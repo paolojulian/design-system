@@ -46,4 +46,20 @@ export const DarkTheme: Story = {
   },
 };
 
+export const BlockedDates: Story = {
+  name: 'Blocked Dates',
+  args: {
+    label: 'Delivery date',
+    defaultValue: '2026-11-04',
+    disabledDates: ['2026-11-01', '2026-11-02'],
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: "Nov 1 and Nov 2 are blocked with `disabledDates`, drawn like Airbnb's unavailable days; they stay reachable by keyboard.",
+      },
+    },
+  },
+};
+
 export default meta;

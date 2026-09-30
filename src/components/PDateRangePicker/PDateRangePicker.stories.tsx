@@ -248,4 +248,23 @@ export const DarkTheme: Story = {
   },
 };
 
+export const BlockedDates: Story = {
+  name: "Blocked Dates",
+  args: {
+    label: "Check-in – Check-out",
+    defaultValue: { start: "2026-10-27", end: "2026-10-30" },
+    disabledDates: ["2026-11-01", "2026-11-02"],
+    summaryUnit: "nights",
+    helperText: "Nov 1 and Nov 2 are blocked.",
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Nov 1 and Nov 2 are blocked with `disabledDates`, drawn like Airbnb's unavailable days (light gray, struck through). They cannot be picked, and a range can never include one: a click that would span them starts a new range there, and a drag stops at the last free day. For rules a list can't express (every Sunday), pass `isDateDisabled`.",
+      },
+    },
+  },
+};
+
 export default meta;

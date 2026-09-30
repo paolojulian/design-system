@@ -182,3 +182,22 @@ export function getYearOptions(visibleMonth: Date, minDate: Date | null, maxDate
 
   return Array.from({ length: lastYear - firstYear + 1 }, (_, index) => firstYear + index);
 }
+
+/**
+ * One predicate from the two ways to block days: a list of ISO dates
+ * (`disabledDates`) and a rule (`isDateDisabled`). The list becomes a Set, so a
+ * lookup per rendered day stays cheap. Returns `undefined` when nothing is
+ * blocked, so calendars can skip the checks.
+ */
+export function toDateBlocker(
+  disabledDates: string[] | undefined,
+  isDateDisabled: ((date: Date) => boolean) | undefined,
+): ((date: Date) => boolean) | undefined {
+  const blocked = disabledDates?.length ? new Set(disabledDates) : null;
+
+  if (!blocked && !isDateDisabled) {
+    return undefined;
+  }
+
+  return (date: Date) => Boolean(blocked?.has(toIsoDate(date)) || isDateDisabled?.(date));
+}

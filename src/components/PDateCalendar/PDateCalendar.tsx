@@ -1,6 +1,6 @@
 import { forwardRef, useId, useMemo, useState, type HTMLAttributes } from 'react';
 import cn from '../../utils/cn';
-import { getToday, toIsoDate, toLocalDate } from '../calendar/dateUtils';
+import { getToday, toDateBlocker, toIsoDate, toLocalDate } from '../calendar/dateUtils';
 import { DatePickerCalendar } from '../PDatePicker/DatePickerCalendar';
 import '../PDatePicker/PDatePicker.css';
 
@@ -17,6 +17,14 @@ export type PDateCalendarProps = {
   max?: string;
   locale?: string;
   weekStartsOn?: 0 | 1 | 2 | 3 | 4 | 5 | 6;
+  /** ISO dates (`YYYY-MM-DD`) that can't be picked, e.g. `['2026-11-01', '2026-11-02']`. */
+  disabledDates?: string[];
+  /**
+   * A rule for unavailable days (every Sunday, holidays…), combined with
+   * `disabledDates`. Blocked days are shown struck through and not
+   * selectable. Keep it cheap and stable (memoize); it runs per day.
+   */
+  isDateDisabled?: (date: Date) => boolean;
   /** Form field name for the hidden input. */
   name?: string;
   className?: string;
@@ -28,7 +36,22 @@ export type PDateCalendarProps = {
  */
 export const PDateCalendar = forwardRef<PDateCalendarRef, PDateCalendarProps>(
   (
-    { label = 'Date', value, defaultValue, onValueChange, min, max, locale, weekStartsOn = 0, name, className, id, ...props },
+    {
+      label = 'Date',
+      value,
+      defaultValue,
+      onValueChange,
+      min,
+      max,
+      locale,
+      weekStartsOn = 0,
+      disabledDates,
+      isDateDisabled,
+      name,
+      className,
+      id,
+      ...props
+    },
     ref,
   ) => {
     const generatedId = useId();
@@ -37,6 +60,7 @@ export const PDateCalendar = forwardRef<PDateCalendarRef, PDateCalendarProps>(
     const [internalValue, setInternalValue] = useState(defaultValue ?? '');
     const selectedDate = toLocalDate(isControlled ? value : internalValue);
     const today = useMemo(getToday, []);
+    const dateBlocker = useMemo(() => toDateBlocker(disabledDates, isDateDisabled), [disabledDates, isDateDisabled]);
 
     const handleSelect = (date: Date) => {
       const nextValue = toIsoDate(date);
@@ -65,6 +89,7 @@ export const PDateCalendar = forwardRef<PDateCalendarRef, PDateCalendarProps>(
           maxDate={toLocalDate(max)}
           locale={locale}
           weekStartsOn={weekStartsOn}
+          isDateDisabled={dateBlocker}
           onSelect={handleSelect}
           autoFocus={false}
         />

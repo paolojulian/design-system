@@ -34,6 +34,8 @@ type DatePickerCalendarProps = {
   onSelect: (date: Date) => void;
   /** Focus the active day on mount. On for popovers; off for inline calendars. */
   autoFocus?: boolean;
+  /** Unavailable days: focusable (so the grid stays navigable) but not selectable. */
+  isDateDisabled?: (date: Date) => boolean;
 };
 
 function getWeeks(days: Date[]) {
@@ -51,6 +53,7 @@ export function DatePickerCalendar({
   weekStartsOn,
   onSelect,
   autoFocus = true,
+  isDateDisabled,
 }: DatePickerCalendarProps) {
   const initialDate = selectedDate ?? today;
   const [visibleMonth, setVisibleMonth] = useState(() => startOfMonth(initialDate));
@@ -93,7 +96,7 @@ export function DatePickerCalendar({
   };
 
   const handleDayClick = (date: Date) => {
-    if (!isOutOfBounds(date)) {
+    if (!isOutOfBounds(date) && !isDateDisabled?.(date)) {
       // Keeps the roving tab stop on the picked day when the calendar stays open (inline).
       setFocusedDate(date);
       onSelect(date);
@@ -212,8 +215,10 @@ export function DatePickerCalendar({
                     date.getMonth() !== visibleMonth.getMonth() && 'p-date-picker__day--outside',
                     isSameDay(date, today) && 'p-date-picker__day--today',
                     isSelected && 'p-date-picker__day--selected',
+                    isDateDisabled?.(date) && 'p-date-picker__day--blocked',
                   )}
                   disabled={isOutOfBounds(date)}
+                  aria-disabled={isDateDisabled?.(date) || undefined}
                   aria-label={getDayLabel(date, locale)}
                   aria-selected={isSelected}
                   tabIndex={isSameDay(date, focusedDate) ? 0 : -1}

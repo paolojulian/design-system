@@ -183,4 +183,14 @@ export const Disabled: Story = {
   },
 };
 
+export const BlockedDates: Story = {
+  name: 'Blocked Dates',
+  args: {
+    label: 'Delivery date',
+    defaultValue: '2026-11-04',
+    disabledDates: ['2026-11-01', '2026-11-02'],
+    helperText: 'Nov 1 and Nov 2 are blocked.',
+  },
+};
+
 export default meta;

@@ -1,7 +1,7 @@
 import { forwardRef, useId, useMemo, useRef, useState, type CSSProperties } from 'react';
 import { CalendarIcon } from '../../icons';
 import cn from '../../utils/cn';
-import { getDateLabel, getToday, isSameDay, toIsoDate, toLocalDate } from '../calendar/dateUtils';
+import { getDateLabel, getToday, isSameDay, toDateBlocker, toIsoDate, toLocalDate } from '../calendar/dateUtils';
 import { useFieldControl } from '../PFormField';
 import { PPopover } from '../PPopover';
 import { DatePickerCalendar } from './DatePickerCalendar';
@@ -45,6 +45,8 @@ export const PDatePicker = forwardRef<PDatePickerRef, PDatePickerProps>(
       required: requiredProp = false,
       locale,
       weekStartsOn = 0,
+      disabledDates,
+      isDateDisabled,
       className,
       id,
       style,
@@ -79,6 +81,7 @@ export const PDatePicker = forwardRef<PDatePickerRef, PDatePickerProps>(
     const selectedValue = isControlled ? value : internalValue;
     const selectedDate = toLocalDate(selectedValue);
     const today = useMemo(getToday, []);
+    const dateBlocker = useMemo(() => toDateBlocker(disabledDates, isDateDisabled), [disabledDates, isDateDisabled]);
     const minDate = toLocalDate(min);
     const maxDate = toLocalDate(max);
     const calendarTriggerRef = useRef<HTMLButtonElement | null>(null);
@@ -287,6 +290,7 @@ export const PDatePicker = forwardRef<PDatePickerRef, PDatePickerProps>(
             maxDate={maxDate}
             locale={locale}
             weekStartsOn={weekStartsOn}
+            isDateDisabled={dateBlocker}
             onSelect={handleDaySelect}
           />
         </PPopover>

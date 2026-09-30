@@ -16,6 +16,7 @@ import {
   isSameRange,
   normalizeRange,
   resolvePresetRange,
+  toDateBlocker,
   toIsoDate,
   toLocalDate,
 } from './dateRangeUtils';
@@ -64,6 +65,8 @@ export const PDateRangePicker = forwardRef<PDateRangePickerRef, PDateRangePicker
       required: requiredProp = false,
       locale,
       weekStartsOn = 0,
+      disabledDates,
+      isDateDisabled,
       numberOfMonths = 2,
       summaryUnit = 'days',
       className,
@@ -100,6 +103,7 @@ export const PDateRangePicker = forwardRef<PDateRangePickerRef, PDateRangePicker
     const selectedValue = isControlled ? value : internalValue;
     const { startDate, endDate } = getRangeDates(selectedValue);
     const today = useMemo(getToday, []);
+    const dateBlocker = useMemo(() => toDateBlocker(disabledDates, isDateDisabled), [disabledDates, isDateDisabled]);
     const minDate = toLocalDate(min);
     const maxDate = toLocalDate(max);
     const calendarTriggerRef = useRef<HTMLButtonElement | null>(null);
@@ -311,6 +315,7 @@ export const PDateRangePicker = forwardRef<PDateRangePickerRef, PDateRangePicker
             maxDate={maxDate}
             locale={locale}
             weekStartsOn={weekStartsOn}
+            isDateDisabled={dateBlocker}
             summaryUnit={summaryUnit}
             onRangeChange={handleCalendarChange}
           />

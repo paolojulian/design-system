@@ -34,5 +34,13 @@ export type PDatePickerProps = {
   required?: boolean;
   locale?: string;
   weekStartsOn?: 0 | 1 | 2 | 3 | 4 | 5 | 6;
+  /** ISO dates (`YYYY-MM-DD`) that can't be picked, e.g. `['2026-11-01', '2026-11-02']`. */
+  disabledDates?: string[];
+  /**
+   * A rule for unavailable days (every Sunday, holidays…), combined with
+   * `disabledDates`. Blocked days are shown struck through and not
+   * selectable. Keep it cheap and stable (memoize); it runs per day.
+   */
+  isDateDisabled?: (date: Date) => boolean;
   className?: string;
 } & Omit<HTMLAttributes<HTMLDivElement>, 'className' | 'defaultValue' | 'onChange'>;

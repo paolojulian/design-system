@@ -16,7 +16,7 @@ import {
 import { DateRangeCalendarHeader } from './DateRangeCalendarHeader';
 import { DateRangeMonth } from './DateRangeMonth';
 import { DateRangeSummary } from './DateRangeSummary';
-import { getClickedRange, getNextEdge, type DayRange } from './rangeSelection';
+import { getClickedRange, getNextEdge, type DateBlocker, type DayRange } from './rangeSelection';
 import type { FocusableElement, PDateRangePickerSummaryUnit } from './types';
 import { useDayRangeDrag } from './useDayRangeDrag';
 
@@ -36,6 +36,8 @@ type DateRangeCalendarProps = {
   onRangeChange: (range: DayRange) => void;
   /** Focus the active day on mount. On for popovers; off for inline calendars. */
   autoFocus?: boolean;
+  /** Unavailable days: not selectable, and no range may include one. */
+  isDateDisabled?: DateBlocker;
 };
 
 const STACK_BATCH = 12;
@@ -56,6 +58,7 @@ export function DateRangeCalendar({
   summaryUnit,
   onRangeChange,
   autoFocus = true,
+  isDateDisabled,
 }: DateRangeCalendarProps) {
   const initialDate = range.start ?? today;
   const [visibleMonth, setVisibleMonth] = useState(() => startOfMonth(initialDate));
@@ -72,6 +75,7 @@ export function DateRangeCalendar({
   );
   const { displayRange, previewRange, isDragging, gridProps } = useDayRangeDrag({
     range,
+    isBlocked: isDateDisabled,
     // Touch drags would fight the sheet's vertical scroll; taps still select.
     allowTouchDrag: !isStacked,
     onCommit: (nextRange) => {
@@ -118,7 +122,7 @@ export function DateRangeCalendar({
 
   const handleDayClick = (date: Date) => {
     if (!isOutOfBounds(date)) {
-      const nextRange = getClickedRange(range, date);
+      const nextRange = getClickedRange(range, date, isDateDisabled);
       setFocusedDate(date);
 
       if (!nextRange) {
@@ -192,6 +196,7 @@ export function DateRangeCalendar({
             previewRange={previewRange}
             focusedDate={focusedDate}
             isOutOfBounds={isOutOfBounds}
+            isBlocked={isDateDisabled}
             dayRefs={dayRefs}
             onDayClick={handleDayClick}
             onDayKeyDown={handleDayKeyDown}
