@@ -193,3 +193,13 @@ test.describe('Selection controls — accessibility', () => {
     });
   }
 });
+
+test('PCheckbox check mark is centered and fills the box', async ({ page }) => {
+  await page.goto('/iframe.html?id=pipz-pcheckbox--checked&viewMode=story');
+  const box = (await page.locator('.p-checkbox__box').first().boundingBox())!;
+  const check = (await page.locator('.p-checkbox__check').first().boundingBox())!;
+  expect(Math.abs(check.x + check.width / 2 - (box.x + box.width / 2))).toBeLessThanOrEqual(1);
+  expect(Math.abs(check.y + check.height / 2 - (box.y + box.height / 2))).toBeLessThanOrEqual(1);
+  // Not squeezed by the hidden indeterminate dash sharing its row.
+  expect(check.width).toBeGreaterThanOrEqual(box.width * 0.75);
+});
