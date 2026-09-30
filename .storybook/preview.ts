@@ -28,7 +28,14 @@ const applyTheme = () => {
 };
 
 const withTheme: Decorator = (Story, context) => {
-  themePreference = toThemePreference(context.globals.theme);
+  // A docs page renders every story in one iframe, so they share one <html>.
+  // Honoring a story's own `globals.theme` there (the Dark Theme stories)
+  // repaints every story on the page dark over the light docs background.
+  // Docs follow the toolbar; the story's theme still applies in story view.
+  const { userGlobals } = context as typeof context & { userGlobals?: Record<string, unknown> };
+  themePreference = toThemePreference(
+    context.viewMode === 'docs' ? (userGlobals ?? context.globals).theme : context.globals.theme,
+  );
   if (typeof document !== 'undefined') {
     // Design language is a second axis, independent of light/dark. Pipz is the
     // default and needs no attribute, so its stories render exactly as before.

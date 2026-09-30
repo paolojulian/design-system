@@ -78,4 +78,22 @@ test.describe('Theme toolbar', () => {
     await page.emulateMedia({ colorScheme: 'dark' });
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
   });
+
+  // Docs pages share one <html> across stories; a Dark Theme story used to
+  // flip every story on the page to dark tokens over the light docs canvas.
+  for (const component of ['pdaterangepicker', 'pcheckbox', 'ppopover']) {
+    test(`${component} docs page follows the toolbar, not its Dark Theme story`, async ({ page }) => {
+      await page.goto(`/iframe.html?id=pipz-${component}--docs&viewMode=docs&globals=theme:light`);
+      await expect(page.locator('#storybook-docs')).toBeVisible();
+      // Every story, including Dark Theme, has rendered by the time the last one is on screen.
+      await expect(page.locator('.docs-story').last()).toBeVisible();
+      await page.waitForTimeout(500);
+      await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
+    });
+  }
+
+  test('a Dark Theme story still renders dark on its own', async ({ page }) => {
+    await gotoStory(page, 'pipz-pdaterangepicker--dark-theme');
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+  });
 });

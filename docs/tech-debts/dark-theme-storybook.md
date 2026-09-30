@@ -18,3 +18,11 @@
 - `src/theme.css:203` — `[data-theme='dark'] { color-scheme: dark; … }` full token block
 - `.storybook/preview.ts` — no globalTypes/decorator; only chromatic viewports and control matchers
 - 16 `*.stories.tsx` files — zero dark-theme stories
+
+## Update 2026-09-30
+
+- The "zero dark-theme stories" evidence above is out of date: about ten components now have `Dark Theme` stories that use `globals: { theme: 'dark' }`.
+- Those stories used to turn their whole docs page dark. A docs page renders every story in one iframe, and the theme decorator writes `data-theme` on the shared `<html>`. So the Dark story repainted every story on the page with dark tokens over the light docs canvas.
+- Fixed in `.storybook/preview.ts`: in docs view mode the decorator follows the toolbar (`userGlobals.theme`), not the story's own globals.
+- Tradeoff: on a docs page, a Dark Theme story now renders in the toolbar theme. Open it in story view to see it dark.
+- Covered by `tests/ui/theme-toolbar.spec.ts`.
