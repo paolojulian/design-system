@@ -534,6 +534,11 @@
   background: var(--p-date-range-picker-accent-subtle);
 }
 
+/* Can't end a stay here (minimum one night): no pointer affordance. */
+.p-date-range-picker__day[aria-disabled='true'] {
+  cursor: default;
+}
+
 .p-date-range-picker__day--selected:hover {
   border-color: var(--p-date-range-picker-accent-hover);
   background: var(--p-date-range-picker-accent-hover);
@@ -567,6 +572,27 @@
 
 .p-date-range-picker--disabled {
   opacity: var(--p-opacity-disabled);
+}
+
+/* Inline (PDateRangeCalendar): on the page, not in a popover. It hugs its
+   months and lets them shrink to fit a narrower container. */
+.p-date-range-picker--inline {
+  display: flex;
+  width: fit-content;
+  flex-direction: column;
+  gap: var(--p-space-3);
+}
+
+.p-date-range-picker--inline .p-date-range-picker__months {
+  grid-template-columns: repeat(
+    var(--p-date-range-picker-month-columns, 1),
+    minmax(0, var(--p-date-range-picker-month-width))
+  );
+}
+
+.p-date-range-picker__inline-footer {
+  display: flex;
+  justify-content: flex-end;
 }
 
 @media (max-width: 40rem) {

@@ -86,6 +86,10 @@ test('generic UI vocabulary finds the right component', () => {
   assert.ok(top('notification').includes('PToast'));
   assert.equal(top('toggle')[0], 'PSwitch');
   assert.equal(top('date range')[0], 'PDateRangePicker');
+  assert.equal(top('date picker')[0], 'PDatePicker');
+  assert.equal(top('calendar')[0], 'PDateCalendar');
+  assert.equal(top('range calendar')[0], 'PDateRangeCalendar');
+  assert.equal(top('anchored popover')[0], 'PPopover');
   assert.equal(top('PTable')[0], 'PTable');
   assert.deepEqual(top('zzzqqq'), []);
 });

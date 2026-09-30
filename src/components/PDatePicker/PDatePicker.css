@@ -253,6 +253,11 @@
     font-family: var(--p-font-family-sans);
 }
 
+/* Inline (PDateCalendar): on the page, not in a popover. */
+.p-date-picker--inline {
+    width: fit-content;
+}
+
 .p-popover__sheet-body .p-date-picker__calendar {
     width: 100%;
 }

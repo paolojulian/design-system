@@ -32,6 +32,8 @@ type DatePickerCalendarProps = {
   locale?: string;
   weekStartsOn: number;
   onSelect: (date: Date) => void;
+  /** Focus the active day on mount. On for popovers; off for inline calendars. */
+  autoFocus?: boolean;
 };
 
 function getWeeks(days: Date[]) {
@@ -48,13 +50,14 @@ export function DatePickerCalendar({
   locale,
   weekStartsOn,
   onSelect,
+  autoFocus = true,
 }: DatePickerCalendarProps) {
   const initialDate = selectedDate ?? today;
   const [visibleMonth, setVisibleMonth] = useState(() => startOfMonth(initialDate));
   const [focusedDate, setFocusedDate] = useState(initialDate);
   const dayRefs = useRef<Record<string, FocusableElement | null>>({});
   // Focus the active day on open and after keyboard moves.
-  const shouldFocusDateRef = useRef(true);
+  const shouldFocusDateRef = useRef(autoFocus);
   const monthOptions = useMemo(() => getMonthOptions(locale), [locale]);
   const titleId = `${id}-title`;
   const previousMonth = addMonths(visibleMonth, -1);
@@ -87,6 +90,14 @@ export function DatePickerCalendar({
         ? new Date(visibleMonth.getFullYear(), Number(value), 1)
         : new Date(Number(value), visibleMonth.getMonth(), 1),
     );
+  };
+
+  const handleDayClick = (date: Date) => {
+    if (!isOutOfBounds(date)) {
+      // Keeps the roving tab stop on the picked day when the calendar stays open (inline).
+      setFocusedDate(date);
+      onSelect(date);
+    }
   };
 
   const handleDayKeyDown = (date: Date, event: KeyboardEvent<HTMLButtonElement>) => {
@@ -206,7 +217,7 @@ export function DatePickerCalendar({
                   aria-label={getDayLabel(date, locale)}
                   aria-selected={isSelected}
                   tabIndex={isSameDay(date, focusedDate) ? 0 : -1}
-                  onClick={() => !isOutOfBounds(date) && onSelect(date)}
+                  onClick={() => handleDayClick(date)}
                   onKeyDown={(event) => handleDayKeyDown(date, event)}
                 >
                   {date.getDate()}

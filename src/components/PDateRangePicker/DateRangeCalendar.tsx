@@ -16,7 +16,7 @@ import {
 import { DateRangeCalendarHeader } from './DateRangeCalendarHeader';
 import { DateRangeMonth } from './DateRangeMonth';
 import { DateRangeSummary } from './DateRangeSummary';
-import { getClickedRange, type DayRange, type RangeEdge } from './rangeSelection';
+import { getClickedRange, violatesMinimumNights, type DayRange, type RangeEdge } from './rangeSelection';
 import type { FocusableElement, PDateRangePickerSummaryUnit } from './types';
 import { useDayRangeDrag } from './useDayRangeDrag';
 
@@ -34,6 +34,8 @@ type DateRangeCalendarProps = {
   weekStartsOn: number;
   summaryUnit: PDateRangePickerSummaryUnit;
   onRangeChange: (range: DayRange) => void;
+  /** Focus the active day on mount. On for popovers; off for inline calendars. */
+  autoFocus?: boolean;
 };
 
 const STACK_BATCH = 12;
@@ -53,6 +55,7 @@ export function DateRangeCalendar({
   weekStartsOn,
   summaryUnit,
   onRangeChange,
+  autoFocus = true,
 }: DateRangeCalendarProps) {
   const initialDate = range.start ?? today;
   const [visibleMonth, setVisibleMonth] = useState(() => startOfMonth(initialDate));
@@ -62,9 +65,11 @@ export function DateRangeCalendar({
   const [edge, setEdge] = useState<RangeEdge>(range.start && !range.end ? 'end' : 'start');
   // Without a start (e.g. after Clear dates) the next click always sets it.
   const activeEdge: RangeEdge = range.start ? edge : 'start';
+  // Stays need at least one night (Airbnb's default); a days range may be a single day.
+  const minimumNights = summaryUnit === 'nights' ? 1 : 0;
   const dayRefs = useRef<Record<string, FocusableElement | null>>({});
   // Focus the active day on open and after keyboard moves, not after clicks.
-  const shouldFocusDateRef = useRef(true);
+  const shouldFocusDateRef = useRef(autoFocus);
   const isStacked = layout.kind === 'stack';
   const monthCount = isStacked ? stackCount : layout.count;
   const months = Array.from({ length: monthCount }, (_, index) => addMonths(visibleMonth, index)).filter(
@@ -74,6 +79,7 @@ export function DateRangeCalendar({
   const { displayRange, previewRange, isDragging, gridProps } = useDayRangeDrag({
     range,
     activeEdge,
+    minimumNights,
     // Touch drags would fight the sheet's vertical scroll; taps still select.
     allowTouchDrag: !isStacked,
     onCommit: (nextRange) => {
@@ -121,8 +127,14 @@ export function DateRangeCalendar({
 
   const handleDayClick = (date: Date) => {
     if (!isOutOfBounds(date)) {
-      const { range: nextRange, nextEdge } = getClickedRange(range, date, activeEdge);
+      const result = getClickedRange(range, date, activeEdge, minimumNights);
       setFocusedDate(date);
+
+      if (!result) {
+        return;
+      }
+
+      const { range: nextRange, nextEdge } = result;
       setEdge(nextEdge);
       onRangeChange(nextRange);
     }
@@ -192,6 +204,7 @@ export function DateRangeCalendar({
             previewRange={previewRange}
             focusedDate={focusedDate}
             isOutOfBounds={isOutOfBounds}
+            isTooShort={(date) => violatesMinimumNights(range, date, activeEdge, minimumNights)}
             dayRefs={dayRefs}
             onDayClick={handleDayClick}
             onDayKeyDown={handleDayKeyDown}

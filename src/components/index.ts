@@ -56,6 +56,12 @@ export {
 export { PDrawer, type PDrawerProps, type PDrawerSide } from './PDrawer';
 export { PModal, type PModalProps, type PModalSize } from './PModal';
 export { PSheet, type PSheetProps } from './PSheet';
+export { PDateCalendar, type PDateCalendarProps, type PDateCalendarRef } from './PDateCalendar';
+export {
+  PDateRangeCalendar,
+  type PDateRangeCalendarProps,
+  type PDateRangeCalendarRef,
+} from './PDateRangeCalendar';
 export {
   PPopover,
   type PPopoverCloseReason,

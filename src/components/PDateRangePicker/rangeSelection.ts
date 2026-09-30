@@ -17,9 +17,35 @@ export type ClickResult = {
   nextEdge: RangeEdge;
 };
 
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+/** Whole days from `a` to `b`, immune to DST-length days. */
+function dayDifference(a: Date, b: Date) {
+  return Math.round(
+    (Date.UTC(b.getFullYear(), b.getMonth(), b.getDate()) - Date.UTC(a.getFullYear(), a.getMonth(), a.getDate())) /
+      DAY_MS,
+  );
+}
+
+/**
+ * Whether a day is blocked as an end because the stay would be too short.
+ * Mirrors react-dates `doesNotMeetMinimumNights`: only while picking the end,
+ * for days on or after the start but fewer than `minimumNights` after it.
+ */
+export function violatesMinimumNights(range: DayRange, date: Date, edge: RangeEdge, minimumNights: number) {
+  if (edge !== 'end' || !range.start || minimumNights <= 0) {
+    return false;
+  }
+
+  const difference = dayDifference(range.start, date);
+  return difference >= 0 && difference < minimumNights;
+}
+
 /**
  * Where a click lands the selection, following Airbnb's `react-dates`
- * (`DayPickerRangeController#onDayClick`, calendar kept open, no minimum stay):
+ * (`DayPickerRangeController#onDayClick`, calendar kept open). Returns `null`
+ * for a click Airbnb ignores: a day that would break `minimumNights` (with
+ * nights, picking the check-in day again as the check-out does nothing).
  *
  * - Picking the start: the click becomes the start. An end before it is
  *   cleared. Then the end is picked.
@@ -27,8 +53,17 @@ export type ClickResult = {
  *   end stays active, so later clicks move it. A click before the start
  *   becomes the new start and clears the end.
  */
-export function getClickedRange(range: DayRange, date: Date, edge: RangeEdge): ClickResult {
+export function getClickedRange(
+  range: DayRange,
+  date: Date,
+  edge: RangeEdge,
+  minimumNights = 0,
+): ClickResult | null {
   const { start, end } = range;
+
+  if (violatesMinimumNights(range, date, edge, minimumNights)) {
+    return null;
+  }
 
   if (edge === 'start' || !start) {
     return { range: { start: date, end: end && date > end ? null : end }, nextEdge: 'end' };

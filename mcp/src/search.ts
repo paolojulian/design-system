@@ -107,11 +107,25 @@ function score(query: string, fields: Field[]): number {
 
 export type Scored<T> = { item: T; score: number };
 
-function rank<T>(items: T[], query: string, toFields: (item: T) => Field[], limit: number): Scored<T>[] {
+/**
+ * Ties go to the shorter name: with equal scores it has fewer words beyond the
+ * query, so it is the more general match ("date range" → PDateRangePicker over
+ * PDateRangeCalendar and PDateRangePickerPresets). Then alphabetical, so the
+ * order never depends on catalog order.
+ */
+function rank<T extends { name: string }>(
+  items: T[],
+  query: string,
+  toFields: (item: T) => Field[],
+  limit: number,
+): Scored<T>[] {
   return items
     .map((item) => ({ item, score: score(query, toFields(item)) }))
     .filter((entry) => entry.score > 0)
-    .sort((a, b) => b.score - a.score)
+    .sort(
+      (a, b) =>
+        b.score - a.score || a.item.name.length - b.item.name.length || a.item.name.localeCompare(b.item.name),
+    )
     .slice(0, limit);
 }
 

@@ -12,6 +12,7 @@ type UseDayRangeDragOptions = {
   range: DayRange;
   /** The edge a click would set, for the hover preview. */
   activeEdge: RangeEdge;
+  minimumNights: number;
   /** When false, touch presses never start a drag, leaving the gesture to scrolling. */
   allowTouchDrag?: boolean;
   onCommit: (range: DayRange) => void;
@@ -36,7 +37,13 @@ function getEventDay(target: EventTarget | null) {
  * click, so taps, mouse clicks, and keyboard activation share one path
  * (`getClickedRange`) and a click is never applied twice.
  */
-export function useDayRangeDrag({ range, activeEdge, allowTouchDrag = true, onCommit }: UseDayRangeDragOptions) {
+export function useDayRangeDrag({
+  range,
+  activeEdge,
+  minimumNights,
+  allowTouchDrag = true,
+  onCommit,
+}: UseDayRangeDragOptions) {
   const [drag, setDrag] = useState<DragState | null>(null);
   const [hoverDate, setHoverDate] = useState<Date | null>(null);
   const dragRef = useRef<DragState | null>(null);
@@ -113,7 +120,8 @@ export function useDayRangeDrag({ range, activeEdge, allowTouchDrag = true, onCo
   const onPointerLeave = () => setHoverDate(null);
 
   const dragRange = drag ? getDragRange(drag.anchor, drag.hover) : null;
-  const hoverRange = !drag && hoverDate ? getClickedRange(range, hoverDate, activeEdge).range : null;
+  const hoverRange =
+    !drag && hoverDate ? (getClickedRange(range, hoverDate, activeEdge, minimumNights)?.range ?? null) : null;
 
   return {
     /** The range to render as selected: the live drag, else the value. */
