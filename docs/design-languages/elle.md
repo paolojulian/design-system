@@ -1,13 +1,19 @@
 # Elle — Apple-inspired design language
 
 Elle is the second design language in this system. **Pipz** is the original (Swiss, AvantGarde, red brand) and stays
-the default. Elle is opt-in and, for now, *theming only*: it re-values the existing `--p-*` token contract, so the
-current components render in Elle without code changes. Elle-specific components come later and will live under the
-`Elle/` Storybook folder next to `Elle/Theme`.
+the default. Elle is opt-in and has two parts:
+
+1. **Theming.** It re-values the existing `--p-*` token contract, so every current component renders in Elle
+   without code changes.
+2. **Apple-pattern components** that Pipz has no equivalent for, from `@paolojulian.dev/design-system/elle`:
+   `EButton` (filled / tinted / gray / plain), `ESegmentedControl`, `EList` + `EListRow` (inset grouped list),
+   `ENavigationBar`, `ETabBar`. They live under `Elle/` in Storybook, with an `Elle/Examples → Settings` screen.
+   They add no global tokens: each declares `--e-*` component tokens that default to `--p-*` semantic tokens.
 
 ```ts
 import '@paolojulian.dev/design-system/theme.css';
 import '@paolojulian.dev/design-system/theme-elle.css'; // opt-in, ~11 kB
+import { EList, EListRow, ENavigationBar } from '@paolojulian.dev/design-system/elle'; // optional components
 ```
 
 ```html
@@ -94,4 +100,15 @@ passed. Screenshots showed Pipz.
 - **Renaming `Components/*` to `Pipz/*` changed every story id** (`components-pbutton--primary` →
   `pipz-pbutton--primary`). Old deep links to the public Storybook break, and Chromatic will treat the stories as new
   and ask for baselines to be re-accepted once.
-- The MCP catalog serves Pipz token values only; it does not know Elle yet.
+- The MCP catalog serves Pipz token values only; it does not know Elle yet. It does list the `E*` components with
+  their `/elle` import path.
+- **Gray fills equal the page in light.** `surface-subtle` is the grouped page background in Elle light, so gray
+  `EButton`s and the `ESegmentedControl` track only read on white surfaces (cards, list rows), which is where Apple
+  uses them.
+- **`ESegmentedControl` needs `light-dark()` for its dark thumb** (Chrome 123, Safari 17.5, Firefox 120). Elle dark
+  gives `surface-raised` and `surface-subtle` the same gray; older browsers fall back to the raised surface, where
+  the thumb shows only by its shadow and the selected label's weight.
+- **The large title does not collapse on scroll.** `ENavigationBar largeTitle` is a static block inside the sticky
+  header.
+- **Dev-time misuse warnings never reach consumers.** They are guarded by `import.meta.env.DEV`, which Vite's
+  library build replaces with `false`, so they only fire inside this repo.

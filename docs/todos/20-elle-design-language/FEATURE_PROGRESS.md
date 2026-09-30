@@ -28,8 +28,8 @@ boundary. Do not reorder phases or tasks.
 - [x] `src/elle/elle-material.css` exactly as in the design, with a test for the opaque fallback under `prefers-reduced-transparency` / `prefers-contrast` (requirement 10)
 - [x] `ENavigationBar` (`src/elle/ENavigationBar/`): tests, then component — single heading, large title block, leading/trailing, sticky; stories `Elle/ENavigationBar`
 - [x] `ETabBar` (`src/elle/ETabBar/`): tests, then component — `<nav>`, `aria-current`, badges, link vs button items, safe-area padding, 2–5 guard; stories `Elle/ETabBar` (requirement 9)
-- [ ] `Elle/Examples → Settings` story built only from Elle components + `PSwitch`; axe + Elle-applied guard at 1280px and 390px, light and dark; screenshot reviewed (requirements 11–12)
-- [ ] Update `docs/design-languages/elle.md` (component list, remove "theming only"), README "Design languages", full static-build suite + `mcp` tests green
+- [x] `Elle/Examples → Settings` story built only from Elle components + `PSwitch`; axe + Elle-applied guard at 1280px and 390px, light and dark; screenshot reviewed (requirements 11–12)
+- [x] Update `docs/design-languages/elle.md` (component list, remove "theming only"), README "Design languages", full static-build suite + `mcp` tests green
 
 ## Notes
 
@@ -70,3 +70,10 @@ had no visible thumb in any theme, because `.p-switch` re-declared three tokens 
 build is a production build, so `import.meta.env.DEV` is false there; the test asserts the safe fallback instead.
 A `PSwitch` in `trailing` keeps its label for assistive tech; `EList.css` hides it visually because the row title
 already labels it.
+
+**2026-09-30 — Phase 4, todo complete** (282/282 Playwright on the static build, 34/34 MCP, lint + tsc + lib
+build clean; Settings screenshot reviewed light/dark at 1100px and 390px). Surprise on the way: Chromium applies
+`justify-items` to block-level children, so a `display: block` story canvas that still carried `place-items: center`
+shrink-wrapped the bars. `prefers-reduced-transparency` has no Playwright option; the test uses the CDP
+`Emulation.setEmulatedMedia` feature list. The `@supports not (backdrop-filter)` branch is untested (Chromium always
+supports it).

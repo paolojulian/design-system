@@ -180,7 +180,13 @@ import '@paolojulian.dev/design-system/theme-elle.css';
 
 `data-design` and `data-theme` are independent, so Elle has its own light and dark. Elle adds no tokens and changes no
 components; it re-values `--p-*`, uses the system font (San Francisco on Apple devices), and keeps every text pairing
-at WCAG AA. Sources, measurements, and limits: [`docs/design-languages/elle.md`](./docs/design-languages/elle.md).
+at WCAG AA. Elle also ships Apple-pattern components Pipz lacks, from their own entry:
+
+```ts
+import { EButton, ESegmentedControl, EList, EListRow, ENavigationBar, ETabBar } from '@paolojulian.dev/design-system/elle';
+```
+
+Sources, measurements, and limits: [`docs/design-languages/elle.md`](./docs/design-languages/elle.md).
 
 ## MCP server
 
