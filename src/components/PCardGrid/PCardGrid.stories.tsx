@@ -39,7 +39,7 @@ function renderCards(count = 4) {
 }
 
 const meta = {
-  title: 'Components/PCardGrid',
+  title: 'Pipz/PCardGrid',
   component: PCardGrid,
   tags: ['autodocs'],
   parameters: {

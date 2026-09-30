@@ -50,7 +50,7 @@ test('get_component returns props, tokens, links, and examples', async () => {
   assert.match(text, /`variant`: `[^`]*'primary'[^`]*` \(default `'primary'`\)/);
   assert.match(text, /`children\*`/);
   assert.match(text, /--p-button-bg/);
-  assert.match(text, /\?path=\/story\/components-pbutton--primary/);
+  assert.match(text, /\?path=\/story\/pipz-pbutton--primary/);
   assert.match(text, /## Examples/);
 
   const lean = await call('get_component', { name: 'PButton', includeExamples: false });

@@ -33,7 +33,7 @@ test.describe('Feedback — PAlert', () => {
   test('renders variant icon alongside the message (color is never the only signal)', async ({
     page,
   }) => {
-    await gotoStory(page, 'components-palert--danger');
+    await gotoStory(page, 'pipz-palert--danger');
     const alert = page.getByRole('alert');
     await expect(alert).toBeVisible();
     // Icon accompanies the text.
@@ -44,15 +44,15 @@ test.describe('Feedback — PAlert', () => {
   test('info/success use polite status role, warning/danger use assertive alert role', async ({
     page,
   }) => {
-    await gotoStory(page, 'components-palert--info');
+    await gotoStory(page, 'pipz-palert--info');
     await expect(page.getByRole('status')).toBeVisible();
 
-    await gotoStory(page, 'components-palert--warning');
+    await gotoStory(page, 'pipz-palert--warning');
     await expect(page.getByRole('alert')).toBeVisible();
   });
 
   test('dismiss button has an accessible name and fires onDismiss', async ({ page }) => {
-    await gotoStory(page, 'components-palert--dismissible');
+    await gotoStory(page, 'pipz-palert--dismissible');
     const dismiss = page.getByRole('button', { name: 'Dismiss' });
     await expect(dismiss).toBeVisible();
     // The story wires onDismiss to window.alert; assert it is invoked.
@@ -61,17 +61,17 @@ test.describe('Feedback — PAlert', () => {
   });
 
   test('action renders as an operable control', async ({ page }) => {
-    await gotoStory(page, 'components-palert--with-action');
+    await gotoStory(page, 'pipz-palert--with-action');
     await expect(page.getByRole('button', { name: 'Resend link' })).toBeVisible();
   });
 
   for (const storyId of [
-    'components-palert--info',
-    'components-palert--success',
-    'components-palert--warning',
-    'components-palert--danger',
-    'components-palert--with-long-text',
-    'components-palert--dark-theme',
+    'pipz-palert--info',
+    'pipz-palert--success',
+    'pipz-palert--warning',
+    'pipz-palert--danger',
+    'pipz-palert--with-long-text',
+    'pipz-palert--dark-theme',
   ]) {
     test(`${storyId} has no detectable axe violations`, async ({ page }) => {
       await gotoStory(page, storyId);
@@ -82,7 +82,7 @@ test.describe('Feedback — PAlert', () => {
 
 test.describe('Feedback — PToast', () => {
   test('imperative toast.* API renders a titled toast from a trigger', async ({ page }) => {
-    await gotoStory(page, 'components-ptoast--playground');
+    await gotoStory(page, 'pipz-ptoast--playground');
     await page.getByRole('button', { name: 'Success' }).click();
     const toast = page.locator('.p-toast');
     await expect(toast).toHaveCount(1);
@@ -93,7 +93,7 @@ test.describe('Feedback — PToast', () => {
   test('queues extra toasts — never more than the max (3) are visible, in order', async ({
     page,
   }) => {
-    await gotoStory(page, 'components-ptoast--stacked-queue');
+    await gotoStory(page, 'pipz-ptoast--stacked-queue');
     const toasts = page.locator('.p-toast');
     await expect(toasts).toHaveCount(3);
     // First three fired are shown; the 4th/5th wait their turn.
@@ -110,7 +110,7 @@ test.describe('Feedback — PToast', () => {
   test('region is an aria-live=polite landmark; danger toasts carry role=alert', async ({
     page,
   }) => {
-    await gotoStory(page, 'components-ptoast--variants');
+    await gotoStory(page, 'pipz-ptoast--variants');
     const region = page.locator('.p-toast-region');
     await expect(region).toHaveAttribute('aria-live', 'polite');
     // The danger toast escalates to assertive via role=alert.
@@ -120,7 +120,7 @@ test.describe('Feedback — PToast', () => {
   });
 
   test('pauses auto-dismiss on hover and resumes on leave', async ({ page }) => {
-    await gotoStory(page, 'components-ptoast--pause-on-hover');
+    await gotoStory(page, 'pipz-ptoast--pause-on-hover');
     await page.getByRole('button', { name: 'Show toast' }).click();
     const toast = page.locator('.p-toast');
     await expect(toast).toBeVisible();
@@ -137,7 +137,7 @@ test.describe('Feedback — PToast', () => {
 
   test('swipe dismisses a toast at mobile width', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
-    await gotoStory(page, 'components-ptoast--mobile-viewport');
+    await gotoStory(page, 'pipz-ptoast--mobile-viewport');
     const toast = page.locator('.p-toast');
     await expect(toast).toBeVisible();
 
@@ -154,9 +154,9 @@ test.describe('Feedback — PToast', () => {
   });
 
   for (const storyId of [
-    'components-ptoast--variants',
-    'components-ptoast--with-action',
-    'components-ptoast--dark-theme',
+    'pipz-ptoast--variants',
+    'pipz-ptoast--with-action',
+    'pipz-ptoast--dark-theme',
   ]) {
     test(`${storyId} has no detectable axe violations`, async ({ page }) => {
       await gotoStory(page, storyId);

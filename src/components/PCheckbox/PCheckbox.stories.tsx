@@ -2,7 +2,7 @@ import { type Meta, type StoryObj } from '@storybook/react';
 import { PCheckbox } from '.';
 
 const meta: Meta<typeof PCheckbox> = {
-  title: 'Components/PCheckbox',
+  title: 'Pipz/PCheckbox',
   component: PCheckbox,
   tags: ['autodocs'],
   parameters: {

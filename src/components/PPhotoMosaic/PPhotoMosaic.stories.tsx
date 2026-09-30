@@ -6,7 +6,7 @@ import { PPhotoMosaic, type PPhotoMosaicProps } from './PPhotoMosaic';
 const photos = samplePhotos(60);
 
 const meta = {
-  title: 'Components/PPhotoMosaic',
+  title: 'Pipz/PPhotoMosaic',
   component: PPhotoMosaic,
   tags: ['autodocs'],
   parameters: {

@@ -162,6 +162,26 @@ component's tokens through a class (for example `--p-highlight-bg`) rather than
 reaching for base values.
 
 
+## Design languages
+
+The system ships two looks over one token contract:
+
+- **Pipz** — the default. Nothing to do.
+- **Elle** — Apple-inspired. Opt in with one import and one attribute:
+
+```ts
+import '@paolojulian.dev/design-system/theme.css';
+import '@paolojulian.dev/design-system/theme-elle.css';
+```
+
+```html
+<html data-design="elle" data-theme="light">
+```
+
+`data-design` and `data-theme` are independent, so Elle has its own light and dark. Elle adds no tokens and changes no
+components; it re-values `--p-*`, uses the system font (San Francisco on Apple devices), and keeps every text pairing
+at WCAG AA. Sources, measurements, and limits: [`docs/design-languages/elle.md`](./docs/design-languages/elle.md).
+
 ## MCP server
 
 Let your AI agent look up this design system's components, props, and tokens instead of guessing them.

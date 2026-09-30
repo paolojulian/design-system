@@ -3,7 +3,7 @@ import { type Meta, type StoryObj } from '@storybook/react';
 import { PPagination } from './PPagination';
 
 const meta = {
-  title: 'Components/PPagination',
+  title: 'Pipz/PPagination',
   component: PPagination,
   tags: ['autodocs'],
   parameters: {

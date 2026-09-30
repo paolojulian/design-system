@@ -2,7 +2,7 @@ import { type Meta, type StoryObj } from '@storybook/react';
 import { PAlert } from '.';
 
 const meta: Meta<typeof PAlert> = {
-  title: 'Components/PAlert',
+  title: 'Pipz/PAlert',
   component: PAlert,
   tags: ['autodocs'],
   parameters: {

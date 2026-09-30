@@ -3,7 +3,7 @@ import { PDatePicker, PDatePickerPresets } from '.';
 import { PTextInput } from '../PTextInput';
 
 const meta: Meta<typeof PDatePicker> = {
-  title: 'Components/PDatePicker',
+  title: 'Pipz/PDatePicker',
   component: PDatePicker,
   tags: ['autodocs'],
   parameters: {

@@ -82,60 +82,60 @@ async function expectElementWidthAtLeast(page: Page, selector: string, width: nu
 
 test.describe('Storybook smoke tests', () => {
   test('renders button actions and link semantics', async ({ page }) => {
-    await gotoStory(page, 'components-pbutton--primary');
+    await gotoStory(page, 'pipz-pbutton--primary');
     await expect(page.getByRole('button', { name: 'Button' })).toBeVisible();
 
-    await gotoStory(page, 'components-pbutton--loading');
+    await gotoStory(page, 'pipz-pbutton--loading');
     const loadingButton = page.getByRole('button', { name: 'Saving' });
     await expect(loadingButton).toBeDisabled();
     await expect(loadingButton).toHaveAttribute('aria-busy', 'true');
 
-    await gotoStory(page, 'components-pbutton--active');
+    await gotoStory(page, 'pipz-pbutton--active');
     await expect(page.getByRole('button', { name: 'Current view' })).toHaveAttribute(
       'data-active',
       'true',
     );
 
-    await gotoStory(page, 'components-pbutton--pinging');
+    await gotoStory(page, 'pipz-pbutton--pinging');
     await expect(page.getByRole('button', { name: 'Review now' })).toHaveClass(/p-button--pinging/);
 
-    await gotoStory(page, 'components-pbutton--link');
+    await gotoStory(page, 'pipz-pbutton--link');
     await expect(page.getByRole('link', { name: 'Open details' })).toBeVisible();
   });
 
   test('renders badge variants, icons, and truncation', async ({ page }) => {
-    await gotoStory(page, 'components-pbadge--default');
+    await gotoStory(page, 'pipz-pbadge--default');
     await expect(page.getByText('Active')).toBeVisible();
 
     const badge = page.locator('.p-badge').first();
     await expect(badge).toHaveCSS('display', 'inline-flex');
 
-    await gotoStory(page, 'components-pbadge--with-icon');
+    await gotoStory(page, 'pipz-pbadge--with-icon');
     await expect(page.getByText('Online')).toBeVisible();
     await expect(page.locator('.p-badge__icon')).toHaveCount(1);
 
-    await gotoStory(page, 'components-pbadge--pinging');
+    await gotoStory(page, 'pipz-pbadge--pinging');
     await expect(page.locator('.p-badge', { hasText: 'Live' })).toHaveClass(/p-badge--pinging/);
 
-    await gotoStory(page, 'components-pbadge--truncated');
+    await gotoStory(page, 'pipz-pbadge--truncated');
     const truncatedBadge = page.locator('.p-badge').first();
     const truncatedBox = await truncatedBadge.boundingBox();
     expect(truncatedBox?.width).toBeLessThanOrEqual(120);
   });
 
   test('renders the critical typography stories', async ({ page }) => {
-    await gotoStory(page, 'components-ptypography--body-wide');
+    await gotoStory(page, 'pipz-ptypography--body-wide');
     await expect(page.getByText('AVANT GARDE')).toBeVisible();
 
-    await gotoStory(page, 'components-ptypography--heading');
+    await gotoStory(page, 'pipz-ptypography--heading');
     await expect(page.getByText('This is a heading')).toBeVisible();
 
-    await gotoStory(page, 'components-ptypography--serif');
+    await gotoStory(page, 'pipz-ptypography--serif');
     await expect(page.getByText(/Lorem ipsum dolor sit amet/).first()).toBeVisible();
   });
 
   test('renders section header indexed hierarchy', async ({ page }) => {
-    await gotoStory(page, 'components-psectionheader--indexed');
+    await gotoStory(page, 'pipz-psectionheader--indexed');
 
     await expect(page.getByText('01')).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Portfolio Health' })).toBeVisible();
@@ -146,7 +146,7 @@ test.describe('Storybook smoke tests', () => {
   });
 
   test('keeps the Serif variant on the enterprise serif contract', async ({ page }) => {
-    await gotoStory(page, 'components-ptypography--serif');
+    await gotoStory(page, 'pipz-ptypography--serif');
 
     const serifText = page.getByText(/Lorem ipsum dolor sit amet/).first();
     await expect(serifText).toBeVisible();
@@ -156,7 +156,7 @@ test.describe('Storybook smoke tests', () => {
   });
 
   test('renders text input states and announces errors', async ({ page }) => {
-    await gotoStory(page, 'components-ptextinput--with-helper-text');
+    await gotoStory(page, 'pipz-ptextinput--with-helper-text');
     const textInputBox = await page.getByLabel('Email').boundingBox();
     const placeholderLabelBox = await page.locator('.p-text-input__placeholder-label').boundingBox();
     const inputCenter = (textInputBox?.y ?? 0) + (textInputBox?.height ?? 0) / 2;
@@ -166,24 +166,24 @@ test.describe('Storybook smoke tests', () => {
     await page.getByLabel('Email').focus();
     await expect(page.locator('.p-text-input__floating-label')).toHaveCSS('color', lightControlTextColor);
 
-    await gotoStory(page, 'components-ptextinput--with-error');
+    await gotoStory(page, 'pipz-ptextinput--with-error');
 
     await expect(page.getByLabel('Label')).toBeVisible();
     await expect(page.getByRole('alert')).toHaveText('This field is required.');
 
-    await gotoStory(page, 'components-ptextinput--disabled');
+    await gotoStory(page, 'pipz-ptextinput--disabled');
     await expect(page.getByLabel('Label')).toBeDisabled();
   });
 
   test('keeps floating select labels neutral on focus', async ({ page }) => {
-    await gotoStory(page, 'components-pselect--default');
+    await gotoStory(page, 'pipz-pselect--default');
 
     await page.locator('.p-select__control').focus();
     await expect(page.locator('.p-select__floating-label')).toHaveCSS('color', lightControlTextColor);
   });
 
   test('renders combobox search, selection, and mobile flow', async ({ page }) => {
-    await gotoStory(page, 'components-pcombobox--standard');
+    await gotoStory(page, 'pipz-pcombobox--standard');
 
     const combobox = page.getByRole('combobox', { name: 'Account owner' });
     await expect(combobox).toBeVisible();
@@ -206,7 +206,7 @@ test.describe('Storybook smoke tests', () => {
     await expect(combobox).not.toHaveValue('');
 
     await page.setViewportSize({ width: 390, height: 844 });
-    await gotoStory(page, 'components-pcombobox--standard');
+    await gotoStory(page, 'pipz-pcombobox--standard');
     const mobileCombobox = page.getByRole('combobox', { name: 'Account owner', exact: true });
     await mobileCombobox.click();
     await expect(page.getByRole('listbox', { name: 'Account owner' })).toBeVisible();
@@ -225,7 +225,7 @@ test.describe('Storybook smoke tests', () => {
     await expect(page.getByRole('button', { name: 'Close Account owner' })).toBeVisible();
 
     await page.setViewportSize({ width: 768, height: 1024 });
-    await gotoStory(page, 'components-pcombobox--standard');
+    await gotoStory(page, 'pipz-pcombobox--standard');
     const tabletCombobox = page.getByRole('combobox', { name: 'Account owner', exact: true });
     await tabletCombobox.click();
     const tabletPanelPosition = await page
@@ -242,7 +242,7 @@ test.describe('Storybook smoke tests', () => {
   });
 
   test('renders combobox remote loading and pagination flow', async ({ page }) => {
-    await gotoStory(page, 'components-pcombobox--async-infinite-loading');
+    await gotoStory(page, 'pipz-pcombobox--async-infinite-loading');
 
     const combobox = page.getByRole('combobox', { name: 'Account API' });
     await combobox.click();
@@ -261,10 +261,10 @@ test.describe('Storybook smoke tests', () => {
   });
 
   test('keeps combobox selection and form validity tied to committed values', async ({ page }) => {
-    await gotoStory(page, 'components-pcombobox--selected-option-mismatch');
+    await gotoStory(page, 'pipz-pcombobox--selected-option-mismatch');
     await expect(page.getByRole('combobox', { name: 'Mismatched owner' })).toHaveValue('Nina Patel');
 
-    await gotoStory(page, 'components-pcombobox--required-form-field');
+    await gotoStory(page, 'pipz-pcombobox--required-form-field');
     const invalidBeforeSelection = await page
       .locator('input[name="approvalOwner"]')
       .evaluate((element) => (element as HTMLInputElement).checkValidity());
@@ -272,7 +272,7 @@ test.describe('Storybook smoke tests', () => {
   });
 
   test('renders responsive enterprise table states', async ({ page }) => {
-    await gotoStory(page, 'components-ptable--standard');
+    await gotoStory(page, 'pipz-ptable--standard');
     await expect(page.getByRole('table', { name: 'Enterprise accounts' })).toBeVisible();
     await expect(page.getByRole('columnheader', { name: 'Account' })).toHaveAttribute(
       'aria-sort',
@@ -285,7 +285,7 @@ test.describe('Storybook smoke tests', () => {
     await expect(page.locator('.p-table__viewport')).toHaveCSS('overflow-x', 'auto');
 
     await page.setViewportSize({ width: 768, height: 1024 });
-    await gotoStory(page, 'components-ptable--standard');
+    await gotoStory(page, 'pipz-ptable--standard');
     await expect(page.locator('.p-table__viewport')).toBeVisible();
     await expect(page.locator('.p-table__mobile-list')).toBeHidden();
     await expect(page.getByRole('columnheader', { name: 'Risk' })).toBeAttached();
@@ -302,20 +302,20 @@ test.describe('Storybook smoke tests', () => {
     expect(Math.abs((tabletAccountHeaderBox?.x ?? 0) - (tabletAccountCellBox?.x ?? 0))).toBeLessThanOrEqual(1);
 
     await page.setViewportSize({ width: 390, height: 844 });
-    await gotoStory(page, 'components-ptable--standard');
+    await gotoStory(page, 'pipz-ptable--standard');
     await expect(page.locator('.p-table__viewport')).toBeHidden();
     await expect(page.locator('.p-table__mobile-list')).toBeVisible();
     await expect(page.locator('.p-table__mobile-row').first()).toContainText('Acme Industrial');
     await expect(page.locator('.p-table__mobile-field').first()).toContainText('Owner');
 
-    await gotoStory(page, 'components-ptable--loading');
+    await gotoStory(page, 'pipz-ptable--loading');
     await expect(page.locator('.p-table__mobile-state').getByText('Loading table data...')).toBeVisible();
 
-    await gotoStory(page, 'components-ptable--empty');
+    await gotoStory(page, 'pipz-ptable--empty');
     await expect(page.locator('.p-table__mobile-state').getByText('No matching accounts')).toBeVisible();
 
     await page.setViewportSize({ width: 1280, height: 900 });
-    await gotoStory(page, 'components-ptable--interactive-rows');
+    await gotoStory(page, 'pipz-ptable--interactive-rows');
     const accountRow = page.getByRole('row', { name: /Acme Industrial/ });
     await accountRow.focus();
     await page.keyboard.press('Enter');
@@ -331,7 +331,7 @@ test.describe('Storybook smoke tests', () => {
   });
 
   test('renders pagination controls and responsive card grids', async ({ page }) => {
-    await gotoStory(page, 'components-ppagination--standard');
+    await gotoStory(page, 'pipz-ppagination--standard');
     await expect(page.getByRole('navigation', { name: 'Pagination' })).toBeVisible();
     await expect(page.getByText('Showing 101-120 of 476 records')).toBeVisible();
     await expect(page.getByRole('button', { name: 'Go to page 6' })).toHaveAttribute(
@@ -345,17 +345,17 @@ test.describe('Storybook smoke tests', () => {
     await expect(page.getByText('Showing 1-50 of 476 records')).toBeVisible();
 
     await page.setViewportSize({ width: 390, height: 844 });
-    await gotoStory(page, 'components-ppagination--standard');
+    await gotoStory(page, 'pipz-ppagination--standard');
     const paginationControls = await page.locator('.p-pagination__controls').boundingBox();
     const previousButton = await page.getByRole('button', { name: 'Go to previous page' }).boundingBox();
     expect(paginationControls?.width).toBeLessThanOrEqual(390);
     expect(previousButton?.height).toBeGreaterThanOrEqual(44);
 
-    await gotoStory(page, 'components-ppagination--without-rows-per-page');
+    await gotoStory(page, 'pipz-ppagination--without-rows-per-page');
     await expect(page.getByRole('combobox', { name: 'Rows per page' })).toHaveCount(0);
 
     await page.setViewportSize({ width: 1024, height: 768 });
-    await gotoStory(page, 'components-pcardgrid--four-cards');
+    await gotoStory(page, 'pipz-pcardgrid--four-cards');
     await expect(page.locator('.p-card-grid')).toBeVisible();
     await expectGridColumnCount(page, '.p-card-grid', 2);
     await expect(page.locator('.p-card')).toHaveCount(4);
@@ -366,13 +366,13 @@ test.describe('Storybook smoke tests', () => {
     await expect(page.locator('.p-card').first()).toHaveCSS('border-top-left-radius', '0px');
 
     await page.setViewportSize({ width: 390, height: 844 });
-    await gotoStory(page, 'components-pcardgrid--four-cards');
+    await gotoStory(page, 'pipz-pcardgrid--four-cards');
     await expectGridColumnCount(page, '.p-card-grid', 1);
   });
 
   test('renders date picker standard and preset flows', async ({ page }) => {
     await pinClockToMay2026(page);
-    await gotoStory(page, 'components-pdatepicker--standard');
+    await gotoStory(page, 'pipz-pdatepicker--standard');
     await expect(page.getByLabel('Due date')).toBeVisible();
     await expect(page.getByRole('button', { name: 'Due date: May 10, 2026' })).toBeVisible();
     await expect(page.locator('.p-date-picker__label')).toHaveCount(0);
@@ -391,7 +391,7 @@ test.describe('Storybook smoke tests', () => {
     await page.getByRole('combobox', { name: 'Year' }).selectOption('2027');
     await expect(page.getByRole('dialog', { name: 'July 2027' })).toBeVisible();
 
-    await gotoStory(page, 'components-pdatepicker--with-presets');
+    await gotoStory(page, 'pipz-pdatepicker--with-presets');
     await expect(page.getByRole('group', { name: 'Report date' })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Today' })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Yesterday' })).toBeVisible();
@@ -403,14 +403,14 @@ test.describe('Storybook smoke tests', () => {
     await expect(page.getByRole('button', { name: 'Custom' })).toBeVisible();
     await expect(page.locator('.p-date-picker__label-value')).toHaveText('May 15, 2026');
 
-    await gotoStory(page, 'components-pdatepicker--sample-with-other-fields');
+    await gotoStory(page, 'pipz-pdatepicker--sample-with-other-fields');
     const ownerBefore = await page.getByLabel('Owner').boundingBox();
     await page.getByRole('button', { name: 'Custom' }).click();
     await expect(page.getByRole('dialog')).toBeVisible();
     const ownerAfter = await page.getByLabel('Owner').boundingBox();
     expect(ownerAfter?.y).toBeGreaterThan(ownerBefore?.y ?? 0);
 
-    await gotoStory(page, 'components-pdatepicker--with-bounds');
+    await gotoStory(page, 'pipz-pdatepicker--with-bounds');
     await page.getByLabel(/Booking date/).click();
     await expect(page.getByRole('button', { name: 'Previous month' })).toBeDisabled();
     await expect(page.getByRole('button', { name: 'Next month' })).toBeDisabled();
@@ -421,18 +421,18 @@ test.describe('Storybook smoke tests', () => {
       );
     expect(disabledMonthOptions).toBe(11);
 
-    await gotoStory(page, 'components-pdatepicker--alternate-presets');
+    await gotoStory(page, 'pipz-pdatepicker--alternate-presets');
     await expect(page.getByRole('button', { name: 'Yesterday' })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Tomorrow' })).toBeVisible();
 
-    await gotoStory(page, 'components-pdatepicker--presets-only');
+    await gotoStory(page, 'pipz-pdatepicker--presets-only');
     await expect(page.getByRole('button', { name: 'End of month' })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Custom' })).toHaveCount(0);
   });
 
   test('renders date range picker selection and presets', async ({ page }) => {
     await pinClockToMay2026(page);
-    await gotoStory(page, 'components-pdaterangepicker--standard');
+    await gotoStory(page, 'pipz-pdaterangepicker--standard');
     await expect(page.getByRole('button', { name: /Report range/ })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Report range: May 1, 2026 - May 10, 2026' })).toBeVisible();
     await expect(page.locator('.p-date-range-picker__label')).toHaveCount(0);
@@ -458,7 +458,7 @@ test.describe('Storybook smoke tests', () => {
     await page.getByRole('combobox', { name: 'Year' }).selectOption('2027');
     await expect(page.getByRole('dialog', { name: 'July 2027' })).toBeVisible();
 
-    await gotoStory(page, 'components-pdaterangepicker--empty');
+    await gotoStory(page, 'pipz-pdaterangepicker--empty');
     await page.getByRole('button', { name: /Booking range/ }).click();
     await page.getByRole('gridcell', { name: 'Monday, May 4, 2026' }).click();
     await page.getByRole('gridcell', { name: 'Friday, May 15, 2026' }).click();
@@ -467,7 +467,7 @@ test.describe('Storybook smoke tests', () => {
       'May 4, 2026 - May 15, 2026',
     );
 
-    await gotoStory(page, 'components-pdaterangepicker--with-presets');
+    await gotoStory(page, 'pipz-pdaterangepicker--with-presets');
     await expect(page.getByRole('group', { name: /Analytics range/ })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Last 7 days' })).toBeVisible();
     await expect(page.getByRole('button', { name: 'This month' })).toBeVisible();
@@ -480,7 +480,7 @@ test.describe('Storybook smoke tests', () => {
     await page.getByRole('button', { name: 'Custom' }).click();
     await expect(page.getByRole('dialog')).toBeVisible();
 
-    await gotoStory(page, 'components-pdaterangepicker--with-bounds');
+    await gotoStory(page, 'pipz-pdaterangepicker--with-bounds');
     await page.getByLabel(/Booking window/).click();
     await expect(page.getByRole('button', { name: 'Previous month' })).toBeDisabled();
     await expect(page.getByRole('button', { name: 'Next month' })).toBeDisabled();
@@ -491,17 +491,17 @@ test.describe('Storybook smoke tests', () => {
       );
     expect(disabledRangeMonthOptions).toBe(11);
 
-    await gotoStory(page, 'components-pdaterangepicker--presets-only');
+    await gotoStory(page, 'pipz-pdaterangepicker--presets-only');
     await expect(page.getByRole('button', { name: 'Year to date' })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Custom' })).toHaveCount(0);
   });
 
   test('renders textarea states and announces errors', async ({ page }) => {
-    await gotoStory(page, 'components-ptextarea--with-helper-text');
+    await gotoStory(page, 'pipz-ptextarea--with-helper-text');
     await page.getByLabel('Bio').focus();
     await expect(page.locator('.p-text-area__floating-label')).toHaveCSS('color', lightControlTextColor);
 
-    await gotoStory(page, 'components-ptextarea--with-error');
+    await gotoStory(page, 'pipz-ptextarea--with-error');
 
     await expect(page.getByLabel('Label')).toBeVisible();
     await expect(page.getByRole('alert')).toHaveText('This field is required.');
@@ -509,7 +509,7 @@ test.describe('Storybook smoke tests', () => {
 
   test('loads core controls on a mobile viewport', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
-    await gotoStory(page, 'components-ptextinput--default');
+    await gotoStory(page, 'pipz-ptextinput--default');
 
     const input = page.getByLabel('Label');
     await expect(input).toBeVisible();
@@ -520,7 +520,7 @@ test.describe('Storybook smoke tests', () => {
 
   test('keeps mobile buttons within the viewport', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
-    await gotoStory(page, 'components-pbutton--mobile');
+    await gotoStory(page, 'pipz-pbutton--mobile');
 
     const button = page.getByRole('button', { name: 'Review and continue' });
     await expect(button).toBeVisible();
@@ -532,7 +532,7 @@ test.describe('Storybook smoke tests', () => {
 
   test('renders a keyboard-focusable horizontal slider with overflow content', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
-    await gotoStory(page, 'components-phorizontalslider--default');
+    await gotoStory(page, 'pipz-phorizontalslider--default');
 
     const scroller = page.getByRole('region', { name: 'Featured content' });
     await expect(scroller).toBeVisible();
@@ -549,19 +549,19 @@ test.describe('Storybook smoke tests', () => {
   });
 
   test('renders highlight variants and custom colors', async ({ page }) => {
-    await gotoStory(page, 'components-phighlight--hero-use-case');
+    await gotoStory(page, 'pipz-phighlight--hero-use-case');
     await expect(page.getByText('SIMPLE')).toBeVisible();
 
     const heroHighlight = page.locator('.p-highlight').first();
     await expect(heroHighlight).toHaveCSS('display', 'inline');
     await expect(heroHighlight).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
 
-    await gotoStory(page, 'components-phighlight--custom-color');
+    await gotoStory(page, 'pipz-phighlight--custom-color');
     const customHighlight = page.locator('.p-highlight').first();
     await expect(customHighlight).toHaveText('CUSTOM');
     await expect(customHighlight).toHaveCSS('color', 'rgb(17, 17, 17)');
 
-    await gotoStory(page, 'components-phighlight--custom-background');
+    await gotoStory(page, 'pipz-phighlight--custom-background');
     const customBackgroundHighlight = page.locator('.p-highlight').first();
     await expect(customBackgroundHighlight).toHaveText('CUSTOM');
     await expect(customBackgroundHighlight).toHaveCSS('background-color', 'rgb(17, 17, 17)');
@@ -569,34 +569,34 @@ test.describe('Storybook smoke tests', () => {
   });
 
   test('renders cards with metadata, description, and interactive semantics', async ({ page }) => {
-    await gotoStory(page, 'components-pcard--default');
+    await gotoStory(page, 'pipz-pcard--default');
     await expect(page.getByText('01')).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Pipeline overview' })).toBeVisible();
     await expect(page.getByText('A compact summary card for scanning enterprise workflows.')).toBeVisible();
 
-    await gotoStory(page, 'components-pcard--with-metadata');
+    await gotoStory(page, 'pipz-pcard--with-metadata');
     await expect(page.getByText('Operations')).toBeVisible();
 
-    await gotoStory(page, 'components-pcard--without-description');
+    await gotoStory(page, 'pipz-pcard--without-description');
     await expect(page.getByRole('heading', { name: 'Title-only card' })).toBeVisible();
     await expect(page.getByText('A compact summary card for scanning enterprise workflows.')).toHaveCount(0);
 
-    await gotoStory(page, 'components-pcard--custom-width');
+    await gotoStory(page, 'pipz-pcard--custom-width');
     const customWidthCard = await page.locator('.p-card').boundingBox();
     expect(customWidthCard?.width).toBeGreaterThanOrEqual(799);
     expect(customWidthCard?.width).toBeLessThanOrEqual(801);
 
-    await gotoStory(page, 'components-pcard--custom-height');
+    await gotoStory(page, 'pipz-pcard--custom-height');
     const customHeightCard = await page.locator('.p-card').boundingBox();
     expect(customHeightCard?.height).toBeGreaterThanOrEqual(239);
     expect(customHeightCard?.height).toBeLessThanOrEqual(241);
 
-    await gotoStory(page, 'components-pcard--min-sizing');
+    await gotoStory(page, 'pipz-pcard--min-sizing');
     const minSizingCard = await page.locator('.p-card').boundingBox();
     expect(minSizingCard?.width).toBeGreaterThanOrEqual(360);
     expect(minSizingCard?.height).toBeGreaterThanOrEqual(220);
 
-    await gotoStory(page, 'components-pcard--interactive');
+    await gotoStory(page, 'pipz-pcard--interactive');
     await expect(page.getByText('Operations')).toBeVisible();
     await expect(page.getByRole('link', { name: 'Open account summary' })).toBeVisible();
   });
@@ -604,61 +604,61 @@ test.describe('Storybook smoke tests', () => {
 
 test.describe('Storybook accessibility checks', () => {
   for (const storyId of [
-    'components-ptypography--body-wide',
-    'components-pbadge--default',
-    'components-pbadge--variants',
-    'components-pbadge--appearances',
-    'components-pbadge--with-icon',
-    'components-pbadge--pinging',
-    'components-pbutton--primary',
-    'components-pbutton--secondary',
-    'components-pbutton--danger',
-    'components-pbutton--loading',
-    'components-pbutton--active',
-    'components-pbutton--pinging',
-    'components-pbutton--mobile',
-    'components-psectionheader--default',
-    'components-psectionheader--indexed',
-    'components-phighlight--default',
-    'components-phighlight--hero-use-case',
-    'components-phighlight--custom-color',
-    'components-phighlight--custom-background',
-    'components-ppagination--standard',
-    'components-ppagination--cursor-based',
-    'components-ppagination--loading',
-    'components-pcardgrid--two-across',
-    'components-pcardgrid--four-cards',
-    'components-pcardgrid--auto-fit',
-    'components-pcombobox--standard',
-    'components-pcombobox--async-infinite-loading',
-    'components-pcombobox--required-form-field',
-    'components-pcombobox--with-error',
-    'components-ptable--standard',
-    'components-ptable--loading',
-    'components-ptable--empty',
-    'components-ptable--error-state',
-    'components-ptable--interactive-rows',
-    'components-pdatepicker--standard',
-    'components-pdatepicker--with-presets',
-    'components-pdatepicker--many-presets',
-    'components-pdatepicker--presets-only',
-    'components-pdatepicker--with-error',
-    'components-pdaterangepicker--standard',
-    'components-pdaterangepicker--with-presets',
-    'components-pdaterangepicker--many-presets',
-    'components-pdaterangepicker--presets-only',
-    'components-pdaterangepicker--with-error',
-    'components-pcard--default',
-    'components-pcard--without-description',
-    'components-pcard--custom-width',
-    'components-pcard--custom-height',
-    'components-pcard--min-sizing',
-    'components-pcard--interactive',
-    'components-phorizontalslider--default',
-    'components-ptextinput--default',
-    'components-ptextinput--with-error',
-    'components-ptextarea--default',
-    'components-ptextarea--with-error',
+    'pipz-ptypography--body-wide',
+    'pipz-pbadge--default',
+    'pipz-pbadge--variants',
+    'pipz-pbadge--appearances',
+    'pipz-pbadge--with-icon',
+    'pipz-pbadge--pinging',
+    'pipz-pbutton--primary',
+    'pipz-pbutton--secondary',
+    'pipz-pbutton--danger',
+    'pipz-pbutton--loading',
+    'pipz-pbutton--active',
+    'pipz-pbutton--pinging',
+    'pipz-pbutton--mobile',
+    'pipz-psectionheader--default',
+    'pipz-psectionheader--indexed',
+    'pipz-phighlight--default',
+    'pipz-phighlight--hero-use-case',
+    'pipz-phighlight--custom-color',
+    'pipz-phighlight--custom-background',
+    'pipz-ppagination--standard',
+    'pipz-ppagination--cursor-based',
+    'pipz-ppagination--loading',
+    'pipz-pcardgrid--two-across',
+    'pipz-pcardgrid--four-cards',
+    'pipz-pcardgrid--auto-fit',
+    'pipz-pcombobox--standard',
+    'pipz-pcombobox--async-infinite-loading',
+    'pipz-pcombobox--required-form-field',
+    'pipz-pcombobox--with-error',
+    'pipz-ptable--standard',
+    'pipz-ptable--loading',
+    'pipz-ptable--empty',
+    'pipz-ptable--error-state',
+    'pipz-ptable--interactive-rows',
+    'pipz-pdatepicker--standard',
+    'pipz-pdatepicker--with-presets',
+    'pipz-pdatepicker--many-presets',
+    'pipz-pdatepicker--presets-only',
+    'pipz-pdatepicker--with-error',
+    'pipz-pdaterangepicker--standard',
+    'pipz-pdaterangepicker--with-presets',
+    'pipz-pdaterangepicker--many-presets',
+    'pipz-pdaterangepicker--presets-only',
+    'pipz-pdaterangepicker--with-error',
+    'pipz-pcard--default',
+    'pipz-pcard--without-description',
+    'pipz-pcard--custom-width',
+    'pipz-pcard--custom-height',
+    'pipz-pcard--min-sizing',
+    'pipz-pcard--interactive',
+    'pipz-phorizontalslider--default',
+    'pipz-ptextinput--default',
+    'pipz-ptextinput--with-error',
+    'pipz-ptextarea--default',
+    'pipz-ptextarea--with-error',
   ]) {
     test(`${storyId} has no detectable axe violations`, async ({ page }) => {
       await gotoStory(page, storyId);

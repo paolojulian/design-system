@@ -8,7 +8,7 @@ import { PButton } from '../PButton';
  * a `PToastProvider` and either fire toasts from a trigger or seed them on mount.
  */
 const meta: Meta<typeof PToastProvider> = {
-  title: 'Components/PToast',
+  title: 'Pipz/PToast',
   component: PToastProvider,
   parameters: {
     layout: 'fullscreen',

@@ -1,6 +1,8 @@
 /// <reference types="vite/client" />
 import '../src/fonts.css';
 import '../src/index.css';
+// After index.css: Elle re-values the tokens theme.css declares.
+import '../src/theme-elle.css';
 import type { Decorator, Preview } from '@storybook/react';
 
 type ThemePreference = 'light' | 'dark' | 'system';
@@ -27,6 +29,13 @@ const applyTheme = () => {
 const withTheme: Decorator = (Story, context) => {
   themePreference = toThemePreference(context.globals.theme);
   if (typeof document !== 'undefined') {
+    // Design language is a second axis, independent of light/dark. Pipz is the
+    // default and needs no attribute, so its stories render exactly as before.
+    if (context.globals.design === 'elle') {
+      document.documentElement.setAttribute('data-design', 'elle');
+    } else {
+      document.documentElement.removeAttribute('data-design');
+    }
     if (!isFollowingSystem) {
       // Registered once; re-resolves live when the OS flips while on `system`.
       window.matchMedia(DARK_QUERY).addEventListener('change', applyTheme);
@@ -40,8 +49,21 @@ const withTheme: Decorator = (Story, context) => {
 const preview: Preview = {
   initialGlobals: {
     theme: 'system',
+    design: 'pipz',
   },
   globalTypes: {
+    design: {
+      description: 'Design language applied via data-design on <html>',
+      toolbar: {
+        title: 'Design',
+        icon: 'paintbrush',
+        items: [
+          { value: 'pipz', title: 'Pipz' },
+          { value: 'elle', title: 'Elle' },
+        ],
+        dynamicTitle: true,
+      },
+    },
     theme: {
       description: 'Design-system theme applied via data-theme on <html>; System follows the OS',
       toolbar: {

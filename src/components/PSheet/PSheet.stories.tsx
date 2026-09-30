@@ -16,7 +16,7 @@ function SheetHarness({ defaultOpen = false, triggerLabel = 'Open sheet', ...pro
 }
 
 const meta: Meta<typeof SheetHarness> = {
-  title: 'Components/PSheet',
+  title: 'Pipz/PSheet',
   component: PSheet,
   tags: ['autodocs'],
   parameters: {

@@ -4,7 +4,7 @@ import { PRadio } from './PRadio';
 import { PRadioGroup } from './PRadioGroup';
 
 const meta: Meta<typeof PRadioGroup> = {
-  title: 'Components/PRadioGroup',
+  title: 'Pipz/PRadioGroup',
   component: PRadioGroup,
   // Storybook types this map as `ComponentType<unknown>`, which nothing with
   // required props satisfies — props are contravariant, so `unknown` is not

@@ -3,7 +3,7 @@ import { sampleVideos } from '../media/fixtures';
 import { PVideoGallery } from './PVideoGallery';
 
 const meta = {
-  title: 'Components/PVideoGallery',
+  title: 'Pipz/PVideoGallery',
   component: PVideoGallery,
   tags: ['autodocs'],
   parameters: {

@@ -2,7 +2,7 @@ import { type Meta, type StoryObj } from '@storybook/react';
 import { PTextArea } from '.';
 
 const meta: Meta<typeof PTextArea> = {
-  title: 'Components/PTextArea',
+  title: 'Pipz/PTextArea',
   component: PTextArea,
   tags: ['autodocs'],
   parameters: {

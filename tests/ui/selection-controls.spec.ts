@@ -37,7 +37,7 @@ async function expectNoA11yViolations(page: Page) {
 
 test.describe('Selection controls — checkbox', () => {
   test('toggles by click and by keyboard', async ({ page }) => {
-    await gotoStory(page, 'components-pcheckbox--default');
+    await gotoStory(page, 'pipz-pcheckbox--default');
     const checkbox = page.getByRole('checkbox', { name: 'Email me about account activity' });
     await expect(checkbox).not.toBeChecked();
 
@@ -50,7 +50,7 @@ test.describe('Selection controls — checkbox', () => {
   });
 
   test('exposes the native indeterminate state', async ({ page }) => {
-    await gotoStory(page, 'components-pcheckbox--indeterminate');
+    await gotoStory(page, 'pipz-pcheckbox--indeterminate');
     const checkbox = page.getByRole('checkbox', { name: 'Select all rows' });
     await expect(checkbox).toHaveJSProperty('indeterminate', true);
 
@@ -61,7 +61,7 @@ test.describe('Selection controls — checkbox', () => {
   });
 
   test('announces errors and wires aria-describedby', async ({ page }) => {
-    await gotoStory(page, 'components-pcheckbox--with-error');
+    await gotoStory(page, 'pipz-pcheckbox--with-error');
     const checkbox = page.getByRole('checkbox', { name: 'Accept the terms and conditions' });
     await expect(checkbox).toHaveAttribute('aria-invalid', 'true');
     await expect(page.getByRole('alert')).toHaveText('You must accept the terms to continue.');
@@ -69,7 +69,7 @@ test.describe('Selection controls — checkbox', () => {
 
   test('keeps a 44px touch target on mobile', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
-    await gotoStory(page, 'components-pcheckbox--mobile-viewport');
+    await gotoStory(page, 'pipz-pcheckbox--mobile-viewport');
     const hitArea = page.locator('.p-checkbox__main').first();
     const box = await hitArea.boundingBox();
     expect(box?.height).toBeGreaterThanOrEqual(44);
@@ -78,7 +78,7 @@ test.describe('Selection controls — checkbox', () => {
 
 test.describe('Selection controls — radio group', () => {
   test('moves selection with arrow keys (native radiogroup)', async ({ page }) => {
-    await gotoStory(page, 'components-pradiogroup--default');
+    await gotoStory(page, 'pipz-pradiogroup--default');
     await expect(page.getByRole('radiogroup', { name: 'Deployment environment' })).toBeVisible();
 
     const staging = page.getByRole('radio', { name: 'Staging' });
@@ -96,7 +96,7 @@ test.describe('Selection controls — radio group', () => {
   });
 
   test('selects by click and shares a single name', async ({ page }) => {
-    await gotoStory(page, 'components-pradiogroup--default');
+    await gotoStory(page, 'pipz-pradiogroup--default');
     const production = page.getByRole('radio', { name: 'Production' });
     await production.click();
     await expect(production).toBeChecked();
@@ -108,7 +108,7 @@ test.describe('Selection controls — radio group', () => {
   });
 
   test('disables every radio when the group is disabled', async ({ page }) => {
-    await gotoStory(page, 'components-pradiogroup--disabled');
+    await gotoStory(page, 'pipz-pradiogroup--disabled');
     for (const label of ['Production', 'Staging', 'Development']) {
       await expect(page.getByRole('radio', { name: label })).toBeDisabled();
     }
@@ -116,7 +116,7 @@ test.describe('Selection controls — radio group', () => {
 
   test('keeps a 44px touch target on mobile', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
-    await gotoStory(page, 'components-pradiogroup--mobile-viewport');
+    await gotoStory(page, 'pipz-pradiogroup--mobile-viewport');
     const box = await page.locator('.p-radio').first().boundingBox();
     expect(box?.height).toBeGreaterThanOrEqual(44);
   });
@@ -124,7 +124,7 @@ test.describe('Selection controls — radio group', () => {
 
 test.describe('Selection controls — switch', () => {
   test('has switch role and toggles by click and keyboard', async ({ page }) => {
-    await gotoStory(page, 'components-pswitch--default');
+    await gotoStory(page, 'pipz-pswitch--default');
     const toggle = page.getByRole('switch', { name: 'Enable desktop notifications' });
     await expect(toggle).not.toBeChecked();
 
@@ -138,7 +138,7 @@ test.describe('Selection controls — switch', () => {
 
   test('keeps a 44px touch target on mobile', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
-    await gotoStory(page, 'components-pswitch--mobile-viewport');
+    await gotoStory(page, 'pipz-pswitch--mobile-viewport');
     const box = await page.locator('.p-switch__main').first().boundingBox();
     expect(box?.height).toBeGreaterThanOrEqual(44);
   });
@@ -146,35 +146,35 @@ test.describe('Selection controls — switch', () => {
 
 test.describe('Selection controls — dark theme', () => {
   test('applies the dark theme via story globals', async ({ page }) => {
-    await gotoStory(page, 'components-pcheckbox--dark-theme');
+    await gotoStory(page, 'pipz-pcheckbox--dark-theme');
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
   });
 });
 
 test.describe('Selection controls — accessibility', () => {
   for (const storyId of [
-    'components-pcheckbox--default',
-    'components-pcheckbox--checked',
-    'components-pcheckbox--indeterminate',
-    'components-pcheckbox--with-description',
-    'components-pcheckbox--disabled',
-    'components-pcheckbox--with-error',
-    'components-pcheckbox--with-long-label',
-    'components-pcheckbox--dark-theme',
-    'components-pradiogroup--default',
-    'components-pradiogroup--with-description',
-    'components-pradiogroup--horizontal',
-    'components-pradiogroup--disabled',
-    'components-pradiogroup--with-error',
-    'components-pradiogroup--with-long-label',
-    'components-pradiogroup--dark-theme',
-    'components-pswitch--default',
-    'components-pswitch--on',
-    'components-pswitch--with-description',
-    'components-pswitch--disabled',
-    'components-pswitch--with-error',
-    'components-pswitch--with-long-label',
-    'components-pswitch--dark-theme',
+    'pipz-pcheckbox--default',
+    'pipz-pcheckbox--checked',
+    'pipz-pcheckbox--indeterminate',
+    'pipz-pcheckbox--with-description',
+    'pipz-pcheckbox--disabled',
+    'pipz-pcheckbox--with-error',
+    'pipz-pcheckbox--with-long-label',
+    'pipz-pcheckbox--dark-theme',
+    'pipz-pradiogroup--default',
+    'pipz-pradiogroup--with-description',
+    'pipz-pradiogroup--horizontal',
+    'pipz-pradiogroup--disabled',
+    'pipz-pradiogroup--with-error',
+    'pipz-pradiogroup--with-long-label',
+    'pipz-pradiogroup--dark-theme',
+    'pipz-pswitch--default',
+    'pipz-pswitch--on',
+    'pipz-pswitch--with-description',
+    'pipz-pswitch--disabled',
+    'pipz-pswitch--with-error',
+    'pipz-pswitch--with-long-label',
+    'pipz-pswitch--dark-theme',
   ]) {
     test(`${storyId} has no detectable axe violations`, async ({ page }) => {
       await gotoStory(page, storyId);

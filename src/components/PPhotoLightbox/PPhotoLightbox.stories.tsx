@@ -7,7 +7,7 @@ import { PPhotoLightbox, type PPhotoLightboxProps } from './PPhotoLightbox';
 const photos = samplePhotos(24);
 
 const meta = {
-  title: 'Components/PPhotoLightbox',
+  title: 'Pipz/PPhotoLightbox',
   component: PPhotoLightbox,
   tags: ['autodocs'],
   parameters: {

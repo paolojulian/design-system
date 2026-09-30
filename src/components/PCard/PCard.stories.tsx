@@ -13,7 +13,7 @@ function OperationsLinkMeta() {
 }
 
 const meta: Meta<typeof PCard> = {
-  title: "Components/PCard",
+  title: "Pipz/PCard",
   component: PCard,
   tags: ["autodocs"],
   parameters: {

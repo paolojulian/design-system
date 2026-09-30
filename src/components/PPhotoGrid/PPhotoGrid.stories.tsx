@@ -3,7 +3,7 @@ import { samplePhotos } from '../media/fixtures';
 import { PPhotoGrid } from './PPhotoGrid';
 
 const meta = {
-  title: 'Components/PPhotoGrid',
+  title: 'Pipz/PPhotoGrid',
   component: PPhotoGrid,
   tags: ['autodocs'],
   parameters: {

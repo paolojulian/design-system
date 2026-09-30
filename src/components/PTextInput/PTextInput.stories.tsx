@@ -2,7 +2,7 @@ import { type Meta, type StoryObj } from '@storybook/react';
 import { PTextInput } from '.';
 
 const meta: Meta<typeof PTextInput> = {
-  title: 'Components/PTextInput',
+  title: 'Pipz/PTextInput',
   component: PTextInput,
   tags: ['autodocs'],
   parameters: {

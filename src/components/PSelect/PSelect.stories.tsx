@@ -9,7 +9,7 @@ const accountOptions = [
 ];
 
 const meta: Meta<typeof PSelect> = {
-  title: 'Components/PSelect',
+  title: 'Pipz/PSelect',
   component: PSelect,
   tags: ['autodocs'],
   parameters: {

@@ -5,7 +5,7 @@ import { PTextArea } from '../PTextArea';
 import { PSelect } from '../PSelect';
 
 const meta: Meta<typeof PFormField> = {
-  title: 'Components/PFormField',
+  title: 'Pipz/PFormField',
   component: PFormField,
   tags: ['autodocs'],
   parameters: {

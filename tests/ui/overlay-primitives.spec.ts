@@ -24,7 +24,7 @@ async function expectNoA11yViolations(page: Page) {
 
 test.describe('Overlay — PModal', () => {
   test('opens from the trigger, moves focus in, and restores it on Esc', async ({ page }) => {
-    await gotoStory(page, 'components-pmodal--default');
+    await gotoStory(page, 'pipz-pmodal--default');
     const trigger = page.getByRole('button', { name: 'Open modal' });
 
     await trigger.focus();
@@ -46,7 +46,7 @@ test.describe('Overlay — PModal', () => {
   });
 
   test('traps focus inside the dialog while tabbing (native <dialog>)', async ({ page }) => {
-    await gotoStory(page, 'components-pmodal--with-form');
+    await gotoStory(page, 'pipz-pmodal--with-form');
     const dialog = page.getByRole('dialog');
     await expect(dialog).toBeVisible();
     await waitForOverlaySettled(page);
@@ -67,14 +67,14 @@ test.describe('Overlay — PModal', () => {
   });
 
   test('closes via the close button', async ({ page }) => {
-    await gotoStory(page, 'components-pmodal--with-form');
+    await gotoStory(page, 'pipz-pmodal--with-form');
     await expect(page.getByRole('dialog')).toBeVisible();
     await page.getByRole('button', { name: 'Close' }).click();
     await expect(page.getByRole('dialog')).toBeHidden();
   });
 
   test('closes on scrim click but not on surface click', async ({ page }) => {
-    await gotoStory(page, 'components-pmodal--with-form');
+    await gotoStory(page, 'pipz-pmodal--with-form');
     const dialog = page.getByRole('dialog');
     await expect(dialog).toBeVisible();
 
@@ -88,7 +88,7 @@ test.describe('Overlay — PModal', () => {
   });
 
   test('locks body scroll while open and restores it on close', async ({ page }) => {
-    await gotoStory(page, 'components-pmodal--with-form');
+    await gotoStory(page, 'pipz-pmodal--with-form');
     await expect(page.getByRole('dialog')).toBeVisible();
     await expect(page.locator('body')).toHaveCSS('overflow', 'hidden');
 
@@ -98,13 +98,13 @@ test.describe('Overlay — PModal', () => {
   });
 
   test('renders as alertdialog for destructive confirms', async ({ page }) => {
-    await gotoStory(page, 'components-pmodal--destructive-confirm');
+    await gotoStory(page, 'pipz-pmodal--destructive-confirm');
     await expect(page.getByRole('alertdialog')).toBeVisible();
   });
 
   test('goes full-screen at mobile width for md/lg sizes', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
-    await gotoStory(page, 'components-pmodal--mobile-viewport');
+    await gotoStory(page, 'pipz-pmodal--mobile-viewport');
     const surface = page.locator('.p-overlay__surface');
     await expect(surface).toBeVisible();
     await waitForOverlaySettled(page);
@@ -116,7 +116,7 @@ test.describe('Overlay — PModal', () => {
 test.describe('Overlay — PDrawer', () => {
   test('opens, closes on Esc, and is full-width on mobile', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
-    await gotoStory(page, 'components-pdrawer--default');
+    await gotoStory(page, 'pipz-pdrawer--default');
     const dialog = page.getByRole('dialog');
     await expect(dialog).toBeVisible();
     await waitForOverlaySettled(page);
@@ -132,7 +132,7 @@ test.describe('Overlay — PDrawer', () => {
 
 test.describe('Overlay — PSheet', () => {
   test('closes from the grab handle by keyboard', async ({ page }) => {
-    await gotoStory(page, 'components-psheet--default');
+    await gotoStory(page, 'pipz-psheet--default');
     await expect(page.getByRole('dialog')).toBeVisible();
 
     // The handle is the first control (a real button), reachable and operable by keyboard.
@@ -146,16 +146,16 @@ test.describe('Overlay — PSheet', () => {
 
 test.describe('Overlay — accessibility', () => {
   for (const storyId of [
-    'components-pmodal--long-content',
-    'components-pmodal--with-form',
-    'components-pmodal--destructive-confirm',
-    'components-pmodal--dark-theme',
-    'components-pdrawer--default',
-    'components-pdrawer--with-filters',
-    'components-pdrawer--dark-theme',
-    'components-psheet--default',
-    'components-psheet--with-footer',
-    'components-psheet--dark-theme',
+    'pipz-pmodal--long-content',
+    'pipz-pmodal--with-form',
+    'pipz-pmodal--destructive-confirm',
+    'pipz-pmodal--dark-theme',
+    'pipz-pdrawer--default',
+    'pipz-pdrawer--with-filters',
+    'pipz-pdrawer--dark-theme',
+    'pipz-psheet--default',
+    'pipz-psheet--with-footer',
+    'pipz-psheet--dark-theme',
   ]) {
     test(`${storyId} has no detectable axe violations`, async ({ page }) => {
       await gotoStory(page, storyId);

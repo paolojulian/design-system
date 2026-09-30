@@ -3,7 +3,7 @@ import { PSectionHeader } from ".";
 import { P_COLORS } from "../../constants";
 
 const meta: Meta<typeof PSectionHeader> = {
-  title: "Components/PSectionHeader",
+  title: "Pipz/PSectionHeader",
   component: PSectionHeader,
   parameters: {
     backgrounds: {

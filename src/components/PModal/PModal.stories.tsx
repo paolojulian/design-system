@@ -21,7 +21,7 @@ function ModalHarness({ defaultOpen = false, triggerLabel = 'Open modal', ...pro
 }
 
 const meta: Meta<typeof ModalHarness> = {
-  title: 'Components/PModal',
+  title: 'Pipz/PModal',
   component: PModal,
   tags: ['autodocs'],
   parameters: { layout: 'centered' },

@@ -2,7 +2,7 @@ import { type Meta, type StoryObj } from '@storybook/react';
 import { PSwitch } from '.';
 
 const meta: Meta<typeof PSwitch> = {
-  title: 'Components/PSwitch',
+  title: 'Pipz/PSwitch',
   component: PSwitch,
   tags: ['autodocs'],
   parameters: {

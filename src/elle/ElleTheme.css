@@ -1,0 +1,121 @@
+/* Documentation-only styles for the Elle theme stories. Tokens only: every value
+   here must come from the contract it documents. */
+.elle-doc {
+  display: grid;
+  gap: var(--p-space-10);
+  padding: var(--p-space-6);
+  background: var(--p-color-background);
+  color: var(--p-color-text);
+  font-family: var(--p-font-family-sans);
+  font-size: var(--p-font-size-body-md);
+  line-height: var(--p-line-height-body-md);
+}
+
+.elle-doc__section {
+  display: grid;
+  gap: var(--p-space-4);
+}
+
+.elle-doc__heading {
+  margin: 0;
+  font-size: var(--p-font-size-heading-sm);
+  line-height: var(--p-line-height-heading-sm);
+  font-weight: var(--p-font-weight-medium);
+  letter-spacing: var(--p-letter-spacing-heading);
+}
+
+.elle-doc__note {
+  margin: 0;
+  max-width: 44rem;
+  color: var(--p-color-text-muted);
+  font-size: var(--p-font-size-body-sm);
+  line-height: var(--p-line-height-body-sm);
+}
+
+.elle-doc__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
+  gap: var(--p-space-3);
+}
+
+.elle-doc__swatch {
+  display: grid;
+  gap: var(--p-space-2);
+  padding: var(--p-space-3);
+  background: var(--p-color-surface);
+  border: 1px solid var(--p-color-border-subtle);
+  border-radius: var(--p-radius-sm);
+}
+
+.elle-doc__chip {
+  height: var(--p-size-control-md);
+  border: 1px solid var(--p-color-border-subtle);
+  border-radius: var(--p-radius-xs);
+}
+
+.elle-doc__token {
+  font-size: var(--p-font-size-caption);
+  line-height: var(--p-line-height-caption);
+  overflow-wrap: anywhere;
+}
+
+.elle-doc__value {
+  color: var(--p-color-text-subtle);
+  font-size: var(--p-font-size-caption);
+  line-height: var(--p-line-height-caption);
+  font-variant-numeric: tabular-nums;
+}
+
+.elle-doc__type-row {
+  display: grid;
+  grid-template-columns: minmax(8rem, 12rem) 1fr;
+  align-items: baseline;
+  gap: var(--p-space-4);
+  padding-block: var(--p-space-3);
+  border-bottom: 1px solid var(--p-color-border-subtle);
+}
+
+.elle-doc__type-sample {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.elle-doc__shape {
+  height: var(--p-space-20);
+  background: var(--p-color-surface);
+  border: 1px solid var(--p-color-border);
+}
+
+.elle-doc__panel {
+  display: grid;
+  gap: var(--p-space-5);
+  padding: var(--p-space-5);
+  background: var(--p-color-surface);
+  border: 1px solid var(--p-color-border-subtle);
+  border-radius: var(--p-radius-lg);
+  box-shadow: var(--p-shadow-sm);
+}
+
+.elle-doc__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--p-space-3);
+}
+
+.elle-doc__fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  gap: var(--p-space-4);
+}
+
+@media (max-width: 40rem) {
+  .elle-doc {
+    padding: var(--p-space-4);
+  }
+
+  .elle-doc__type-row {
+    grid-template-columns: 1fr;
+    gap: var(--p-space-1);
+  }
+}

@@ -185,7 +185,7 @@ function SelectedOptionMismatchExample() {
 }
 
 const meta: Meta<typeof PCombobox> = {
-  title: 'Components/PCombobox',
+  title: 'Pipz/PCombobox',
   component: PCombobox,
   tags: ['autodocs'],
   parameters: {

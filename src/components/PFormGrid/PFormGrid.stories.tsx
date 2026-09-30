@@ -7,7 +7,7 @@ import { PSelect } from '../PSelect';
 import { PButton } from '../PButton';
 
 const meta: Meta<typeof PFormGrid> = {
-  title: 'Components/PFormGrid',
+  title: 'Pipz/PFormGrid',
   component: PFormGrid,
   tags: ['autodocs'],
   parameters: {

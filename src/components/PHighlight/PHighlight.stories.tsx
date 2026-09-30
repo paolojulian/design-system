@@ -3,7 +3,7 @@ import { PTypography } from '../PTypography';
 import { PHighlight } from '.';
 
 const meta: Meta<typeof PHighlight> = {
-  title: 'Components/PHighlight',
+  title: 'Pipz/PHighlight',
   component: PHighlight,
   tags: ['autodocs'],
   parameters: {

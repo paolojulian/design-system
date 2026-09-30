@@ -26,7 +26,7 @@ test.describe('PPhotoMosaic', () => {
   test('renders a lead tile plus a row, with the rest summarised on the last one', async ({
     page,
   }) => {
-    await gotoStory(page, 'components-pphotomosaic--default');
+    await gotoStory(page, 'pipz-pphotomosaic--default');
 
     await expect(page.locator('.p-photo-mosaic__tile--hero')).toHaveCount(1);
     await expect(page.locator('.p-photo-mosaic__tile--row')).toHaveCount(3);
@@ -42,7 +42,7 @@ test.describe('PPhotoMosaic', () => {
   });
 
   test('tiles paint the preview source, never the full-size file', async ({ page }) => {
-    await gotoStory(page, 'components-pphotomosaic--default');
+    await gotoStory(page, 'pipz-pphotomosaic--default');
 
     // The fixtures label the two variants differently, so the rendered src says
     // outright which one the tile reached for.
@@ -57,7 +57,7 @@ test.describe('PPhotoMosaic', () => {
   });
 
   test('every tile is a labelled button and reports its own index', async ({ page }) => {
-    await gotoStory(page, 'components-pphotomosaic--reports-the-tapped-index');
+    await gotoStory(page, 'pipz-pphotomosaic--reports-the-tapped-index');
     const readout = page.getByTestId('opened-index');
     await expect(readout).toHaveText('No tile opened yet');
 
@@ -72,7 +72,7 @@ test.describe('PPhotoMosaic', () => {
   test('the overflow tile opens at its own index rather than jumping to the end', async ({
     page,
   }) => {
-    await gotoStory(page, 'components-pphotomosaic--reports-the-tapped-index');
+    await gotoStory(page, 'pipz-pphotomosaic--reports-the-tapped-index');
 
     // 12 photos, 4 tiles: the last tile carries "+8" and is still index 3.
     await expect(page.locator('.p-photo-mosaic__overflow')).toHaveText('+8');
@@ -83,7 +83,7 @@ test.describe('PPhotoMosaic', () => {
   test('the overflow tile is named for what it does, not for the photo behind it', async ({
     page,
   }) => {
-    await gotoStory(page, 'components-pphotomosaic--default');
+    await gotoStory(page, 'pipz-pphotomosaic--default');
 
     await expect(
       page.getByRole('button', { name: 'Open the gallery — 56 more photos' }),
@@ -100,14 +100,14 @@ test.describe('PPhotoMosaic', () => {
   });
 
   test('renders nothing interactive without onPhotoClick', async ({ page }) => {
-    await gotoStory(page, 'components-pphotomosaic--static');
+    await gotoStory(page, 'pipz-pphotomosaic--static');
 
     await expect(page.locator('.p-photo-mosaic__tile')).toHaveCount(4);
     await expect(page.locator('#storybook-root button')).toHaveCount(0);
   });
 
   test('a single photo collapses to the lead tile with no row', async ({ page }) => {
-    await gotoStory(page, 'components-pphotomosaic--single-photo');
+    await gotoStory(page, 'pipz-pphotomosaic--single-photo');
 
     await expect(page.locator('.p-photo-mosaic__tile--hero')).toHaveCount(1);
     await expect(page.locator('.p-photo-mosaic__row')).toHaveCount(0);
@@ -115,14 +115,14 @@ test.describe('PPhotoMosaic', () => {
   });
 
   test('exactly previewCount photos means no overflow tile', async ({ page }) => {
-    await gotoStory(page, 'components-pphotomosaic--exact-fit');
+    await gotoStory(page, 'pipz-pphotomosaic--exact-fit');
 
     await expect(page.locator('.p-photo-mosaic__tile')).toHaveCount(4);
     await expect(page.locator('.p-photo-mosaic__overflow')).toHaveCount(0);
   });
 
   test('with one preview tile the lead tile carries the count', async ({ page }) => {
-    await gotoStory(page, 'components-pphotomosaic--hero-only-with-overflow');
+    await gotoStory(page, 'pipz-pphotomosaic--hero-only-with-overflow');
 
     await expect(page.locator('.p-photo-mosaic__row')).toHaveCount(0);
     await expect(
@@ -131,14 +131,14 @@ test.describe('PPhotoMosaic', () => {
   });
 
   test('the preview row follows previewCount', async ({ page }) => {
-    await gotoStory(page, 'components-pphotomosaic--five-tiles');
+    await gotoStory(page, 'pipz-pphotomosaic--five-tiles');
 
     await expect(page.locator('.p-photo-mosaic__tile--row')).toHaveCount(4);
     await expect(page.locator('.p-photo-mosaic__overflow')).toHaveText('+55');
   });
 
   test('is keyboard reachable and shows a focus ring', async ({ page }) => {
-    await gotoStory(page, 'components-pphotomosaic--reports-the-tapped-index');
+    await gotoStory(page, 'pipz-pphotomosaic--reports-the-tapped-index');
 
     await page.keyboard.press('Tab');
     const hero = page.locator('.p-photo-mosaic__tile--hero');
@@ -150,14 +150,14 @@ test.describe('PPhotoMosaic', () => {
   });
 
   test('has no accessibility violations', async ({ page }) => {
-    await gotoStory(page, 'components-pphotomosaic--default');
+    await gotoStory(page, 'pipz-pphotomosaic--default');
     await expectNoA11yViolations(page);
   });
 });
 
 test.describe('PPhotoGrid', () => {
   test('renders a list of tiles with nothing focusable by default', async ({ page }) => {
-    await gotoStory(page, 'components-pphotogrid--default');
+    await gotoStory(page, 'pipz-pphotogrid--default');
 
     await expect(page.locator('.p-photo-grid__item')).toHaveCount(12);
     await expect(page.locator('.p-photo-grid__button')).toHaveCount(0);
@@ -165,14 +165,14 @@ test.describe('PPhotoGrid', () => {
   });
 
   test('tiles become labelled buttons with onPhotoClick', async ({ page }) => {
-    await gotoStory(page, 'components-pphotogrid--interactive');
+    await gotoStory(page, 'pipz-pphotogrid--interactive');
 
     await expect(page.locator('.p-photo-grid__button')).toHaveCount(12);
     await expect(page.getByRole('button', { name: 'Open Ceremony, photo 1' })).toBeVisible();
   });
 
   test('derives a sizes attribute from the column configuration', async ({ page }) => {
-    await gotoStory(page, 'components-pphotogrid--six-columns');
+    await gotoStory(page, 'pipz-pphotogrid--six-columns');
 
     // 3 / 4 / 6 columns → 33vw / 25vw / 17vw, largest breakpoint first.
     const sizes = await page.locator('.p-photo-grid__image').first().getAttribute('sizes');
@@ -180,19 +180,19 @@ test.describe('PPhotoGrid', () => {
   });
 
   test('renders nothing for an empty set', async ({ page }) => {
-    await gotoStory(page, 'components-pphotogrid--empty');
+    await gotoStory(page, 'pipz-pphotogrid--empty');
     await expect(page.locator('.p-photo-grid')).toHaveCount(0);
   });
 
   test('has no accessibility violations', async ({ page }) => {
-    await gotoStory(page, 'components-pphotogrid--interactive');
+    await gotoStory(page, 'pipz-pphotogrid--interactive');
     await expectNoA11yViolations(page);
   });
 });
 
 test.describe('PVideoGallery', () => {
   test('shows posters only — no video element until a clip is played', async ({ page }) => {
-    await gotoStory(page, 'components-pvideogallery--default');
+    await gotoStory(page, 'pipz-pvideogallery--default');
 
     await expect(page.locator('.p-video-gallery__poster')).toHaveCount(6);
     // The whole point of the component: nothing has touched the network for
@@ -201,7 +201,7 @@ test.describe('PVideoGallery', () => {
   });
 
   test('mounts a player in place of the poster that was clicked', async ({ page }) => {
-    await gotoStory(page, 'components-pvideogallery--default');
+    await gotoStory(page, 'pipz-pvideogallery--default');
 
     await page.getByRole('button', { name: 'Play Ceremony clip 1' }).click();
 
@@ -211,7 +211,7 @@ test.describe('PVideoGallery', () => {
   });
 
   test('plays one clip at a time', async ({ page }) => {
-    await gotoStory(page, 'components-pvideogallery--default');
+    await gotoStory(page, 'pipz-pvideogallery--default');
 
     await page.getByRole('button', { name: 'Play Ceremony clip 1' }).click();
     await expect(page.locator('video')).toHaveCount(1);
@@ -226,7 +226,7 @@ test.describe('PVideoGallery', () => {
   });
 
   test('the toggle expands the set and is wired to the list it controls', async ({ page }) => {
-    await gotoStory(page, 'components-pvideogallery--default');
+    await gotoStory(page, 'pipz-pvideogallery--default');
 
     // Located by class, not by accessible name: the name is the thing under
     // test and flips to "Show fewer" the moment it is clicked.
@@ -248,21 +248,21 @@ test.describe('PVideoGallery', () => {
   });
 
   test('renders no toggle when nothing is hidden', async ({ page }) => {
-    await gotoStory(page, 'components-pvideogallery--without-toggle');
+    await gotoStory(page, 'pipz-pvideogallery--without-toggle');
 
     await expect(page.locator('.p-video-gallery__poster')).toHaveCount(3);
     await expect(page.locator('.p-video-gallery__toggle')).toHaveCount(0);
   });
 
   test('has no accessibility violations', async ({ page }) => {
-    await gotoStory(page, 'components-pvideogallery--default');
+    await gotoStory(page, 'pipz-pvideogallery--default');
     await expectNoA11yViolations(page);
   });
 });
 
 test.describe('PPhotoLightbox', () => {
   test('opens from a mosaic tile at the index that was clicked', async ({ page }) => {
-    await gotoStory(page, 'components-pphotolightbox--default');
+    await gotoStory(page, 'pipz-pphotolightbox--default');
     await expect(page.locator('.yarl__portal_open')).toHaveCount(0);
 
     await page.locator('.p-photo-mosaic__tile--row').nth(1).click();
@@ -274,7 +274,7 @@ test.describe('PPhotoLightbox', () => {
   });
 
   test('does not wrap past the last photo', async ({ page }) => {
-    await gotoStory(page, 'components-pphotolightbox--open-at-index');
+    await gotoStory(page, 'pipz-pphotolightbox--open-at-index');
     await expect(page.locator('.yarl__portal_open')).toBeVisible();
 
     const previous = page.getByRole('button', { name: 'Previous photo' });
@@ -288,7 +288,7 @@ test.describe('PPhotoLightbox', () => {
   });
 
   test('closes on the X button but not on the letterboxed backdrop', async ({ page }) => {
-    await gotoStory(page, 'components-pphotolightbox--open-at-index');
+    await gotoStory(page, 'pipz-pphotolightbox--open-at-index');
     const portal = page.locator('.yarl__portal_open');
     await expect(portal).toBeVisible();
 
@@ -302,7 +302,7 @@ test.describe('PPhotoLightbox', () => {
   });
 
   test('adds a whole-set download only when an archive URL is given', async ({ page }) => {
-    await gotoStory(page, 'components-pphotolightbox--open-at-index');
+    await gotoStory(page, 'pipz-pphotolightbox--open-at-index');
 
     const archive = page.getByRole('link', {
       name: 'Download all 24 photos from Jose Albin — Day 1 as a ZIP file',
@@ -314,7 +314,7 @@ test.describe('PPhotoLightbox', () => {
   });
 
   test('omits the whole-set download when there is no archive', async ({ page }) => {
-    await gotoStory(page, 'components-pphotolightbox--unlabelled');
+    await gotoStory(page, 'pipz-pphotolightbox--unlabelled');
 
     await expect(page.locator('.yarl__portal_open')).toBeVisible();
     await expect(page.locator('.p-photo-lightbox__action')).toHaveCount(0);
@@ -324,7 +324,7 @@ test.describe('PPhotoLightbox', () => {
   });
 
   test('themes the backdrop through a design-system token', async ({ page }) => {
-    await gotoStory(page, 'components-pphotolightbox--open-at-index');
+    await gotoStory(page, 'pipz-pphotolightbox--open-at-index');
 
     // The library's stylesheet is unlayered and would beat a layered override,
     // so the variable is set inline and reads our token.

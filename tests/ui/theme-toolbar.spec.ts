@@ -30,13 +30,13 @@ async function resolveColorToken(page: Page, token: string) {
 
 test.describe('Theme toolbar', () => {
   test('flips the background token between light and dark globals', async ({ page }) => {
-    await gotoStory(page, 'components-pcard--default', 'light');
+    await gotoStory(page, 'pipz-pcard--default', 'light');
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
     const lightBackground = await resolveColorToken(page, '--p-color-background');
     // --p-color-neutral-50
     expect(lightBackground).toBe('rgb(250, 250, 249)');
 
-    await gotoStory(page, 'components-pcard--default', 'dark');
+    await gotoStory(page, 'pipz-pcard--default', 'dark');
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
     const darkBackground = await resolveColorToken(page, '--p-color-background');
     // --p-color-neutral-950
@@ -52,7 +52,7 @@ test.describe('Theme toolbar', () => {
 
   test('system follows the OS color scheme, including live changes', async ({ page }) => {
     await page.emulateMedia({ colorScheme: 'dark' });
-    await gotoStory(page, 'components-pcard--default', 'system');
+    await gotoStory(page, 'pipz-pcard--default', 'system');
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
     expect(await resolveColorToken(page, '--p-color-background')).toBe('rgb(17, 17, 17)');
 
@@ -64,13 +64,13 @@ test.describe('Theme toolbar', () => {
 
   test('defaults to system when no theme global is set', async ({ page }) => {
     await page.emulateMedia({ colorScheme: 'dark' });
-    await gotoStory(page, 'components-pcard--default');
+    await gotoStory(page, 'pipz-pcard--default');
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
   });
 
   test('an explicit theme wins over the OS color scheme', async ({ page }) => {
     await page.emulateMedia({ colorScheme: 'dark' });
-    await gotoStory(page, 'components-pcard--default', 'light');
+    await gotoStory(page, 'pipz-pcard--default', 'light');
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
 
     // An OS change must not override an explicit choice.

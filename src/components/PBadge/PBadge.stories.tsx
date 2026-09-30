@@ -10,7 +10,7 @@ function DotIcon() {
 }
 
 const meta: Meta<typeof PBadge> = {
-  title: "Components/PBadge",
+  title: "Pipz/PBadge",
   component: PBadge,
   tags: ["autodocs"],
   parameters: {

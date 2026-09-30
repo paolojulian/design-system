@@ -160,7 +160,7 @@ function InteractiveRowsStory(args: PTableProps<Account>) {
 }
 
 const meta = {
-  title: "Components/PTable",
+  title: "Pipz/PTable",
   component: AccountTable,
   tags: ["autodocs"],
   parameters: {

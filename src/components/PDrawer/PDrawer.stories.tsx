@@ -17,7 +17,7 @@ function DrawerHarness({ defaultOpen = false, triggerLabel = 'Open drawer', ...p
 }
 
 const meta: Meta<typeof DrawerHarness> = {
-  title: 'Components/PDrawer',
+  title: 'Pipz/PDrawer',
   component: PDrawer,
   tags: ['autodocs'],
   parameters: { layout: 'centered' },

@@ -2,7 +2,7 @@ import { type Meta, type StoryObj } from "@storybook/react";
 import { PDateRangePicker, PDateRangePickerPresets } from ".";
 
 const meta: Meta<typeof PDateRangePicker> = {
-  title: "Components/PDateRangePicker",
+  title: "Pipz/PDateRangePicker",
   component: PDateRangePicker,
   tags: ["autodocs"],
   parameters: {

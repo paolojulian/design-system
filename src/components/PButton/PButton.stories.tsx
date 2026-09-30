@@ -34,7 +34,7 @@ function PlusIcon() {
 }
 
 const meta: Meta<typeof PButton> = {
-  title: 'Components/PButton',
+  title: 'Pipz/PButton',
   component: PButton,
   tags: ['autodocs'],
   parameters: {

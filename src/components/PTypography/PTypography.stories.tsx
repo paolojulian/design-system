@@ -3,7 +3,7 @@ import { PTypography } from '.';
 import { P_COLORS } from '../../constants';
 
 const meta: Meta<typeof PTypography> = {
-  title: 'Components/PTypography',
+  title: 'Pipz/PTypography',
   component: PTypography,
   parameters: {
     backgrounds: {

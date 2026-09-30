@@ -35,6 +35,7 @@
     },
     "./style.css": "./dist/style.css",
     "./theme.css": "./dist/theme.css",
+    "./theme-elle.css": "./dist/theme-elle.css",
     "./fonts.css": "./dist/fonts.css",
     "./fonts/*": "./dist/assets/fonts/*",
     "./vite-config/*": "./dist/vite-config/*"

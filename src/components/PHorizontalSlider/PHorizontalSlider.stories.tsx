@@ -35,7 +35,7 @@ const items: SliderStoryItem[] = [
 ];
 
 const meta: Meta<typeof PHorizontalSlider> = {
-  title: 'Components/PHorizontalSlider',
+  title: 'Pipz/PHorizontalSlider',
   component: PHorizontalSlider,
   tags: ['autodocs'],
   parameters: {
