@@ -8,13 +8,16 @@ CSS anchor positioning (`anchor-name`, `position-try-fallbacks`) isn't supported
 
 The popover uses `popover="manual"`, so it renders in the top layer and no ancestor's `overflow` or `z-index` can clip it. It uses `manual`, not `auto`, on purpose. With `auto`, light dismiss fires on the trigger's pointerdown and the trigger's click then reopens the popover. Dismissal (Escape, press outside, focus leaving) is handled in the component, so React state stays the only source of truth.
 
-## Positioning follows Popper.js defaults
+## Positioning follows Popper.js flip and preventOverflow (with altAxis)
 
-- flip: use the preferred side if it fits, else the opposite side if that fits, else stay on the preferred side.
-- preventOverflow: shift along the cross axis only.
-- `position: absolute` in document coordinates: a popover taller than the space below extends the page, which then scrolls.
+- flip: use the preferred side if it fits, else the opposite side if that fits, else the side with more room.
+- preventOverflow on both axes: the popover always stays inside the viewport. When neither side fits, it slides back on screen, covering the anchor if it must.
+- Only a popover taller than the whole viewport gets `max-height`. Then the body scrolls and the footer stays pinned.
+- `position: fixed`. Staying on screen never depends on page scroll.
 
 ## Dead ends
+
+- **Popper's `absolute` strategy with no main-axis limit (4.7.0).** "Extend the page and let it scroll" works on a normal page, but a modal locks page scroll. Inside the planner's "Block dates" modal the calendar ran off the bottom of a 900px-tall laptop window, and Done / Clear dates were unreachable. Fixed in 4.7.1 with preventOverflow on the main axis (`altAxis`), covered by `tests/ui/date-range-picker.spec.ts` ("inside a scroll-locked modal", at 900/700/560px).
 
 - **Capping height and scrolling inside the popover.** The first version followed the roomier side and set `max-height`, so the calendar scrolled inside itself. The user rejected it: a cut-off calendar with an inner scrollbar. `position: fixed` also can't grow the page's scroll area, so the rest of the popover could never be scrolled into view. Switched to Popper's approach. Checked in Chromium: an absolutely positioned top-layer element *does* extend the document's scrollable overflow (`scrollTo` goes past the reported `scrollHeight`). Other browsers are not verified yet.
 - **Author `display` vs the UA `:not(:popover-open)` rule.** This is the same trap as `<dialog>` in 03's notes. `.p-popover { display: flex }` would keep the closed popover visible, so the hidden state is restated with a more specific selector.

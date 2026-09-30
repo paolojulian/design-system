@@ -2,12 +2,11 @@
 /*
  * Rendered with popover="manual", so it sits in the top layer. The UA popover
  * styles center it with `inset: 0; margin: auto`; reset those so the inline
- * `top`/`left` from useAnchoredPosition decide placement. Absolute (document
- * coordinates), as in Popper: a popover taller than the space below extends
- * the page instead of scrolling inside itself.
+ * `top`/`left` from useAnchoredPosition decide placement. Fixed: it is kept
+ * inside the viewport, so it never depends on page scroll (modals lock it).
  */
 .p-popover {
-  position: absolute;
+  position: fixed;
   inset: auto;
   z-index: var(--p-popover-z-index);
   box-sizing: border-box;
@@ -16,6 +15,8 @@
   flex-direction: column;
   gap: var(--p-popover-gap);
   margin: 0;
+  /* Only when taller than the viewport: the body scrolls, the footer stays. */
+  overflow: hidden;
   border: 1px solid var(--p-popover-border);
   border-radius: var(--p-popover-radius);
   background: var(--p-popover-surface);
@@ -37,6 +38,12 @@
   clip: rect(0 0 0 0);
   clip-path: inset(50%);
   white-space: nowrap;
+}
+
+.p-popover__body {
+  min-height: 0;
+  flex: 1 1 auto;
+  overflow: auto;
 }
 
 .p-popover__footer {

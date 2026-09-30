@@ -1,4 +1,8 @@
 import { type Meta, type StoryObj } from "@storybook/react";
+import { useState } from "react";
+import { PButton } from "../PButton";
+import { PCheckbox } from "../PCheckbox";
+import { PModal } from "../PModal";
 import { PDateRangePicker, PDateRangePickerPresets } from ".";
 
 const meta: Meta<typeof PDateRangePicker> = {
@@ -195,6 +199,41 @@ export const MobileViewport: Story = {
     defaultValue: { start: "2026-05-18", end: "2026-05-21" },
   },
   parameters: { viewport: { defaultViewport: "mobile1" } },
+};
+
+function ModalHarness() {
+  const [open, setOpen] = useState(true);
+
+  return (
+    <>
+      <PButton onClick={() => setOpen(true)}>Block dates</PButton>
+      <PModal
+        open={open}
+        onClose={() => setOpen(false)}
+        title="Block dates"
+        description="Guests can't book the ticked properties for these dates."
+      >
+        <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+          <PCheckbox label="Ocean View Suite" />
+          <PCheckbox label="Pine Ridge Cabin" />
+          <PDateRangePicker label="Check-in – Check-out" placeholder="Pick dates" summaryUnit="nights" locale="en-US" />
+        </div>
+      </PModal>
+    </>
+  );
+}
+
+export const InsideModal: Story = {
+  name: "Inside Modal",
+  render: () => <ModalHarness />,
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "A modal locks page scroll, so the calendar must stay inside the viewport on its own: when it fits on neither side of the field it slides back on screen, overlapping the field.",
+      },
+    },
+  },
 };
 
 export const DarkTheme: Story = {

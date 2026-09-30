@@ -319,8 +319,9 @@ test.describe('PDateRangePicker mobile sheet', () => {
 test.describe('Open calendars have no axe violations', () => {
   const cases = [
     { name: 'range popover', id: 'pipz-pdaterangepicker--standard', trigger: /Report range/, width: 1280 },
-    // Dark via the Theme toolbar global, as everywhere else in this Storybook.
-    { name: 'range popover, dark', id: 'pipz-pdaterangepicker--standard&globals=theme:dark', trigger: /Report range/, width: 1280 },
+    // The Dark Theme story also paints the canvas dark; a URL theme global alone
+    // leaves it white, so page-level text would be audited against the wrong color.
+    { name: 'range popover, dark', id: 'pipz-pdaterangepicker--dark-theme', trigger: /Report range/, width: 1280 },
     { name: 'range sheet', id: 'pipz-pdaterangepicker--mobile-viewport', trigger: /Booking range/, width: 375 },
     { name: 'date popover', id: 'pipz-pdatepicker--standard', trigger: /Due date/, width: 1280 },
     { name: 'date sheet', id: 'pipz-pdatepicker--standard', trigger: /Due date/, width: 375 },
@@ -338,6 +339,25 @@ test.describe('Open calendars have no axe violations', () => {
       // `region` audits the Storybook page (loose helper text), not the component.
       const results = await new AxeBuilder({ page }).disableRules(['region']).analyze();
       expect(results.violations.map((violation) => `${violation.id}: ${violation.nodes[0]?.target}`)).toEqual([]);
+    });
+  }
+});
+
+test.describe('PDateRangePicker inside a scroll-locked modal', () => {
+  for (const height of [900, 700, 560]) {
+    test(`the calendar stays fully on screen at ${height}px tall`, async ({ page }) => {
+      await page.setViewportSize({ width: 1280, height });
+      await page.goto(storyUrl('pipz-pdaterangepicker--inside-modal'));
+      await page.getByRole('button', { name: /Check-in – Check-out/ }).click();
+      const panel = page.locator('.p-popover');
+      await expect(panel).toBeVisible();
+      const box = (await panel.boundingBox())!;
+      expect(box.y).toBeGreaterThanOrEqual(0);
+      expect(box.y + box.height).toBeLessThanOrEqual(height);
+      await expect(page.getByRole('button', { name: 'Done' })).toBeInViewport();
+      // Above the modal, and usable: a day can be picked.
+      await page.getByRole('gridcell').filter({ hasText: /^15$/ }).first().click();
+      await expect(page.locator('.p-date-range-picker__edge').first()).not.toContainText('Add date');
     });
   }
 });

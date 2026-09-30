@@ -93,19 +93,26 @@ test.describe('PPopover', () => {
   }
 });
 
-test('when neither side fits it stays below, full height, and the page scrolls to it', async ({ page }) => {
-  await page.setViewportSize({ width: 800, height: 260 });
+test('when neither side fits it slides fully into the viewport, with nothing scrolling', async ({ page }) => {
+  await page.setViewportSize({ width: 800, height: 300 });
   await page.goto(storyUrl('pipz-ppopover--default'));
   const panel = page.getByRole('dialog', { name: 'Filter orders' });
   await expect(panel).toBeVisible();
-  await expect(panel).toHaveAttribute('data-placement', 'bottom-start');
-  // Not capped: nothing inside scrolls.
-  expect(await panel.evaluate((element) => element.scrollHeight <= element.clientHeight)).toBe(true);
-  const apply = page.getByRole('button', { name: 'Apply' });
-  await apply.scrollIntoViewIfNeeded();
-  await expect(apply).toBeInViewport();
-  // It moved with the page, still attached under its trigger.
-  const anchor = (await trigger(page).boundingBox())!;
   const box = (await panel.boundingBox())!;
-  expect(box.y).toBeGreaterThanOrEqual(anchor.y + anchor.height);
+  expect(box.y).toBeGreaterThanOrEqual(0);
+  expect(box.y + box.height).toBeLessThanOrEqual(300);
+  // Fits once shifted, so it is not capped: nothing inside scrolls.
+  expect(await panel.evaluate((element) => element.scrollHeight <= element.clientHeight)).toBe(true);
+  await expect(page.getByRole('button', { name: 'Apply' })).toBeInViewport();
+});
+
+test('taller than the viewport: capped, the body scrolls and the footer stays visible', async ({ page }) => {
+  await page.setViewportSize({ width: 800, height: 180 });
+  await page.goto(storyUrl('pipz-ppopover--default'));
+  const panel = page.getByRole('dialog', { name: 'Filter orders' });
+  await expect(panel).toBeVisible();
+  const box = (await panel.boundingBox())!;
+  expect(box.y).toBeGreaterThanOrEqual(0);
+  expect(box.y + box.height).toBeLessThanOrEqual(180);
+  await expect(page.getByRole('button', { name: 'Apply' })).toBeInViewport();
 });

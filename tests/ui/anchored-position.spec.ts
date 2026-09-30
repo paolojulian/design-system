@@ -12,6 +12,7 @@ test.describe('computeAnchoredPosition', () => {
       top: 148,
       left: 200,
       placement: 'bottom-start',
+      maxHeight: undefined,
     });
   });
 
@@ -35,19 +36,33 @@ test.describe('computeAnchoredPosition', () => {
     });
   });
 
-  test('stays on the preferred side, uncapped, when neither side fits (Popper flip)', () => {
-    const tall = { width: 400, height: 900 };
-    const nearBottom = { ...anchor, top: 500 };
-    expect(computeAnchoredPosition({ anchor: nearBottom, floating: tall, viewport })).toEqual({
-      top: 548,
+  test('neither side fits: uses the roomier side and slides fully on screen (preventOverflow altAxis)', () => {
+    const tall = { width: 400, height: 700 };
+    const middle = { ...anchor, top: 380 };
+    // Below: 800-420-16 = 364. Above: 380-16 = 364... tie keeps the preferred side.
+    expect(computeAnchoredPosition({ anchor: middle, floating: tall, viewport })).toEqual({
+      top: 92,
       left: 200,
       placement: 'bottom-start',
+      maxHeight: undefined,
     });
-    // Preferring top keeps top, extending above the viewport like Popper does.
-    expect(computeAnchoredPosition({ anchor: nearBottom, floating: tall, viewport, placement: 'top-start' })).toEqual({
-      top: -408,
+    // More room above: flips, then slides down so nothing leaves the top edge.
+    const low = { ...anchor, top: 600 };
+    expect(computeAnchoredPosition({ anchor: low, floating: tall, viewport })).toEqual({
+      top: 8,
       left: 200,
       placement: 'top-start',
+      maxHeight: undefined,
+    });
+  });
+
+  test('only an element taller than the viewport is capped', () => {
+    const huge = { width: 400, height: 900 };
+    expect(computeAnchoredPosition({ anchor, floating: huge, viewport })).toEqual({
+      top: 8,
+      left: 200,
+      placement: 'bottom-start',
+      maxHeight: 784,
     });
   });
 
