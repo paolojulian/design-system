@@ -22,6 +22,7 @@ const REPO_ROOT = path.resolve(MCP_ROOT, '..');
 const ENTRIES = [
   { subpath: '.', file: 'src/components/index.ts' },
   { subpath: './gallery', file: 'src/gallery/index.ts' },
+  { subpath: './elle', file: 'src/elle/index.ts' },
 ];
 const ICONS_ENTRY = 'src/icons/index.ts';
 const GUIDE_SOURCES = { readme: 'README.md', designRules: '.claude/rules/swiss-design.md' };

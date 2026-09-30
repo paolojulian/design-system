@@ -52,6 +52,9 @@ test('entries map to the right import path', () => {
     get('PPhotoLightbox').importStatement,
     "import { PPhotoLightbox } from '@paolojulian.dev/design-system/gallery';",
   );
+  assert.equal(get('EButton').entry, './elle');
+  assert.equal(get('EButton').importStatement, "import { EButton } from '@paolojulian.dev/design-system/elle';");
+  assert.equal(get('EButton').storybookTitle, 'Elle/EButton');
 });
 
 test('non-component exports are classified', () => {

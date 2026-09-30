@@ -32,6 +32,7 @@
     "src/icons",
     "src/utils",
     "src/constants",
+    "src/elle",
     "tailwind.config.js",
     "vite.config.ts"
   ]

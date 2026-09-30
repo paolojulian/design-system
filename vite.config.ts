@@ -65,6 +65,7 @@ export default defineConfig({
         constants: path.resolve(__dirname, "src/constants/index.ts"),
         icons: path.resolve(__dirname, "src/icons/index.ts"),
         utils: path.resolve(__dirname, "src/utils/index.ts"),
+        elle: path.resolve(__dirname, "src/elle/index.ts"),
       },
       name: "PaoloJulian-DesignSystem",
       fileName: (format) => `[name].${format}.js`,

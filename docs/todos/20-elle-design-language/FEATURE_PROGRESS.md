@@ -15,8 +15,8 @@ boundary. Do not reorder phases or tasks.
 - [x] Re-verify on the static build (`npm run build:storybook && STORYBOOK_PORT=6116 npx playwright test`, lint, `tsc`, `cd mcp && npm test`), restore `tsconfig.*.tsbuildinfo`, then commit all of the above as `feat(elle): add Elle design language theming` — it is currently uncommitted
 
 ## Phase 2: Elle entry + EButton + ESegmentedControl
-- [ ] Packaging: `src/elle/index.ts`, `elle` lib entry in `vite.config.ts`, `./elle` export in `package.json`, `src/elle` in `tsconfig.node.json`, `./elle` in MCP `ENTRIES` + catalog test for the `/elle` import path (design → Packaging)
-- [ ] `tests/ui/elle-helpers.ts`: move `gotoStory`/`resolveColors`/`expectElleApplied` out of `elle-theme.spec.ts` and reuse them there
+- [x] Packaging: `src/elle/index.ts`, `elle` lib entry in `vite.config.ts`, `./elle` export in `package.json`, `src/elle` in `tsconfig.node.json`, `./elle` in MCP `ENTRIES` + catalog test for the `/elle` import path (design → Packaging)
+- [x] `tests/ui/elle-helpers.ts`: move `gotoStory`/`resolveColors`/`expectElleApplied` out of `elle-theme.spec.ts` and reuse them there
 - [ ] `EButton` (`src/elle/EButton/`): tests, then component — 4 variants × 2 tones × 3 sizes × 2 shapes, loading, anchor mode, 44px hit area for `sm`; add the `gray` pairing to `PAIRS`; stories `Elle/EButton` (requirement 6)
 - [ ] `ESegmentedControl` (`src/elle/ESegmentedControl/`): tests, then component — radiogroup semantics, roving tabindex, arrows select, sliding thumb, form `name`, reduced motion; stories `Elle/ESegmentedControl` (requirement 7)
 

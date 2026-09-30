@@ -33,6 +33,11 @@
       "import": "./dist/utils.es.js",
       "require": "./dist/utils.cjs.js"
     },
+    "./elle": {
+      "types": "./dist/elle.d.ts",
+      "import": "./dist/elle.es.js",
+      "require": "./dist/elle.cjs.js"
+    },
     "./style.css": "./dist/style.css",
     "./theme.css": "./dist/theme.css",
     "./theme-elle.css": "./dist/theme-elle.css",
