@@ -1,6 +1,6 @@
 import { type Meta, type StoryObj } from '@storybook/react';
 import { EButton, type EButtonTone, type EButtonVariant } from '.';
-import '../ElleStories.css';
+import { withElleCanvas } from '../ElleCanvas';
 
 function PlusIcon() {
   return (
@@ -17,7 +17,7 @@ const meta: Meta<typeof EButton> = {
   tags: ['autodocs'],
   globals: { design: 'elle' },
   parameters: {
-    layout: 'centered',
+    layout: 'fullscreen',
     docs: {
       description: {
         component:
@@ -25,6 +25,7 @@ const meta: Meta<typeof EButton> = {
       },
     },
   },
+  decorators: [withElleCanvas],
   args: {
     children: 'Continue',
     variant: 'filled',
@@ -130,7 +131,6 @@ export const Link: Story = {
 };
 
 export const FullWidth: Story = {
-  parameters: { layout: 'padded' },
   render: () => (
     <div className="elle-story elle-story--narrow">
       <EButton fullWidth size="lg">

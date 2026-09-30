@@ -7,3 +7,4 @@
  * `theme-elle.css` loaded. Not re-exported from the package root.
  */
 export * from './EButton';
+export * from './ESegmentedControl';

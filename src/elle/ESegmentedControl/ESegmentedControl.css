@@ -1,0 +1,130 @@
+@layer components {
+    .e-segmented {
+        --e-segmented-track-bg: var(--p-color-surface-subtle);
+        /* Elle dark gives surface-raised and surface-subtle the same gray, so the
+           thumb lifts itself toward the text color there. Light keeps the raised surface. */
+        --e-segmented-thumb-bg: var(--p-color-surface-raised);
+        --e-segmented-thumb-shadow: var(--p-shadow-sm);
+        --e-segmented-text: var(--p-color-text-muted);
+        --e-segmented-text-selected: var(--p-color-text);
+        --e-segmented-ring: var(--p-focus-ring-color);
+        --e-segmented-height: var(--p-size-control-sm);
+        --e-segmented-inset: 0.125rem;
+        --e-segmented-radius: var(--p-radius-sm);
+        --e-segmented-font-size: var(--p-font-size-body-sm);
+        --e-segmented-line-height: var(--p-line-height-body-sm);
+        --e-segmented-padding-x: var(--p-space-4);
+
+        position: relative;
+        isolation: isolate;
+        display: inline-grid;
+        grid-template-columns: repeat(var(--e-segmented-count), minmax(0, 1fr));
+        max-width: 100%;
+        min-height: var(--e-segmented-height);
+        padding: var(--e-segmented-inset);
+        border-radius: var(--e-segmented-radius);
+        background: var(--e-segmented-track-bg);
+        font-family: var(--p-font-family-sans);
+    }
+
+    @supports (color: light-dark(#000, #fff)) {
+        .e-segmented {
+            --e-segmented-thumb-bg: light-dark(
+                var(--p-color-surface-raised),
+                color-mix(in srgb, var(--p-color-surface-raised) 80%, var(--p-color-text))
+            );
+        }
+    }
+
+    .e-segmented--sm {
+        --e-segmented-height: var(--p-space-8);
+        --e-segmented-font-size: var(--p-font-size-caption);
+        --e-segmented-line-height: var(--p-line-height-caption);
+        --e-segmented-padding-x: var(--p-space-3);
+    }
+
+    .e-segmented--full-width {
+        display: grid;
+        width: 100%;
+    }
+
+    .e-segmented[aria-disabled="true"] {
+        opacity: var(--p-opacity-disabled);
+    }
+
+    .e-segmented__thumb {
+        position: absolute;
+        z-index: -1;
+        inset-block: var(--e-segmented-inset);
+        inset-inline-start: var(--e-segmented-inset);
+        width: calc((100% - 2 * var(--e-segmented-inset)) / var(--e-segmented-count));
+        border-radius: calc(var(--e-segmented-radius) - var(--e-segmented-inset));
+        background: var(--e-segmented-thumb-bg);
+        box-shadow: var(--e-segmented-thumb-shadow);
+        transform: translateX(calc(var(--e-segmented-index) * 100%));
+        transition: transform var(--p-duration-normal) var(--p-ease-standard);
+    }
+
+    .e-segmented__option {
+        position: relative;
+        display: inline-flex;
+        min-width: 0;
+        align-items: center;
+        justify-content: center;
+        border: 0;
+        border-radius: calc(var(--e-segmented-radius) - var(--e-segmented-inset));
+        background: transparent;
+        color: var(--e-segmented-text);
+        font: inherit;
+        font-size: var(--e-segmented-font-size);
+        font-weight: var(--p-font-weight-regular);
+        line-height: var(--e-segmented-line-height);
+        padding-inline: var(--e-segmented-padding-x);
+        white-space: nowrap;
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    /* Hit area: at least the touch minimum tall, whatever the visual height. */
+    .e-segmented__option::before {
+        position: absolute;
+        inset: min(0px, calc((var(--e-segmented-height) - var(--p-size-touch-min)) / 2 - var(--e-segmented-inset))) 0;
+        content: "";
+    }
+
+    .e-segmented__option[aria-checked="true"] {
+        color: var(--e-segmented-text-selected);
+        font-weight: var(--p-font-weight-medium);
+    }
+
+    .e-segmented__option:focus {
+        outline: none;
+    }
+
+    .e-segmented__option:focus-visible {
+        box-shadow: 0 0 0 var(--p-focus-ring-width) var(--e-segmented-ring);
+        outline: var(--p-focus-outline-width) solid transparent;
+        outline-offset: var(--p-focus-ring-offset);
+    }
+
+    .e-segmented__option:disabled {
+        cursor: default;
+        opacity: var(--p-opacity-disabled);
+    }
+
+    .e-segmented[aria-disabled="true"] .e-segmented__option:disabled {
+        opacity: 1;
+    }
+
+    .e-segmented__label {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .e-segmented__thumb {
+            transition: none;
+        }
+    }
+}

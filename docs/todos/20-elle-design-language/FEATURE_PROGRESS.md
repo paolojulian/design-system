@@ -18,7 +18,7 @@ boundary. Do not reorder phases or tasks.
 - [x] Packaging: `src/elle/index.ts`, `elle` lib entry in `vite.config.ts`, `./elle` export in `package.json`, `src/elle` in `tsconfig.node.json`, `./elle` in MCP `ENTRIES` + catalog test for the `/elle` import path (design → Packaging)
 - [x] `tests/ui/elle-helpers.ts`: move `gotoStory`/`resolveColors`/`expectElleApplied` out of `elle-theme.spec.ts` and reuse them there
 - [x] `EButton` (`src/elle/EButton/`): tests, then component — 4 variants × 2 tones × 3 sizes × 2 shapes, loading, anchor mode, 44px hit area for `sm`; add the `gray` pairing to `PAIRS`; stories `Elle/EButton` (requirement 6)
-- [ ] `ESegmentedControl` (`src/elle/ESegmentedControl/`): tests, then component — radiogroup semantics, roving tabindex, arrows select, sliding thumb, form `name`, reduced motion; stories `Elle/ESegmentedControl` (requirement 7)
+- [x] `ESegmentedControl` (`src/elle/ESegmentedControl/`): tests, then component — radiogroup semantics, roving tabindex, arrows select, sliding thumb, form `name`, reduced motion; stories `Elle/ESegmentedControl` (requirement 7)
 
 ## Phase 3: Grouped list
 - [ ] `EList` + `EListRow` (`src/elle/EList/`): tests, then components — link / button / static rows, leading, subtitle, value, accessory, `trailing` control, destructive tone, inset separators, 44px rows, dev-time conflict warning (requirement 8)
@@ -48,3 +48,18 @@ Apple is unconfirmed.
 Queue caveats: `scripts/run-todos.sh` processes folders in order, so this runs after 05–18 — run it directly with
 `./scripts/dark-factory.sh docs/todos/20-elle-design-language` to jump the queue. `docs/todos/00-theming-infrastructure`
 is a stale duplicate of `done/00-…` with no spec and will trip the queue runner.
+
+**2026-09-30 — Phase 1 committed, Phase 2 built** (231/231 Playwright on the static build, 34/34 MCP, lint + tsc clean).
+Deviations from the design, and why:
+- `ESegmentedControl` thumb: the design's `surface-raised` thumb on a `surface-subtle` track is invisible in Elle
+  dark (both are `neutral-800`). The thumb uses `light-dark(surface-raised, surface-raised mixed 20% toward text)`,
+  guarded by `@supports`; a test asserts thumb ≠ track in dark. Alternatives rejected: a base-token (`neutral-0`)
+  mix breaks the semantic-only rule; a border ring on the thumb was ~1.2:1 in dark.
+- `name` submits through one `<input type="hidden">`, not hidden radios: same `FormData`, and no duplicate radio
+  nodes for assistive tech to skip.
+- Gray `EButton` and the segmented track use `surface-subtle`, which equals the grouped page background in Elle light.
+  They are meant for white surfaces (cards, list rows); the stories show them on one and say so in the docs.
+- Stories paint Elle's page background through `withElleCanvas` (`src/elle/ElleCanvas.tsx`): Storybook paints none,
+  so the browser's default canvas (white / `#121212`) showed instead of `#f2f2f7` / `#000`.
+- Dev warnings (`src/elle/devWarning.ts`) use `import.meta.env.DEV` as designed. Vite's library build replaces it
+  statically, so the published package never warns; they only fire inside this repo (Storybook, tests).

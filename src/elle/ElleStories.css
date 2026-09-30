@@ -22,9 +22,13 @@
   width: min(24rem, 100%);
 }
 
-/* Fullscreen stories paint the grouped page background themselves. */
-.elle-story--page {
+/* The grouped page background, which Storybook would otherwise leave to the browser. */
+.elle-canvas {
+  display: grid;
   min-height: 100vh;
+  box-sizing: border-box;
+  place-items: center;
+  padding: var(--p-space-6) var(--p-space-4);
   background: var(--p-color-background);
   color: var(--p-color-text);
   font-family: var(--p-font-family-sans);
