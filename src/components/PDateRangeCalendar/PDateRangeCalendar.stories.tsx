@@ -10,7 +10,7 @@ const meta: Meta<typeof PDateRangeCalendar> = {
     docs: {
       description: {
         component:
-          "The PDateRangePicker calendar without a trigger or popover, always on the page, like Airbnb's listing calendar. Same selection rules (Start date / End date fields; after the start, clicks move the end; a click before the start begins again), drag, keyboard model, and summary header. Two months side by side from the `md` breakpoint, one below it. It never takes focus on mount.",
+          "The PDateRangePicker calendar without a trigger or popover, always on the page, like Airbnb's listing calendar. Same selection rules (a click before the start moves the start; any later click moves the end), drag, keyboard model, and summary header. Two months side by side from the `md` breakpoint, one below it. It never takes focus on mount.",
       },
     },
   },

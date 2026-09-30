@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type PointerEvent } from 'react';
 import { isSameDay, toLocalDate } from './dateRangeUtils';
-import { getClickedRange, getDragAnchor, getDragRange, type DayRange, type RangeEdge } from './rangeSelection';
+import { getClickedRange, getDragAnchor, getDragRange, type DayRange } from './rangeSelection';
 
 type DragState = {
   anchor: Date;
@@ -10,9 +10,6 @@ type DragState = {
 
 type UseDayRangeDragOptions = {
   range: DayRange;
-  /** The edge a click would set, for the hover preview. */
-  activeEdge: RangeEdge;
-  minimumNights: number;
   /** When false, touch presses never start a drag, leaving the gesture to scrolling. */
   allowTouchDrag?: boolean;
   onCommit: (range: DayRange) => void;
@@ -39,8 +36,6 @@ function getEventDay(target: EventTarget | null) {
  */
 export function useDayRangeDrag({
   range,
-  activeEdge,
-  minimumNights,
   allowTouchDrag = true,
   onCommit,
 }: UseDayRangeDragOptions) {
@@ -121,7 +116,7 @@ export function useDayRangeDrag({
 
   const dragRange = drag ? getDragRange(drag.anchor, drag.hover) : null;
   const hoverRange =
-    !drag && hoverDate ? (getClickedRange(range, hoverDate, activeEdge, minimumNights)?.range ?? null) : null;
+    !drag && hoverDate ? getClickedRange(range, hoverDate) : null;
 
   return {
     /** The range to render as selected: the live drag, else the value. */

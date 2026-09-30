@@ -7,8 +7,8 @@ type DateRangeSummaryProps = {
   range: DayRange;
   unit: PDateRangePickerSummaryUnit;
   locale?: string;
-  activeEdge: RangeEdge;
-  onEdgeChange: (edge: RangeEdge) => void;
+  /** The edge the next click completes, if any; its field is highlighted. */
+  nextEdge: RangeEdge | null;
 };
 
 const DAY_MS = 24 * 60 * 60 * 1000;
@@ -38,43 +38,37 @@ const EDGE_LABELS: Record<PDateRangePickerSummaryUnit, Record<RangeEdge, string>
 };
 
 /**
- * Selection status above the calendar: the range length, then one field per
- * edge like Airbnb's Check-in / Check-out. The active field is the edge the
- * next click sets; pressing a field makes it active.
+ * Selection status above the calendar: the range length, then one read-only
+ * field per edge like Airbnb's Check-in / Check-out. The field the next click
+ * completes is highlighted.
  */
-export function DateRangeSummary({ range, unit, locale, activeEdge, onEdgeChange }: DateRangeSummaryProps) {
-  const title =
-    getRangeLength(range, unit) ?? (activeEdge === 'end' ? 'Select an end date' : 'Select a start date');
+export function DateRangeSummary({ range, unit, locale, nextEdge }: DateRangeSummaryProps) {
+  const title = getRangeLength(range, unit) ?? (nextEdge === 'end' ? 'Select an end date' : 'Select a start date');
 
   return (
     <div className="p-date-range-picker__summary">
       <p className="p-date-range-picker__summary-title" aria-live="polite">
         {title}
       </p>
-      <div className="p-date-range-picker__edges" role="group" aria-label="Date being selected">
+      <dl className="p-date-range-picker__edges">
         {(['start', 'end'] as const).map((edge) => {
           const date = range[edge];
 
           return (
-            <button
+            <div
               key={edge}
-              type="button"
-              className={cn('p-date-range-picker__edge', activeEdge === edge && 'p-date-range-picker__edge--active')}
-              aria-pressed={activeEdge === edge}
-              // The start must exist before its end can be picked.
-              disabled={edge === 'end' && !range.start}
-              onClick={() => onEdgeChange(edge)}
+              className={cn('p-date-range-picker__edge', nextEdge === edge && 'p-date-range-picker__edge--active')}
             >
-              <span className="p-date-range-picker__edge-label">{EDGE_LABELS[unit][edge]}</span>
-              <span
+              <dt className="p-date-range-picker__edge-label">{EDGE_LABELS[unit][edge]}</dt>
+              <dd
                 className={cn('p-date-range-picker__edge-value', !date && 'p-date-range-picker__edge-value--empty')}
               >
                 {date ? getDateLabel(date, locale) : 'Add date'}
-              </span>
-            </button>
+              </dd>
+            </div>
           );
         })}
-      </div>
+      </dl>
     </div>
   );
 }

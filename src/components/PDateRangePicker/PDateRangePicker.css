@@ -265,10 +265,11 @@
   gap: var(--p-space-2);
 }
 
-/* Start / end fields: one framed control split in two, like the calendar header. */
+/* Start / end fields: read-only, one framed box split in two. */
 .p-date-range-picker__edges {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: 0;
   overflow: hidden;
   border: 1px solid var(--p-date-range-picker-border);
   border-radius: var(--p-date-range-picker-radius);
@@ -280,37 +281,16 @@
   min-height: var(--p-size-control-lg);
   flex-direction: column;
   justify-content: center;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
-  color: var(--p-date-range-picker-text);
-  cursor: pointer;
-  font: inherit;
   padding-inline: var(--p-space-3);
-  text-align: start;
-  transition: var(--p-date-range-picker-transition);
 }
 
 .p-date-range-picker__edge + .p-date-range-picker__edge {
   border-inline-start: 1px solid var(--p-date-range-picker-border);
 }
 
-.p-date-range-picker__edge:hover:not(:disabled) {
-  background: var(--p-date-range-picker-bg-hover);
-}
-
-/* Active edge: an inset accent ring, so it never shifts the layout. */
+/* The field the next click completes: an inset accent ring, so it never shifts the layout. */
 .p-date-range-picker__edge--active {
   box-shadow: inset 0 0 0 2px var(--p-date-range-picker-accent);
-}
-
-.p-date-range-picker__edge:focus-visible {
-  outline: var(--p-focus-outline-width) solid transparent;
-  box-shadow: inset 0 0 0 var(--p-focus-ring-width) var(--p-date-range-picker-ring);
-}
-
-.p-date-range-picker__edge:disabled {
-  cursor: not-allowed;
 }
 
 .p-date-range-picker__edge-label {
@@ -321,6 +301,7 @@
 }
 
 .p-date-range-picker__edge-value {
+  margin: 0;
   overflow: hidden;
   font-size: var(--p-font-size-body-sm);
   line-height: var(--p-line-height-body-sm);
@@ -532,11 +513,6 @@
 /* Keep state fills on hover; the generic day hover would wash them out. */
 .p-date-range-picker__day--in-range:hover {
   background: var(--p-date-range-picker-accent-subtle);
-}
-
-/* Can't end a stay here (minimum one night): no pointer affordance. */
-.p-date-range-picker__day[aria-disabled='true'] {
-  cursor: default;
 }
 
 .p-date-range-picker__day--selected:hover {

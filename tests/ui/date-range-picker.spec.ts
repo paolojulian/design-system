@@ -36,20 +36,25 @@ async function dragDays(page: Page, from: number, to: number) {
 }
 
 const value = (page: Page) => page.locator('.p-date-range-picker__trigger-value');
+const edge = (page: Page, index: number) => page.locator('.p-date-range-picker__edge').nth(index);
 
 test.describe('PDateRangePicker selection', () => {
   // Tall enough that the popover is not height-capped, so every day is on screen to drag across.
   test.use({ viewport: { width: 1280, height: 1000 } });
 
-  // Airbnb's react-dates rules: after the start, clicks set the end; a click
-  // before the start becomes the new start and clears the end.
+  // A click before the start moves the start; any later click moves the end.
+  // Clicking the start or end day itself changes nothing.
   const cases: Array<{ clicks: number[]; expected: string }> = [
-    { clicks: [1, 2, 3], expected: 'May 1, 2026 - May 3, 2026' },
+    { clicks: [1, 3], expected: 'May 1, 2026 - May 3, 2026' },
+    { clicks: [4, 6, 1], expected: 'May 1, 2026 - May 6, 2026' },
+    { clicks: [1, 9, 5], expected: 'May 1, 2026 - May 5, 2026' },
+    { clicks: [4, 6, 5], expected: 'May 4, 2026 - May 5, 2026' },
+    { clicks: [4, 4], expected: 'May 4, 2026 -' },
+    { clicks: [4, 6, 8], expected: 'May 4, 2026 - May 8, 2026' },
+    { clicks: [4, 6, 6], expected: 'May 4, 2026 - May 6, 2026' },
+    { clicks: [4, 6, 4], expected: 'May 4, 2026 - May 6, 2026' },
+    { clicks: [2, 1], expected: 'May 1, 2026 - May 2, 2026' },
     { clicks: [20, 19, 18, 21], expected: 'May 18, 2026 - May 21, 2026' },
-    { clicks: [2, 3, 1], expected: 'May 1, 2026 -' },
-    { clicks: [2, 1], expected: 'May 1, 2026 -' },
-    { clicks: [1, 5, 3], expected: 'May 1, 2026 - May 3, 2026' },
-    { clicks: [4, 4], expected: 'May 4, 2026 - May 4, 2026' },
   ];
 
   for (const { clicks, expected } of cases) {
@@ -62,34 +67,17 @@ test.describe('PDateRangePicker selection', () => {
     });
   }
 
-  test('the Start date field makes the next click move the start', async ({ page }) => {
+  test('the Start / End fields show the dates and highlight the one the next click completes', async ({ page }) => {
     await openStory(page, 'pipz-pdaterangepicker--empty', /Booking range/);
-    await clickDays(page, [1, 5]);
-    const startField = page.getByRole('button', { name: /Start date/ });
-    await startField.click();
-    await expect(startField).toHaveAttribute('aria-pressed', 'true');
-    await day(page, 3).click();
-    await expect(value(page)).toHaveText('May 3, 2026 - May 5, 2026');
-    // Picking the start hands over to the end.
-    await expect(page.getByRole('button', { name: /End date/ })).toHaveAttribute('aria-pressed', 'true');
-
-    // A new start after the end clears the end.
-    await startField.click();
-    await day(page, 8).click();
-    await expect(value(page)).toHaveText('May 8, 2026 -');
-  });
-
-  test('reopening a complete range starts on the start date, like Check-in', async ({ page }) => {
-    await openStory(page, 'pipz-pdaterangepicker--standard', /Report range/);
-    await expect(page.getByRole('button', { name: /Start date/ })).toHaveAttribute('aria-pressed', 'true');
-    await day(page, 5).click();
-    await expect(value(page)).toHaveText('May 5, 2026 - May 10, 2026');
-  });
-
-  test('the End date field waits for a start', async ({ page }) => {
-    await openStory(page, 'pipz-pdaterangepicker--empty', /Booking range/);
-    await expect(page.getByRole('button', { name: /End date/ })).toBeDisabled();
-    await expect(page.getByRole('button', { name: /End date/ })).toContainText('Add date');
+    const [startField, endField] = [edge(page, 0), edge(page, 1)];
+    await expect(startField).toHaveClass(/--active/);
+    await expect(endField).toContainText('Add date');
+    await day(page, 4).click();
+    await expect(startField).toContainText('May 4, 2026');
+    await expect(endField).toHaveClass(/--active/);
+    await day(page, 6).click();
+    await expect(endField).toContainText('May 6, 2026');
+    await expect(page.locator('.p-date-range-picker__edge--active')).toHaveCount(0);
   });
 
   test('dragging across days selects the span', async ({ page }) => {
@@ -139,10 +127,10 @@ test.describe('PDateRangePicker selection', () => {
     await page.keyboard.press('ArrowRight');
     await page.keyboard.press('Enter');
     await expect(value(page)).toHaveText('May 10, 2026 - May 11, 2026');
-    // Before the start: a new start, end cleared.
+    // Before the start: extends the start.
     await page.keyboard.press('ArrowUp');
     await page.keyboard.press('Enter');
-    await expect(value(page)).toHaveText('May 4, 2026 -');
+    await expect(value(page)).toHaveText('May 4, 2026 - May 11, 2026');
   });
 });
 
@@ -254,18 +242,20 @@ test.describe('PDateRangePicker popover layout', () => {
     await expect(summary(page)).toContainText('Select a start date');
     await day(page, 18).click();
     await expect(summary(page)).toContainText('Select an end date');
-    await expect(page.getByRole('button', { name: /Start date/ })).toContainText('May 18, 2026');
+    await expect(edge(page, 0)).toContainText('May 18, 2026');
     await day(page, 21).click();
     await expect(summary(page)).toContainText('4 days');
-    await expect(page.getByRole('button', { name: /End date/ })).toContainText('May 21, 2026');
+    await expect(edge(page, 1)).toContainText('May 21, 2026');
   });
 
   test('summaryUnit="nights" counts nights', async ({ page }) => {
     await page.goto(storyUrl('pipz-pdaterangepicker--stay'));
     await page.getByRole('button', { name: /Check-in – Check-out/ }).click();
     await expect(summary(page)).toContainText('5 nights');
-    await expect(page.getByRole('button', { name: /^Check-in May 18/ })).toBeVisible();
-    await expect(page.getByRole('button', { name: /^Check-out May 23/ })).toBeVisible();
+    await expect(edge(page, 0)).toContainText('Check-in');
+    await expect(edge(page, 0)).toContainText('May 18, 2026');
+    await expect(edge(page, 1)).toContainText('Check-out');
+    await expect(edge(page, 1)).toContainText('May 23, 2026');
   });
 
   test('Escape closes and returns focus; a press outside closes', async ({ page }) => {

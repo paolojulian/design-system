@@ -16,8 +16,6 @@ type DateRangeMonthProps = {
   previewRange: DayRange | null;
   focusedDate: Date;
   isOutOfBounds: (date: Date) => boolean;
-  /** Days that can't end the range yet (minimum stay). Clicks are ignored; they stay focusable. */
-  isTooShort: (date: Date) => boolean;
   dayRefs: MutableRefObject<Record<string, FocusableElement | null>>;
   onDayClick: (date: Date) => void;
   onDayKeyDown: (date: Date, event: KeyboardEvent<HTMLButtonElement>) => void;
@@ -62,7 +60,6 @@ export function DateRangeMonth({
   previewRange,
   focusedDate,
   isOutOfBounds,
-  isTooShort,
   dayRefs,
   onDayClick,
   onDayKeyDown,
@@ -109,7 +106,6 @@ export function DateRangeMonth({
                   data-date={isoDate}
                   className={getDayClassName(date, today, range, previewRange)}
                   disabled={isOutOfBounds(date)}
-                  aria-disabled={isTooShort(date) || undefined}
                   aria-label={getDayLabel(date, locale)}
                   aria-selected={isEdge}
                   tabIndex={isSameDay(date, focusedDate) ? 0 : -1}

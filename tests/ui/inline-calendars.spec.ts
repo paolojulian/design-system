@@ -44,32 +44,23 @@ test.describe('PDateRangeCalendar (inline)', () => {
     await expect(page.locator('.p-date-range-picker__summary')).toContainText('Select a start date');
   });
 
-  test('nights: picking the check-in day again as the check-out is ignored, like Airbnb', async ({ page }) => {
+  test('clicking the start day again changes nothing (no zero-length range)', async ({ page }) => {
     await open(page, 'pipz-pdaterangecalendar--nights');
     await page.getByRole('button', { name: 'Clear dates' }).click();
-    await day(page, 1).click();
-    await expect(day(page, 1)).toHaveAttribute('aria-disabled', 'true');
-    // Playwright won't click aria-disabled targets; a real user can, and it must be ignored.
-    await day(page, 1).click({ force: true });
-    const checkIn = page.locator('.p-date-range-picker__edge').nth(0);
-    const checkOut = page.locator('.p-date-range-picker__edge').nth(1);
-    await expect(checkIn).toContainText('May 1, 2026');
+    await day(page, 4).click();
+    await day(page, 4).click();
+    const [checkIn, checkOut] = [0, 1].map((index) => page.locator('.p-date-range-picker__edge').nth(index));
+    await expect(checkIn).toContainText('May 4, 2026');
     await expect(checkOut).toContainText('Add date');
-    // Still picking the check-out; the next later day ends the stay.
-    await day(page, 3).click();
+    await day(page, 6).click();
     await expect(page.locator('.p-date-range-picker__summary')).toContainText('2 nights');
-    // A day before the check-in still starts over.
-    await page.getByRole('button', { name: /^Check-in/ }).click();
-    await day(page, 2).click();
-    await expect(checkIn).toContainText('May 2, 2026');
-  });
-
-  test('days: clicking the start again makes a one-day range', async ({ page }) => {
-    await open(page, 'pipz-pdaterangecalendar--empty');
-    await day(page, 4).click();
-    await expect(day(page, 4)).not.toHaveAttribute('aria-disabled', 'true');
-    await day(page, 4).click();
-    await expect(page.locator('.p-date-range-picker__summary')).toContainText('1 day');
+    // Inside the range moves the end; before the start extends the start.
+    await day(page, 5).click();
+    await expect(checkIn).toContainText('May 4, 2026');
+    await expect(checkOut).toContainText('May 5, 2026');
+    await day(page, 1).click();
+    await expect(checkIn).toContainText('May 1, 2026');
+    await expect(checkOut).toContainText('May 5, 2026');
   });
 
   test('one month on a phone, filling the width without overflow', async ({ page }) => {
