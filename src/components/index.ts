@@ -50,11 +50,18 @@ export {
   type PDateRangePickerPresetColumns,
   type PDateRangePickerProps,
   type PDateRangePickerRef,
+  type PDateRangePickerSummaryUnit,
   type PDateRangeValue,
 } from './PDateRangePicker';
 export { PDrawer, type PDrawerProps, type PDrawerSide } from './PDrawer';
 export { PModal, type PModalProps, type PModalSize } from './PModal';
 export { PSheet, type PSheetProps } from './PSheet';
+export {
+  PPopover,
+  type PPopoverCloseReason,
+  type PPopoverPlacement,
+  type PPopoverProps,
+} from './PPopover';
 export {
   PFormField,
   useFormField,

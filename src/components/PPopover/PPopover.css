@@ -1,0 +1,50 @@
+@layer components {
+/*
+ * Rendered with popover="manual", so it sits in the top layer. The UA popover
+ * styles center it with `inset: 0; margin: auto`; reset those so the inline
+ * `top`/`left` from useAnchoredPosition decide placement. Absolute (document
+ * coordinates), as in Popper: a popover taller than the space below extends
+ * the page instead of scrolling inside itself.
+ */
+.p-popover {
+  position: absolute;
+  inset: auto;
+  z-index: var(--p-popover-z-index);
+  box-sizing: border-box;
+  display: flex;
+  max-width: calc(100vw - var(--p-space-4));
+  flex-direction: column;
+  gap: var(--p-popover-gap);
+  margin: 0;
+  border: 1px solid var(--p-popover-border);
+  border-radius: var(--p-popover-radius);
+  background: var(--p-popover-surface);
+  box-shadow: var(--p-popover-shadow);
+  color: var(--p-popover-text);
+  padding: var(--p-popover-padding);
+}
+
+/* Popover API present but not yet shown: stay hidden (UA rule, restated). */
+.p-popover[popover]:not(:popover-open) {
+  display: none;
+}
+
+.p-popover__title {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.p-popover__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--p-space-2);
+  border-block-start: 1px solid var(--p-color-border-subtle);
+  padding-block-start: var(--p-popover-gap);
+}
+}

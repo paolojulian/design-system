@@ -253,6 +253,17 @@
   /* Side drawer width (capped to viewport on small screens). */
   --p-overlay-drawer-width: 30rem;
 
+  /* Anchored popover (PPopover): non-modal, so no backdrop. */
+  --p-popover-surface: var(--p-color-surface-raised);
+  --p-popover-text: var(--p-color-text);
+  --p-popover-border: var(--p-color-border);
+  --p-popover-shadow: var(--p-shadow-lg);
+  --p-popover-radius: var(--p-radius-md);
+  --p-popover-padding: var(--p-space-4);
+  --p-popover-gap: var(--p-space-3);
+  /* Fallback stacking where the Popover API (top layer) is unavailable. */
+  --p-popover-z-index: 1000;
+
   /* Feedback (PAlert, PToast) — status roles map 1:1 to semantic tokens.
      A single `--p-feedback-*` triplet is switched per variant so both
      components share one status language. Default is info. */

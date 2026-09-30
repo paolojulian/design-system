@@ -380,16 +380,17 @@ test.describe('Storybook smoke tests', () => {
     await expectElementWidthAtLeast(page, '.p-date-picker', 350);
     await page.getByLabel('Due date').click();
     await expect(page.locator('.p-date-picker__trigger-floating-label')).toHaveCSS('color', lightControlTextColor);
-    await expect(page.getByRole('dialog', { name: 'May 2026' })).toBeVisible();
+    await expect(page.getByRole('dialog', { name: 'Due date' })).toBeVisible();
+    await expect(page.getByRole('grid', { name: 'May 2026' })).toBeVisible();
     const selectedDueDate = page.getByRole('gridcell', { name: 'Sunday, May 10, 2026' });
     await expect(selectedDueDate).toHaveAttribute('aria-selected', 'true');
     await expect(selectedDueDate).toBeFocused();
     await page.keyboard.press('ArrowRight');
     await expect(page.getByRole('gridcell', { name: 'Monday, May 11, 2026' })).toBeFocused();
     await page.getByRole('combobox', { name: 'Month' }).selectOption('6');
-    await expect(page.getByRole('dialog', { name: 'July 2026' })).toBeVisible();
+    await expect(page.getByRole('grid', { name: 'July 2026' })).toBeVisible();
     await page.getByRole('combobox', { name: 'Year' }).selectOption('2027');
-    await expect(page.getByRole('dialog', { name: 'July 2027' })).toBeVisible();
+    await expect(page.getByRole('grid', { name: 'July 2027' })).toBeVisible();
 
     await gotoStory(page, 'pipz-pdatepicker--with-presets');
     await expect(page.getByRole('group', { name: 'Report date' })).toBeVisible();
@@ -407,8 +408,9 @@ test.describe('Storybook smoke tests', () => {
     const ownerBefore = await page.getByLabel('Owner').boundingBox();
     await page.getByRole('button', { name: 'Custom' }).click();
     await expect(page.getByRole('dialog')).toBeVisible();
+    // The calendar floats in a popover, so the fields below it stay put.
     const ownerAfter = await page.getByLabel('Owner').boundingBox();
-    expect(ownerAfter?.y).toBeGreaterThan(ownerBefore?.y ?? 0);
+    expect(ownerAfter).toEqual(ownerBefore);
 
     await gotoStory(page, 'pipz-pdatepicker--with-bounds');
     await page.getByLabel(/Booking date/).click();
@@ -443,7 +445,9 @@ test.describe('Storybook smoke tests', () => {
       'color',
       lightControlTextColor,
     );
-    await expect(page.getByRole('dialog', { name: 'May 2026' })).toBeVisible();
+    await expect(page.getByRole('dialog', { name: 'Report range' })).toBeVisible();
+    await expect(page.getByRole('grid', { name: 'May 2026' })).toBeVisible();
+    await expect(page.getByRole('grid', { name: 'June 2026' })).toBeVisible();
     const rangeStart = page.getByRole('gridcell', { name: 'Friday, May 1, 2026' });
     await expect(rangeStart).toHaveAttribute('aria-selected', 'true');
     await expect(rangeStart).toBeFocused();
@@ -454,9 +458,9 @@ test.describe('Storybook smoke tests', () => {
       'true',
     );
     await page.getByRole('combobox', { name: 'Month' }).selectOption('6');
-    await expect(page.getByRole('dialog', { name: 'July 2026' })).toBeVisible();
+    await expect(page.getByRole('grid', { name: 'July 2026' })).toBeVisible();
     await page.getByRole('combobox', { name: 'Year' }).selectOption('2027');
-    await expect(page.getByRole('dialog', { name: 'July 2027' })).toBeVisible();
+    await expect(page.getByRole('grid', { name: 'July 2027' })).toBeVisible();
 
     await gotoStory(page, 'pipz-pdaterangepicker--empty');
     await page.getByRole('button', { name: /Booking range/ }).click();

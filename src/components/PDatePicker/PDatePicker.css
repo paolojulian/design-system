@@ -9,6 +9,7 @@
     --p-date-picker-text-muted: var(--p-control-text-muted);
     --p-date-picker-label-focus: var(--p-date-picker-text);
     --p-date-picker-accent: var(--p-color-action-primary);
+    --p-date-picker-accent-hover: var(--p-color-action-primary-hover);
     --p-date-picker-accent-subtle: var(--p-color-action-primary-subtle);
     --p-date-picker-error: var(--p-control-border-error);
     --p-date-picker-ring: var(--p-control-ring);
@@ -20,7 +21,7 @@
     --p-date-picker-label-top: var(--p-space-2);
     --p-date-picker-placeholder-top: 50%;
     --p-date-picker-message-margin-top: var(--p-control-message-margin-top);
-    --p-date-picker-panel-width: 20rem;
+    --p-date-picker-calendar-width: 18rem;
     --p-date-picker-transition:
         background-color var(--p-duration-fast) var(--p-ease-standard),
         border-color var(--p-duration-fast) var(--p-ease-standard),
@@ -244,16 +245,16 @@
     color: var(--p-date-picker-accent);
 }
 
-.p-date-picker__panel {
-    z-index: 20;
-    width: var(--p-date-picker-panel-width);
-    max-width: calc(100vw - var(--p-space-8));
-    margin-block-start: var(--p-space-2);
-    border: 1px solid var(--p-date-picker-border);
-    border-radius: var(--p-date-picker-radius);
-    background: var(--p-date-picker-bg);
-    box-shadow: var(--p-shadow-lg);
-    padding: var(--p-space-3);
+/* Calendar content. It renders inside PPopover (or PSheet on mobile), which owns the surface. */
+.p-date-picker__calendar {
+    width: var(--p-date-picker-calendar-width);
+    max-width: 100%;
+    color: var(--p-date-picker-text);
+    font-family: var(--p-font-family-sans);
+}
+
+.p-popover__sheet-body .p-date-picker__calendar {
+    width: 100%;
 }
 
 .p-date-picker__calendar-header {
@@ -262,7 +263,8 @@
     align-items: center;
     gap: 0;
     overflow: hidden;
-    border: 1px solid var(--p-color-border-subtle);
+    /* Standard control border: surface-subtle matches surface-raised in dark themes. */
+    border: 1px solid var(--p-date-picker-border);
     border-radius: var(--p-date-picker-radius);
     background: var(--p-color-surface-subtle);
     margin-block-end: var(--p-space-3);
@@ -367,8 +369,14 @@
     text-align: center;
 }
 
+.p-date-picker__week {
+    display: contents;
+}
+
 .p-date-picker__day {
     aspect-ratio: 1;
+    /* Days sit on the popover surface; only state rules below paint them. */
+    background: transparent;
     min-width: 0;
     border-color: transparent;
     border-radius: var(--p-radius-xs);
@@ -389,6 +397,12 @@
     border-color: var(--p-date-picker-accent);
     background: var(--p-date-picker-accent);
     color: var(--p-color-text-inverse);
+}
+
+/* Keep the selected fill on hover; the generic day hover would wash it out. */
+.p-date-picker__day--selected:hover {
+    border-color: var(--p-date-picker-accent-hover);
+    background: var(--p-date-picker-accent-hover);
 }
 
 .p-date-picker__message {
@@ -413,11 +427,6 @@
 
 @media (max-width: 40rem) {
     .p-date-picker {
-        max-width: 100%;
-    }
-
-    .p-date-picker__panel {
-        width: 100%;
         max-width: 100%;
     }
 }

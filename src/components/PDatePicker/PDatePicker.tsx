@@ -1,244 +1,25 @@
-import {
-  forwardRef,
-  useEffect,
-  useId,
-  useMemo,
-  useRef,
-  useState,
-  type ButtonHTMLAttributes,
-  type ChangeEvent,
-  type CSSProperties,
-  type HTMLAttributes,
-} from 'react';
-import { CalendarIcon, ChevronLeftIcon, ChevronRightIcon } from '../../icons';
+import { forwardRef, useId, useMemo, useRef, useState, type CSSProperties } from 'react';
+import { CalendarIcon } from '../../icons';
 import cn from '../../utils/cn';
-import './PDatePicker.css';
+import { getDateLabel, getToday, isSameDay, toIsoDate, toLocalDate } from '../calendar/dateUtils';
 import { useFieldControl } from '../PFormField';
+import { PPopover } from '../PPopover';
+import { DatePickerCalendar } from './DatePickerCalendar';
+import type { PDatePickerChangeSource, PDatePickerPreset, PDatePickerProps, PDatePickerRef } from './types';
+import './PDatePicker.css';
 
-export type PDatePickerRef = HTMLDivElement;
-export type PDatePickerChangeSource = 'preset' | 'calendar';
-export type PDatePickerPresetColumns = 2 | 3 | 4 | 'auto';
-type FocusableElement = { focus: () => void };
-
-export type PDatePickerPreset = {
-  label: string;
-  value: string | Date | (() => string | Date);
-};
-
-export type PDatePickerProps = {
-  /** Visible label. Optional inside a `PFormField`, which owns the label. */
-  label?: string;
-  value?: string;
-  defaultValue?: string;
-  onValueChange?: (
-    value: string,
-    details: { date: Date | null; source: PDatePickerChangeSource },
-  ) => void;
-  presets?: PDatePickerPreset[];
-  customLabel?: string;
-  showCustom?: boolean;
-  presetColumns?: PDatePickerPresetColumns;
-  placeholder?: string;
-  helperText?: string;
-  isError?: boolean;
-  errorMessage?: string;
-  min?: string;
-  max?: string;
-  name?: string;
-  disabled?: boolean;
-  readOnly?: boolean;
-  required?: boolean;
-  locale?: string;
-  weekStartsOn?: 0 | 1 | 2 | 3 | 4 | 5 | 6;
-  className?: string;
-} & Omit<HTMLAttributes<HTMLDivElement>, 'className' | 'defaultValue' | 'onChange'>;
-
-const dayFormatter = new Intl.DateTimeFormat(undefined, { weekday: 'short' });
-
-function toLocalDate(value: string | Date | null | undefined) {
-  if (!value) {
-    return null;
-  }
-
-  if (value instanceof Date) {
-    return Number.isNaN(value.getTime())
-      ? null
-      : new Date(value.getFullYear(), value.getMonth(), value.getDate());
-  }
-
-  const parts = value.split('-').map(Number);
-
-  if (parts.length !== 3 || parts.some(Number.isNaN)) {
-    return null;
-  }
-
-  const [year, month, day] = parts;
-  const date = new Date(year, month - 1, day);
-
-  if (date.getFullYear() !== year || date.getMonth() !== month - 1 || date.getDate() !== day) {
-    return null;
-  }
-
-  return date;
-}
-
-function toIsoDate(date: Date | null) {
-  if (!date) {
-    return '';
-  }
-
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-
-  return `${year}-${month}-${day}`;
-}
-
-function startOfMonth(date: Date) {
-  return new Date(date.getFullYear(), date.getMonth(), 1);
-}
-
-function endOfMonth(date: Date) {
-  return new Date(date.getFullYear(), date.getMonth() + 1, 0);
-}
-
-function addMonths(date: Date, months: number) {
-  return new Date(date.getFullYear(), date.getMonth() + months, 1);
-}
-
-function addMonthsClamped(date: Date, months: number) {
-  const monthStart = addMonths(date, months);
-  const lastDay = endOfMonth(monthStart).getDate();
-
-  return new Date(monthStart.getFullYear(), monthStart.getMonth(), Math.min(date.getDate(), lastDay));
-}
-
-function addDays(date: Date, days: number) {
-  return new Date(date.getFullYear(), date.getMonth(), date.getDate() + days);
-}
-
-function isSameDay(a: Date | null, b: Date | null) {
-  return Boolean(a && b && toIsoDate(a) === toIsoDate(b));
-}
-
-function getToday() {
-  const today = new Date();
-  return new Date(today.getFullYear(), today.getMonth(), today.getDate());
-}
-
-function getCalendarDays(monthDate: Date, weekStartsOn: number) {
-  const monthStart = startOfMonth(monthDate);
-  const offset = (monthStart.getDay() - weekStartsOn + 7) % 7;
-  const gridStart = addDays(monthStart, -offset);
-
-  return Array.from({ length: 42 }, (_, index) => addDays(gridStart, index));
-}
+export { PDatePickerPresets } from './presets';
+export type {
+  PDatePickerChangeSource,
+  PDatePickerPreset,
+  PDatePickerPresetColumns,
+  PDatePickerProps,
+  PDatePickerRef,
+} from './types';
 
 function resolvePresetDate(preset: PDatePickerPreset) {
   const value = typeof preset.value === 'function' ? preset.value() : preset.value;
   return toLocalDate(value);
-}
-
-function getMonthLabel(date: Date, locale?: string) {
-  return new Intl.DateTimeFormat(locale, { month: 'long', year: 'numeric' }).format(date);
-}
-
-function getMonthOptions(locale?: string) {
-  return Array.from({ length: 12 }, (_, month) => ({
-    label: new Intl.DateTimeFormat(locale, { month: 'long' }).format(new Date(2024, month, 1)),
-    value: month,
-  }));
-}
-
-function getDateLabel(date: Date, locale?: string) {
-  return new Intl.DateTimeFormat(locale, {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  }).format(date);
-}
-
-function getDayLabel(date: Date, locale?: string) {
-  return new Intl.DateTimeFormat(locale, {
-    weekday: 'long',
-    month: 'long',
-    day: 'numeric',
-    year: 'numeric',
-  }).format(date);
-}
-
-function getWeekdayLabels(weekStartsOn: number, locale?: string) {
-  const baseSunday = new Date(2024, 0, 7);
-
-  return Array.from({ length: 7 }, (_, index) => {
-    const date = addDays(baseSunday, weekStartsOn + index);
-    return dayFormatter.formatToParts(date).length
-      ? new Intl.DateTimeFormat(locale, { weekday: 'short' }).format(date)
-      : '';
-  });
-}
-
-function isBeforeDate(date: Date, minDate: Date | null) {
-  return Boolean(minDate && date.getTime() < minDate.getTime());
-}
-
-function isAfterDate(date: Date, maxDate: Date | null) {
-  return Boolean(maxDate && date.getTime() > maxDate.getTime());
-}
-
-function isSameMonth(a: Date, b: Date) {
-  return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth();
-}
-
-function isMonthDisabled(monthDate: Date, minDate: Date | null, maxDate: Date | null) {
-  const monthStart = startOfMonth(monthDate);
-  const monthEnd = endOfMonth(monthDate);
-
-  return Boolean((minDate && monthEnd < minDate) || (maxDate && monthStart > maxDate));
-}
-
-function clampVisibleMonth(monthDate: Date, minDate: Date | null, maxDate: Date | null) {
-  if (minDate && endOfMonth(monthDate) < minDate) {
-    return startOfMonth(minDate);
-  }
-
-  if (maxDate && startOfMonth(monthDate) > maxDate) {
-    return startOfMonth(maxDate);
-  }
-
-  return startOfMonth(monthDate);
-}
-
-function getFocusableDateInMonth(monthDate: Date, preferredDate: Date, minDate: Date | null, maxDate: Date | null) {
-  const monthStart = startOfMonth(monthDate);
-  const monthEnd = endOfMonth(monthDate);
-  let nextDate = new Date(
-    monthStart.getFullYear(),
-    monthStart.getMonth(),
-    Math.min(preferredDate.getDate(), monthEnd.getDate()),
-  );
-
-  if (minDate && nextDate < minDate) {
-    nextDate = isSameMonth(minDate, monthStart) ? minDate : monthStart;
-  }
-
-  if (maxDate && nextDate > maxDate) {
-    nextDate = isSameMonth(maxDate, monthStart) ? maxDate : monthEnd;
-  }
-
-  return nextDate;
-}
-
-function getYearOptions(visibleMonth: Date, minDate: Date | null, maxDate: Date | null, today: Date) {
-  const visibleYear = visibleMonth.getFullYear();
-  const defaultStartYear = Math.min(visibleYear, today.getFullYear() - 100);
-  const defaultEndYear = Math.max(visibleYear, today.getFullYear() + 20);
-  const startYear = minDate?.getFullYear() ?? defaultStartYear;
-  const endYear = maxDate?.getFullYear() ?? defaultEndYear;
-  const firstYear = Math.min(startYear, endYear, visibleYear);
-  const lastYear = Math.max(startYear, endYear, visibleYear);
-
-  return Array.from({ length: lastYear - firstYear + 1 }, (_, index) => firstYear + index);
 }
 
 export const PDatePicker = forwardRef<PDatePickerRef, PDatePickerProps>(
@@ -300,15 +81,7 @@ export const PDatePicker = forwardRef<PDatePickerRef, PDatePickerProps>(
     const today = useMemo(getToday, []);
     const minDate = toLocalDate(min);
     const maxDate = toLocalDate(max);
-    const [visibleMonth, setVisibleMonth] = useState(() => startOfMonth(selectedDate ?? today));
-    const [focusedDate, setFocusedDate] = useState(() => selectedDate ?? today);
-    const calendarTriggerRef = useRef<FocusableElement | null>(null);
-    const dayRefs = useRef<Record<string, FocusableElement | null>>({});
-    const shouldFocusCalendarDateRef = useRef(false);
-    const calendarDays = getCalendarDays(visibleMonth, weekStartsOn);
-    const weekdayLabels = getWeekdayLabels(weekStartsOn, locale);
-    const monthOptions = useMemo(() => getMonthOptions(locale), [locale]);
-    const yearOptions = getYearOptions(visibleMonth, minDate, maxDate, today);
+    const calendarTriggerRef = useRef<HTMLButtonElement | null>(null);
     const hasPresets = presets.length > 0;
     const shouldRenderCustom = hasPresets ? showCustom : true;
     const presetColumnsStyle =
@@ -329,31 +102,12 @@ export const PDatePicker = forwardRef<PDatePickerRef, PDatePickerProps>(
       ? presets.some((preset) => isSameDay(resolvePresetDate(preset), selectedDate))
       : false;
     const isCustomActive = isOpen || Boolean(selectedDate && !selectedMatchesPreset);
-    const previousMonth = addMonths(visibleMonth, -1);
-    const nextMonth = addMonths(visibleMonth, 1);
-    const isPreviousMonthDisabled = isMonthDisabled(previousMonth, minDate, maxDate);
-    const isNextMonthDisabled = isMonthDisabled(nextMonth, minDate, maxDate);
-
-    useEffect(() => {
-      if (!isOpen) {
-        return;
-      }
-
-      if (shouldFocusCalendarDateRef.current) {
-        dayRefs.current[toIsoDate(focusedDate)]?.focus();
-        shouldFocusCalendarDateRef.current = false;
-      }
-    }, [focusedDate, isOpen, visibleMonth]);
 
     const setDateValue = (date: Date | null, source: PDatePickerChangeSource) => {
       const nextValue = toIsoDate(date);
 
       if (!isControlled) {
         setInternalValue(nextValue);
-      }
-
-      if (date) {
-        setVisibleMonth(startOfMonth(date));
       }
 
       onValueChange?.(nextValue, { date, source });
@@ -364,11 +118,7 @@ export const PDatePicker = forwardRef<PDatePickerRef, PDatePickerProps>(
         return;
       }
 
-      const nextFocusedDate = selectedDate ?? today;
-      calendarTriggerRef.current = trigger as unknown as FocusableElement;
-      shouldFocusCalendarDateRef.current = true;
-      setFocusedDate(nextFocusedDate);
-      setVisibleMonth(startOfMonth(nextFocusedDate));
+      calendarTriggerRef.current = trigger;
       setIsOpen(true);
     };
 
@@ -378,25 +128,6 @@ export const PDatePicker = forwardRef<PDatePickerRef, PDatePickerProps>(
       if (restoreFocus) {
         calendarTriggerRef.current?.focus();
       }
-    };
-
-    const updateVisibleMonth = (nextMonth: Date) => {
-      const clampedMonth = clampVisibleMonth(nextMonth, minDate, maxDate);
-
-      setVisibleMonth(clampedMonth);
-      setFocusedDate(getFocusableDateInMonth(clampedMonth, focusedDate, minDate, maxDate));
-    };
-
-    const handleMonthChange = (event: ChangeEvent<HTMLSelectElement>) => {
-      const { value: nextMonth } = event.currentTarget as unknown as { value: string };
-
-      updateVisibleMonth(new Date(visibleMonth.getFullYear(), Number(nextMonth), 1));
-    };
-
-    const handleYearChange = (event: ChangeEvent<HTMLSelectElement>) => {
-      const { value: nextYear } = event.currentTarget as unknown as { value: string };
-
-      updateVisibleMonth(new Date(Number(nextYear), visibleMonth.getMonth(), 1));
     };
 
     const handlePresetClick = (preset: PDatePickerPreset) => {
@@ -409,55 +140,14 @@ export const PDatePicker = forwardRef<PDatePickerRef, PDatePickerProps>(
       closeCalendar();
     };
 
-    const handleDayClick = (date: Date) => {
-      if (disabled || readOnly || isBeforeDate(date, minDate) || isAfterDate(date, maxDate)) {
+    const handleDaySelect = (date: Date) => {
+      if (disabled || readOnly) {
         return;
       }
 
-      setFocusedDate(date);
       setDateValue(date, 'calendar');
       closeCalendar(true);
     };
-
-    const focusCalendarDate = (date: Date) => {
-      if (isBeforeDate(date, minDate) || isAfterDate(date, maxDate)) {
-        return;
-      }
-
-      shouldFocusCalendarDateRef.current = true;
-      setFocusedDate(date);
-      setVisibleMonth(startOfMonth(date));
-    };
-
-    const handleDayKeyDown =
-      (date: Date): ButtonHTMLAttributes<HTMLButtonElement>['onKeyDown'] =>
-      (event) => {
-        if (event.key === 'Escape') {
-          event.preventDefault();
-          closeCalendar(true);
-          return;
-        }
-
-        const weekOffset = (date.getDay() - weekStartsOn + 7) % 7;
-        const nextDateByKey: Record<string, Date> = {
-          ArrowLeft: addDays(date, -1),
-          ArrowRight: addDays(date, 1),
-          ArrowUp: addDays(date, -7),
-          ArrowDown: addDays(date, 7),
-          Home: addDays(date, -weekOffset),
-          End: addDays(date, 6 - weekOffset),
-          PageUp: addMonthsClamped(date, -1),
-          PageDown: addMonthsClamped(date, 1),
-        };
-        const nextDate = nextDateByKey[event.key];
-
-        if (!nextDate) {
-          return;
-        }
-
-        event.preventDefault();
-        focusCalendarDate(nextDate);
-      };
 
     return (
       <div
@@ -582,115 +272,24 @@ export const PDatePicker = forwardRef<PDatePickerRef, PDatePickerProps>(
 
         <input type="hidden" name={name} value={selectedValue ?? ''} required={required} />
 
-        {isOpen && (
-          <div
-            id={panelId}
-            className="p-date-picker__panel"
-            role="dialog"
-            aria-labelledby={`${panelId}-title`}
-            onKeyDown={(event) => {
-              if (event.key === 'Escape') {
-                closeCalendar();
-              }
-            }}
-          >
-            <div className="p-date-picker__calendar-header">
-              <button
-                type="button"
-                className="p-date-picker__nav"
-                aria-label="Previous month"
-                disabled={isPreviousMonthDisabled}
-                onClick={() => updateVisibleMonth(previousMonth)}
-              >
-                <ChevronLeftIcon />
-              </button>
-              <div className="p-date-picker__month">
-                <span id={`${panelId}-title`} className="p-date-picker__month-label">
-                  {getMonthLabel(visibleMonth, locale)}
-                </span>
-                <select
-                  className="p-date-picker__month-select p-date-picker__calendar-select"
-                  aria-label="Month"
-                  value={visibleMonth.getMonth()}
-                  onChange={handleMonthChange}
-                >
-                  {monthOptions.map((month) => (
-                    <option
-                      key={month.value}
-                      value={month.value}
-                      disabled={isMonthDisabled(new Date(visibleMonth.getFullYear(), month.value, 1), minDate, maxDate)}
-                    >
-                      {month.label}
-                    </option>
-                  ))}
-                </select>
-                <select
-                  className="p-date-picker__year-select p-date-picker__calendar-select"
-                  aria-label="Year"
-                  value={visibleMonth.getFullYear()}
-                  onChange={handleYearChange}
-                >
-                  {yearOptions.map((year) => (
-                    <option key={year} value={year}>
-                      {year}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <button
-                type="button"
-                className="p-date-picker__nav"
-                aria-label="Next month"
-                disabled={isNextMonthDisabled}
-                onClick={() => updateVisibleMonth(nextMonth)}
-              >
-                <ChevronRightIcon />
-              </button>
-            </div>
-
-            <div className="p-date-picker__weekdays" aria-hidden="true">
-              {weekdayLabels.map((weekday) => (
-                <span key={weekday}>{weekday}</span>
-              ))}
-            </div>
-
-            <div className="p-date-picker__grid" role="grid" aria-labelledby={`${panelId}-title`}>
-              {calendarDays.map((date) => {
-                const isoDate = toIsoDate(date);
-                const isOutsideMonth = date.getMonth() !== visibleMonth.getMonth();
-                const isSelected = isSameDay(date, selectedDate);
-                const isToday = isSameDay(date, today);
-                const isDisabled = isBeforeDate(date, minDate) || isAfterDate(date, maxDate);
-
-                return (
-                  <button
-                    key={isoDate}
-                    ref={(node) => {
-                      dayRefs.current[isoDate] = node as unknown as FocusableElement | null;
-                    }}
-                    type="button"
-                    role="gridcell"
-                    data-date={isoDate}
-                    className={cn(
-                      'p-date-picker__day',
-                      isOutsideMonth && 'p-date-picker__day--outside',
-                      isToday && 'p-date-picker__day--today',
-                      isSelected && 'p-date-picker__day--selected',
-                    )}
-                    disabled={isDisabled}
-                    aria-label={getDayLabel(date, locale)}
-                    aria-selected={isSelected}
-                    tabIndex={isSameDay(date, focusedDate) ? 0 : -1}
-                    onClick={() => handleDayClick(date)}
-                    onKeyDown={handleDayKeyDown(date)}
-                  >
-                    {date.getDate()}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        )}
+        <PPopover
+          id={panelId}
+          open={isOpen}
+          onClose={() => closeCalendar()}
+          anchorRef={calendarTriggerRef}
+          title={label ?? placeholder}
+        >
+          <DatePickerCalendar
+            id={`${panelId}-calendar`}
+            selectedDate={selectedDate}
+            today={today}
+            minDate={minDate}
+            maxDate={maxDate}
+            locale={locale}
+            weekStartsOn={weekStartsOn}
+            onSelect={handleDaySelect}
+          />
+        </PPopover>
 
         {!withinField && isError && errorMessage ? (
           <p id={errorId} role="alert" className="p-date-picker__message p-date-picker__message--error">
@@ -709,17 +308,3 @@ export const PDatePicker = forwardRef<PDatePickerRef, PDatePickerProps>(
 );
 
 PDatePicker.displayName = 'PDatePicker';
-
-export const PDatePickerPresets = {
-  today: { label: 'Today', value: () => getToday() },
-  yesterday: { label: 'Yesterday', value: () => addDays(getToday(), -1) },
-  tomorrow: { label: 'Tomorrow', value: () => addDays(getToday(), 1) },
-  startOfMonth: { label: 'Start of month', value: () => startOfMonth(getToday()) },
-  endOfMonth: {
-    label: 'End of month',
-    value: () => {
-      const today = getToday();
-      return new Date(today.getFullYear(), today.getMonth() + 1, 0);
-    },
-  },
-} satisfies Record<string, PDatePickerPreset>;

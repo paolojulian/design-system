@@ -10,6 +10,7 @@
   --p-date-range-picker-label-focus: var(--p-date-range-picker-text);
   --p-date-range-picker-accent: var(--p-color-action-primary);
   --p-date-range-picker-accent-subtle: var(--p-color-action-primary-subtle);
+  --p-date-range-picker-accent-hover: var(--p-color-action-primary-hover);
   --p-date-range-picker-error: var(--p-control-border-error);
   --p-date-range-picker-ring: var(--p-control-ring);
   --p-date-range-picker-radius: var(--p-control-radius);
@@ -20,7 +21,7 @@
   --p-date-range-picker-label-top: var(--p-space-2);
   --p-date-range-picker-placeholder-top: 50%;
   --p-date-range-picker-message-margin-top: var(--p-control-message-margin-top);
-  --p-date-range-picker-panel-width: 20rem;
+  --p-date-range-picker-month-width: 18rem;
   --p-date-range-picker-transition: background-color var(--p-duration-fast) var(--p-ease-standard),
     border-color var(--p-duration-fast) var(--p-ease-standard),
     color var(--p-duration-fast) var(--p-ease-standard),
@@ -242,16 +243,93 @@
   color: var(--p-date-range-picker-accent);
 }
 
-.p-date-range-picker__panel {
-  z-index: 20;
-  width: var(--p-date-range-picker-panel-width);
-  max-width: calc(100vw - var(--p-space-8));
-  margin-block-start: var(--p-space-2);
+/* Calendar content. It renders inside PPopover (or PSheet on mobile), which owns the surface. */
+.p-date-range-picker__calendar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--p-space-3);
+  color: var(--p-date-range-picker-text);
+  font-family: var(--p-font-family-sans);
+}
+
+.p-date-range-picker__summary-title {
+  margin: 0;
+  font-size: var(--p-font-size-body-md);
+  font-weight: var(--p-font-weight-medium);
+  line-height: var(--p-line-height-body-md);
+}
+
+.p-date-range-picker__summary {
+  display: flex;
+  flex-direction: column;
+  gap: var(--p-space-2);
+}
+
+/* Start / end fields: one framed control split in two, like the calendar header. */
+.p-date-range-picker__edges {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  overflow: hidden;
   border: 1px solid var(--p-date-range-picker-border);
   border-radius: var(--p-date-range-picker-radius);
-  background: var(--p-date-range-picker-bg);
-  box-shadow: var(--p-shadow-lg);
-  padding: var(--p-space-3);
+}
+
+.p-date-range-picker__edge {
+  display: flex;
+  min-width: 0;
+  min-height: var(--p-size-control-lg);
+  flex-direction: column;
+  justify-content: center;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--p-date-range-picker-text);
+  cursor: pointer;
+  font: inherit;
+  padding-inline: var(--p-space-3);
+  text-align: start;
+  transition: var(--p-date-range-picker-transition);
+}
+
+.p-date-range-picker__edge + .p-date-range-picker__edge {
+  border-inline-start: 1px solid var(--p-date-range-picker-border);
+}
+
+.p-date-range-picker__edge:hover:not(:disabled) {
+  background: var(--p-date-range-picker-bg-hover);
+}
+
+/* Active edge: an inset accent ring, so it never shifts the layout. */
+.p-date-range-picker__edge--active {
+  box-shadow: inset 0 0 0 2px var(--p-date-range-picker-accent);
+}
+
+.p-date-range-picker__edge:focus-visible {
+  outline: var(--p-focus-outline-width) solid transparent;
+  box-shadow: inset 0 0 0 var(--p-focus-ring-width) var(--p-date-range-picker-ring);
+}
+
+.p-date-range-picker__edge:disabled {
+  cursor: not-allowed;
+}
+
+.p-date-range-picker__edge-label {
+  color: var(--p-date-range-picker-text-muted);
+  font-size: var(--p-font-size-caption);
+  font-weight: var(--p-font-weight-medium);
+  line-height: var(--p-line-height-caption);
+}
+
+.p-date-range-picker__edge-value {
+  overflow: hidden;
+  font-size: var(--p-font-size-body-sm);
+  line-height: var(--p-line-height-body-sm);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.p-date-range-picker__edge-value--empty {
+  color: var(--p-date-range-picker-text-muted);
 }
 
 .p-date-range-picker__calendar-header {
@@ -260,10 +338,10 @@
   align-items: center;
   gap: 0;
   overflow: hidden;
-  border: 1px solid var(--p-color-border-subtle);
+  /* Standard control border: surface-subtle matches surface-raised in dark themes. */
+  border: 1px solid var(--p-date-range-picker-border);
   border-radius: var(--p-date-range-picker-radius);
   background: var(--p-color-surface-subtle);
-  margin-block-end: var(--p-space-3);
 }
 
 .p-date-range-picker__month {
@@ -280,7 +358,7 @@
   text-align: center;
 }
 
-.p-date-range-picker__month-label {
+.p-date-range-picker__sr-only {
   position: absolute;
   width: 1px;
   height: 1px;
@@ -357,6 +435,50 @@
   gap: var(--p-space-1);
 }
 
+/* No column gap, so a selected span reads as one continuous band. */
+.p-date-range-picker__grid {
+  column-gap: 0;
+}
+
+.p-date-range-picker__months {
+  display: grid;
+  grid-template-columns: repeat(var(--p-date-range-picker-month-columns, 1), var(--p-date-range-picker-month-width));
+  gap: var(--p-space-6);
+  max-width: 100%;
+  /* Mouse drags select dates, not text. The sheet keeps vertical panning for scroll. */
+  touch-action: pan-y;
+  user-select: none;
+}
+
+.p-date-range-picker__months[data-month-count='2'] {
+  --p-date-range-picker-month-columns: 2;
+}
+
+/* In the popover, touch drags select dates instead of panning. */
+.p-date-range-picker__months--touch-drag {
+  touch-action: none;
+}
+
+.p-date-range-picker__months--dragging .p-date-range-picker__day {
+  cursor: grabbing;
+}
+
+.p-date-range-picker__calendar--stack .p-date-range-picker__months {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.p-date-range-picker__month-caption {
+  margin-block-end: var(--p-space-2);
+  font-size: var(--p-font-size-body-sm);
+  font-weight: var(--p-font-weight-medium);
+  line-height: var(--p-line-height-body-sm);
+  text-align: center;
+}
+
+.p-date-range-picker__day-placeholder {
+  aspect-ratio: 1;
+}
+
 .p-date-range-picker__weekdays {
   margin-block-end: var(--p-space-1);
   color: var(--p-date-range-picker-text-muted);
@@ -365,33 +487,66 @@
   text-align: center;
 }
 
+.p-date-range-picker__week {
+  display: contents;
+}
+
 .p-date-range-picker__day {
   aspect-ratio: 1;
+  /* Days sit on the popover surface; only state rules below paint them. */
+  background: transparent;
   min-width: 0;
   border-color: transparent;
   border-radius: var(--p-radius-xs);
   font-size: var(--p-font-size-body-sm);
   line-height: var(--p-line-height-body-sm);
   padding: 0;
-}
-
-.p-date-range-picker__day--outside {
-  color: var(--p-date-range-picker-text-muted);
+  /* Selection states already show the press; drop the platform tap flash. */
+  -webkit-tap-highlight-color: transparent;
 }
 
 .p-date-range-picker__day--today {
   border-color: var(--p-date-range-picker-border-active);
 }
 
+/* The band carries the state, so the text stays at full text contrast on every surface. */
 .p-date-range-picker__day--in-range {
+  border-radius: 0;
   background: var(--p-date-range-picker-accent-subtle);
-  color: var(--p-date-range-picker-accent);
+  color: var(--p-date-range-picker-text);
+}
+
+/* Hover preview: what a click on the hovered day would select. */
+.p-date-range-picker__day--preview {
+  border-radius: 0;
+  border-block-color: var(--p-date-range-picker-border-active);
+  border-style: dashed;
 }
 
 .p-date-range-picker__day--selected {
   border-color: var(--p-date-range-picker-accent);
   background: var(--p-date-range-picker-accent);
   color: var(--p-color-text-inverse);
+}
+
+/* Keep state fills on hover; the generic day hover would wash them out. */
+.p-date-range-picker__day--in-range:hover {
+  background: var(--p-date-range-picker-accent-subtle);
+}
+
+.p-date-range-picker__day--selected:hover {
+  border-color: var(--p-date-range-picker-accent-hover);
+  background: var(--p-date-range-picker-accent-hover);
+}
+
+.p-date-range-picker__day--range-start {
+  border-start-end-radius: 0;
+  border-end-end-radius: 0;
+}
+
+.p-date-range-picker__day--range-end {
+  border-start-start-radius: 0;
+  border-end-start-radius: 0;
 }
 
 .p-date-range-picker__message {
@@ -416,11 +571,6 @@
 
 @media (max-width: 40rem) {
   .p-date-range-picker {
-    max-width: 100%;
-  }
-
-  .p-date-range-picker__panel {
-    width: 100%;
     max-width: 100%;
   }
 }
