@@ -56,7 +56,7 @@ export const BlockedDates: Story = {
   parameters: {
     docs: {
       description: {
-        story: "Nov 1 and Nov 2 are blocked with `disabledDates`, drawn like Airbnb's unavailable days; they stay reachable by keyboard.",
+        story: "Nov 1 and Nov 2 are blocked with `disabledDates`, drawn as hatched cells; they stay reachable by keyboard.",
       },
     },
   },

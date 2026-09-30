@@ -77,7 +77,7 @@ export const BlockedDates: Story = {
     docs: {
       description: {
         story:
-          "Nov 1 and Nov 2 are blocked with `disabledDates`, drawn like Airbnb's unavailable days. A range can never include one.",
+          "Nov 1 and Nov 2 are blocked with `disabledDates`, drawn as hatched cells. A range can never include one.",
       },
     },
   },

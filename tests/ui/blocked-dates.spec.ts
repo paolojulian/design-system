@@ -32,11 +32,12 @@ const cell = (page: Page, label: string) => page.getByRole('gridcell', { name: l
 const NOV_1 = 'Sunday, November 1, 2026';
 const NOV_2 = 'Monday, November 2, 2026';
 
-async function expectAirbnbUnavailable(page: Page, label: string) {
+async function expectBlocked(page: Page, label: string) {
   const day = cell(page, label);
   await expect(day).toHaveAttribute('aria-disabled', 'true');
-  await expect(day).toHaveCSS('text-decoration-line', 'line-through');
-  await expect(day).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
+  // Hatched: diagonal stripes over a tinted fill, readable without color.
+  await expect(day).toHaveCSS('background-image', /repeating-linear-gradient/);
+  await expect(day).not.toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
   await expect(day).toHaveCSS('cursor', 'not-allowed');
 }
 
@@ -50,10 +51,10 @@ test.describe('PDateRangePicker blocked dates', () => {
   }
   const value = (page: Page) => page.locator('.p-date-range-picker__trigger-value');
 
-  test('Nov 1 and Nov 2 look unavailable, like Airbnb, and clicks on them do nothing', async ({ page }) => {
+  test('Nov 1 and Nov 2 look blocked (hatched) and clicks on them do nothing', async ({ page }) => {
     await open(page);
-    await expectAirbnbUnavailable(page, NOV_1);
-    await expectAirbnbUnavailable(page, NOV_2);
+    await expectBlocked(page, NOV_1);
+    await expectBlocked(page, NOV_2);
     await cell(page, NOV_1).click({ force: true });
     await expect(value(page)).toHaveText('Oct 27, 2026 - Oct 30, 2026');
   });
@@ -96,26 +97,36 @@ test.describe('PDateRangePicker blocked dates', () => {
 });
 
 test.describe('Single-date and inline calendars with blocked dates', () => {
-  test('PDatePicker: blocked days look unavailable and cannot be picked', async ({ page }) => {
+  test('PDatePicker: blocked days are hatched and cannot be picked', async ({ page }) => {
     await page.goto(storyUrl('pipz-pdatepicker--blocked-dates'));
     await page.getByRole('button', { name: /Delivery date/ }).click();
-    await expectAirbnbUnavailable(page, NOV_2);
+    await expectBlocked(page, NOV_2);
     await cell(page, NOV_2).click({ force: true });
     await expect(page.getByRole('dialog')).toBeVisible();
     await cell(page, 'Tuesday, November 3, 2026').click();
     await expect(page.getByRole('button', { name: 'Delivery date: Nov 3, 2026' })).toBeVisible();
   });
 
-  test('PDateCalendar: blocked days look unavailable and cannot be picked', async ({ page }) => {
+  test('PDateCalendar: blocked days are hatched and cannot be picked', async ({ page }) => {
     await page.goto(storyUrl('pipz-pdatecalendar--blocked-dates'));
-    await expectAirbnbUnavailable(page, NOV_1);
+    await expectBlocked(page, NOV_1);
     await cell(page, NOV_1).click({ force: true });
     await expect(page.locator('input[type="hidden"]')).toHaveValue('2026-11-04');
   });
 
-  test('PDateRangeCalendar: blocked days look unavailable', async ({ page }) => {
+  test('PDateRangeCalendar: blocked days are hatched', async ({ page }) => {
     await page.goto(storyUrl('pipz-pdaterangecalendar--blocked-dates'));
-    await expectAirbnbUnavailable(page, NOV_1);
-    await expectAirbnbUnavailable(page, NOV_2);
+    await expectBlocked(page, NOV_1);
+    await expectBlocked(page, NOV_2);
   });
+});
+
+test('neighboring blocked days join into one striped block in the range picker', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 1000 });
+  await page.goto(storyUrl('pipz-pdaterangepicker--blocked-dates'));
+  await page.getByRole('button', { name: /Check-in – Check-out/ }).click();
+  const first = (await cell(page, NOV_1).boundingBox())!;
+  const second = (await cell(page, NOV_2).boundingBox())!;
+  expect(Math.round(second.x)).toBe(Math.round(first.x + first.width));
+  await expect(cell(page, NOV_1)).toHaveCSS('border-top-right-radius', '0px');
 });

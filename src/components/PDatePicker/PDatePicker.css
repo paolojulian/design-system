@@ -7,7 +7,13 @@
     --p-date-picker-border-active: var(--p-control-border-focus);
     --p-date-picker-text: var(--p-control-text);
     --p-date-picker-text-muted: var(--p-control-text-muted);
-    --p-date-picker-text-unavailable: var(--p-color-text-subtle);
+    --p-date-picker-text-unavailable: var(--p-color-text-muted);
+    /* Derived from text, which contrasts with every surface: surface-subtle
+       matches the raised popover surface in dark themes, so it can't carry the fill. */
+    --p-date-picker-hatch-color: color-mix(in srgb, var(--p-color-text-muted) 35%, transparent);
+    --p-date-picker-hatch-bg: color-mix(in srgb, var(--p-color-text) 5%, transparent);
+    --p-date-picker-hatch-width: var(--p-control-border-width, 1px);
+    --p-date-picker-hatch-gap: var(--p-space-2);
     --p-date-picker-label-focus: var(--p-date-picker-text);
     --p-date-picker-accent: var(--p-color-action-primary);
     --p-date-picker-accent-hover: var(--p-color-action-primary-hover);
@@ -406,16 +412,22 @@
 }
 
 /* Keep the selected fill on hover; the generic day hover would wash it out. */
-/* Unavailable (disabledDates / isDateDisabled), drawn like Airbnb's: a light gray,
-   struck-through number with no fill, hover or pointer. The strike carries the
-   meaning without color; disabled controls are exempt from WCAG text contrast. */
+/* Unavailable (disabledDates / isDateDisabled): a hatched cell, the booking and
+   scheduling convention for "blocked". It reads without color. The stripes are
+   anchored to the viewport (fixed), so neighboring blocked days line up into one
+   continuous pattern. */
 .p-date-picker__day--blocked,
 .p-date-picker__day--blocked:hover {
     border-color: transparent;
-    background: transparent;
+    background-color: var(--p-date-picker-hatch-bg);
+    background-image: repeating-linear-gradient(
+      135deg,
+      var(--p-date-picker-hatch-color) 0 var(--p-date-picker-hatch-width),
+      transparent var(--p-date-picker-hatch-width) var(--p-date-picker-hatch-gap)
+    );
+    background-attachment: fixed;
     color: var(--p-date-picker-text-unavailable);
     cursor: not-allowed;
-    text-decoration: line-through;
 }
 
 .p-date-picker__day--selected:hover {

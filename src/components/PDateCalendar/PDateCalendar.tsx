@@ -21,7 +21,7 @@ export type PDateCalendarProps = {
   disabledDates?: string[];
   /**
    * A rule for unavailable days (every Sunday, holidays…), combined with
-   * `disabledDates`. Blocked days are shown struck through and not
+   * `disabledDates`. Blocked days are shown hatched and not
    * selectable. Keep it cheap and stable (memoize); it runs per day.
    */
   isDateDisabled?: (date: Date) => boolean;

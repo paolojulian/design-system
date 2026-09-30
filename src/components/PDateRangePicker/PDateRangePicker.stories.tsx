@@ -261,7 +261,7 @@ export const BlockedDates: Story = {
     docs: {
       description: {
         story:
-          "Nov 1 and Nov 2 are blocked with `disabledDates`, drawn like Airbnb's unavailable days (light gray, struck through). They cannot be picked, and a range can never include one: a click that would span them starts a new range there, and a drag stops at the last free day. For rules a list can't express (every Sunday), pass `isDateDisabled`.",
+          "Nov 1 and Nov 2 are blocked with `disabledDates`, drawn as hatched cells, the booking convention for blocked days (neighbors join into one striped block). They cannot be picked, and a range can never include one: a click that would span them starts a new range there, and a drag stops at the last free day. For rules a list can't express (every Sunday), pass `isDateDisabled`.",
       },
     },
   },

@@ -7,7 +7,13 @@
   --p-date-range-picker-border-active: var(--p-control-border-focus);
   --p-date-range-picker-text: var(--p-control-text);
   --p-date-range-picker-text-muted: var(--p-control-text-muted);
-  --p-date-range-picker-text-unavailable: var(--p-color-text-subtle);
+  --p-date-range-picker-text-unavailable: var(--p-color-text-muted);
+  /* Derived from text, which contrasts with every surface: surface-subtle
+     matches the raised popover surface in dark themes, so it can't carry the fill. */
+  --p-date-range-picker-hatch-color: color-mix(in srgb, var(--p-color-text-muted) 35%, transparent);
+  --p-date-range-picker-hatch-bg: color-mix(in srgb, var(--p-color-text) 5%, transparent);
+  --p-date-range-picker-hatch-width: var(--p-control-border-width, 1px);
+  --p-date-range-picker-hatch-gap: var(--p-space-2);
   --p-date-range-picker-label-focus: var(--p-date-range-picker-text);
   --p-date-range-picker-accent: var(--p-color-action-primary);
   --p-date-range-picker-accent-subtle: var(--p-color-action-primary-subtle);
@@ -516,16 +522,24 @@
   background: var(--p-date-range-picker-accent-subtle);
 }
 
-/* Unavailable (disabledDates / isDateDisabled), drawn like Airbnb's: a light gray,
-   struck-through number with no fill, hover or pointer. The strike carries the
-   meaning without color; disabled controls are exempt from WCAG text contrast. */
+/* Unavailable (disabledDates / isDateDisabled): a hatched cell, the booking and
+   scheduling convention for "blocked". It reads without color. The stripes are
+   anchored to the viewport (fixed), so neighboring blocked days line up into one
+   continuous pattern. */
 .p-date-range-picker__day--blocked,
 .p-date-range-picker__day--blocked:hover {
   border-color: transparent;
-  background: transparent;
+  /* Square, so consecutive blocked days join into one striped block. */
+  border-radius: 0;
+  background-color: var(--p-date-range-picker-hatch-bg);
+  background-image: repeating-linear-gradient(
+    135deg,
+    var(--p-date-range-picker-hatch-color) 0 var(--p-date-range-picker-hatch-width),
+    transparent var(--p-date-range-picker-hatch-width) var(--p-date-range-picker-hatch-gap)
+  );
+  background-attachment: fixed;
   color: var(--p-date-range-picker-text-unavailable);
   cursor: not-allowed;
-  text-decoration: line-through;
 }
 
 .p-date-range-picker__day--selected:hover {

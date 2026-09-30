@@ -45,7 +45,7 @@ export type PDateRangePickerProps = {
   disabledDates?: string[];
   /**
    * A rule for unavailable days (every Sunday, holidays…), combined with
-   * `disabledDates`. Blocked days are shown struck through, not selectable,
+   * `disabledDates`. Blocked days are shown hatched, not selectable,
    * and no range may include one. Keep it cheap and stable (memoize); it runs per day.
    */
   isDateDisabled?: (date: Date) => boolean;
