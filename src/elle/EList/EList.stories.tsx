@@ -3,22 +3,7 @@ import { useState } from 'react';
 import { EList, EListRow } from '.';
 import { PSwitch } from '../../components/PSwitch';
 import { withElleCanvas } from '../ElleCanvas';
-
-function Glyph({ d }: { d: string }) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-      <path d={d} />
-    </svg>
-  );
-}
-
-const ICONS = {
-  person: 'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm-7 8a7 7 0 0 1 14 0',
-  bell: 'M6 16V11a6 6 0 1 1 12 0v5l1.5 2h-15L6 16Zm4 4h4',
-  lock: 'M7 11V8a5 5 0 0 1 10 0v3M5 11h14v9H5z',
-  wifi: 'M2 9a15 15 0 0 1 20 0M5 12.5a10 10 0 0 1 14 0M8.5 16a5 5 0 0 1 7 0M12 19.5h.01',
-  plane: 'M10 20l2-6-7-3 1-2 8 1 4-6h2l-2 7 4 2-1 2-5-1-3 6z',
-};
+import { StoryIcon } from '../ElleStoryIcons';
 
 const meta: Meta<typeof EList> = {
   title: 'Elle/EList',
@@ -54,9 +39,9 @@ export const Default: Story = {
 export const WithIcons: Story = {
   render: () => (
     <EList header="Settings">
-      <EListRow leading={<Glyph d={ICONS.person} />} title="Profile" subtitle="Name, photo, email" href="#profile" />
-      <EListRow leading={<Glyph d={ICONS.bell} />} title="Notifications" value="On" href="#notifications" />
-      <EListRow leading={<Glyph d={ICONS.lock} />} title="Privacy" href="#privacy" />
+      <EListRow leading={<StoryIcon name="person" />} title="Profile" subtitle="Name, photo, email" href="#profile" />
+      <EListRow leading={<StoryIcon name="bell" />} title="Notifications" value="On" href="#notifications" />
+      <EListRow leading={<StoryIcon name="lock" />} title="Privacy" href="#privacy" />
     </EList>
   ),
 };
@@ -67,16 +52,16 @@ function SwitchDemo() {
   return (
     <EList header="Connections">
       <EListRow
-        leading={<Glyph d={ICONS.plane} />}
+        leading={<StoryIcon name="plane" />}
         title="Airplane Mode"
         trailing={<PSwitch label="Airplane Mode" checked={airplane} onChange={(event) => setAirplane(event.target.checked)} />}
       />
       <EListRow
-        leading={<Glyph d={ICONS.wifi} />}
+        leading={<StoryIcon name="wifi" />}
         title="Wi-Fi"
         trailing={<PSwitch label="Wi-Fi" checked={wifi} onChange={(event) => setWifi(event.target.checked)} />}
       />
-      <EListRow leading={<Glyph d={ICONS.lock} />} title="VPN" value="Not connected" href="#vpn" />
+      <EListRow leading={<StoryIcon name="lock" />} title="VPN" value="Not connected" href="#vpn" />
     </EList>
   );
 }
@@ -111,7 +96,7 @@ export const LongText: Story = {
   render: () => (
     <EList header="Shared with" footer="Long names and values wrap rather than clip, and the row grows to fit.">
       <EListRow
-        leading={<Glyph d={ICONS.person} />}
+        leading={<StoryIcon name="person" />}
         title="Maria Guadalupe Fernández-Castellanos de la Cruz"
         subtitle="maria.guadalupe.fernandez-castellanos@long-company-domain.example.com"
         value="Can edit"

@@ -40,3 +40,25 @@
   gap: var(--p-space-8);
   padding-inline: 0;
 }
+
+/* Whole-screen examples: bars run edge to edge, nothing is centered. */
+.elle-canvas--screen {
+  display: block;
+  /* Chromium applies justify-items to block children too; centered would shrink-wrap the bars. */
+  place-items: normal;
+  padding: 0;
+}
+
+.elle-story--screen-body {
+  padding-block: var(--p-space-6);
+}
+
+/* Room for a fixed tab bar, so the last row is never hidden behind it. */
+.elle-story--above-tabbar {
+  padding-bottom: calc(var(--p-size-touch-min) + var(--p-space-12));
+}
+
+.elle-story__note {
+  margin: 0;
+  padding-inline: var(--p-space-4);
+}

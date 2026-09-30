@@ -25,9 +25,9 @@ boundary. Do not reorder phases or tasks.
 - [x] Stories `Elle/EList`: default, with icons, with `PSwitch` trailing, destructive row, long text wrapping, edge-to-edge (`inset={false}`), mobile viewport; axe in light + dark
 
 ## Phase 4: Bars + example screen
-- [ ] `src/elle/elle-material.css` exactly as in the design, with a test for the opaque fallback under `prefers-reduced-transparency` / `prefers-contrast` (requirement 10)
-- [ ] `ENavigationBar` (`src/elle/ENavigationBar/`): tests, then component — single heading, large title block, leading/trailing, sticky; stories `Elle/ENavigationBar`
-- [ ] `ETabBar` (`src/elle/ETabBar/`): tests, then component — `<nav>`, `aria-current`, badges, link vs button items, safe-area padding, 2–5 guard; stories `Elle/ETabBar` (requirement 9)
+- [x] `src/elle/elle-material.css` exactly as in the design, with a test for the opaque fallback under `prefers-reduced-transparency` / `prefers-contrast` (requirement 10)
+- [x] `ENavigationBar` (`src/elle/ENavigationBar/`): tests, then component — single heading, large title block, leading/trailing, sticky; stories `Elle/ENavigationBar`
+- [x] `ETabBar` (`src/elle/ETabBar/`): tests, then component — `<nav>`, `aria-current`, badges, link vs button items, safe-area padding, 2–5 guard; stories `Elle/ETabBar` (requirement 9)
 - [ ] `Elle/Examples → Settings` story built only from Elle components + `PSwitch`; axe + Elle-applied guard at 1280px and 390px, light and dark; screenshot reviewed (requirements 11–12)
 - [ ] Update `docs/design-languages/elle.md` (component list, remove "theming only"), README "Design languages", full static-build suite + `mcp` tests green
 

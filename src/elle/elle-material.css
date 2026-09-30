@@ -1,0 +1,18 @@
+/* Translucent bar material shared by ENavigationBar and ETabBar. Falls back to
+   the opaque surface when blur is unsupported, or when the user asks for less
+   transparency or more contrast. */
+@layer components {
+  .e-material {
+    --e-material-bg: color-mix(in srgb, var(--p-color-surface) 78%, transparent);
+    --e-material-border: var(--p-color-border-subtle);
+    background: var(--e-material-bg);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    backdrop-filter: saturate(180%) blur(20px);
+  }
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .e-material { --e-material-bg: var(--p-color-surface); }
+  }
+  @media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+    .e-material { --e-material-bg: var(--p-color-surface); -webkit-backdrop-filter: none; backdrop-filter: none; }
+  }
+}

@@ -9,3 +9,5 @@
 export * from './EButton';
 export * from './ESegmentedControl';
 export * from './EList';
+export * from './ENavigationBar';
+export * from './ETabBar';
