@@ -1,4 +1,4 @@
-import { forwardRef, useId, useMemo, useState, type HTMLAttributes } from 'react';
+import { forwardRef, useId, useMemo, useState, type HTMLAttributes, type ReactNode } from 'react';
 import { P_TOKEN_VALUES } from '../../constants/tokens';
 import cn from '../../utils/cn';
 import { useMediaQuery } from '../../utils/useMediaQuery';
@@ -13,7 +13,7 @@ import {
   toLocalDate,
 } from '../PDateRangePicker/dateRangeUtils';
 import type { DayRange } from '../PDateRangePicker/rangeSelection';
-import type { PDateRangePickerSummaryUnit, PDateRangeValue } from '../PDateRangePicker/types';
+import type { DateBlockerUnit, PDateRangePickerSummaryUnit, PDateRangeValue } from '../PDateRangePicker/types';
 import '../PDateRangePicker/PDateRangePicker.css';
 
 export type PDateRangeCalendarRef = HTMLDivElement;
@@ -36,6 +36,20 @@ export type PDateRangeCalendarProps = {
    * and no range may include one. Keep it cheap and stable (memoize); it runs per day.
    */
   isDateDisabled?: (date: Date) => boolean;
+  /**
+   * What a disabled date blocks. `day` (default): the whole day, so no range may
+   * include it. `night`: the night that starts on it, for stays - the date can't
+   * start or sit inside a range, but it can end one: a booked night's date is
+   * the previous guest's checkout day, and is offered as such once a start is held.
+   */
+  disabledUnit?: DateBlockerUnit;
+  /** The month to open on when nothing is selected, as an ISO date in it. Defaults to today's month. */
+  defaultMonth?: string;
+  /**
+   * Extra content inside each day cell, after the number - a price, a marker.
+   * Decorative: the cell's accessible name stays the date. Keep it cheap; it runs per visible day.
+   */
+  renderDayContent?: (date: Date) => ReactNode;
   /** Months side by side from the `md` breakpoint. Defaults to 2; one month below it. */
   numberOfMonths?: 1 | 2;
   /** How the header counts a range: inclusive `days` (default) or `nights`. */
@@ -66,6 +80,9 @@ export const PDateRangeCalendar = forwardRef<PDateRangeCalendarRef, PDateRangeCa
       weekStartsOn = 0,
       disabledDates,
       isDateDisabled,
+      disabledUnit,
+      defaultMonth,
+      renderDayContent,
       numberOfMonths = 2,
       summaryUnit = 'days',
       showClear = true,
@@ -119,6 +136,9 @@ export const PDateRangeCalendar = forwardRef<PDateRangeCalendarRef, PDateRangeCa
           locale={locale}
           weekStartsOn={weekStartsOn}
           isDateDisabled={dateBlocker}
+          disabledUnit={disabledUnit}
+          initialMonth={toLocalDate(defaultMonth)}
+          renderDayContent={renderDayContent}
           summaryUnit={summaryUnit}
           onRangeChange={handleRangeChange}
           autoFocus={false}

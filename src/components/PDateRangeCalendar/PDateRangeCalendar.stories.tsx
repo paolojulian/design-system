@@ -83,4 +83,32 @@ export const BlockedDates: Story = {
   },
 };
 
+export const StayCalendar: Story = {
+  name: 'Stay Calendar (nights)',
+  args: {
+    label: 'Check-in – Check-out',
+    summaryUnit: 'nights',
+    disabledUnit: 'night',
+    disabledDates: ['2026-10-20', '2026-10-21', '2026-10-22', '2026-11-05'],
+    defaultMonth: '2026-10-01',
+    renderDayContent: (date: Date) => (date.getDay() === 5 || date.getDay() === 6 ? '5,200' : '4,500'),
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "A listing calendar. `disabledUnit=\"night\"` makes a blocked date a booked NIGHT: Oct 20–22 are taken, so Oct 20 can't start a stay - but pick Oct 17 and Oct 20 is offered as the checkout, and Oct 23 (the guest's checkout day) is free to start the next one. A click past the stay restarts there; a drag stops at the checkout. `defaultMonth` opens on October with nothing selected, and `renderDayContent` prints the nightly rate under each day.",
+      },
+    },
+  },
+};
+
+export const DefaultMonth: Story = {
+  name: 'Default Month',
+  args: { defaultMonth: '2027-03-15' },
+  parameters: {
+    docs: { description: { story: 'Opens on March 2027 with nothing selected. A selected start always wins over `defaultMonth`.' } },
+  },
+};
+
 export default meta;

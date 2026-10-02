@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type PointerEvent } from 'react';
 import { isSameDay, toLocalDate } from './dateRangeUtils';
-import { getClickedRange, getDragAnchor, getDragRange, type DateBlocker, type DayRange } from './rangeSelection';
+import { getClickedRange, getDragAnchor, getDragRange, type DateBlocker, type DateBlockerUnit, type DayRange } from './rangeSelection';
 
 type DragState = {
   anchor: Date;
@@ -12,6 +12,8 @@ type UseDayRangeDragOptions = {
   range: DayRange;
   /** Unavailable days: never pressed, never spanned. */
   isBlocked?: DateBlocker;
+  /** What a blocked day blocks: the day, or the night starting on it. */
+  unit?: DateBlockerUnit;
   /** When false, touch presses never start a drag, leaving the gesture to scrolling. */
   allowTouchDrag?: boolean;
   onCommit: (range: DayRange) => void;
@@ -36,14 +38,14 @@ function getEventDay(target: EventTarget | null) {
  * click, so taps, mouse clicks, and keyboard activation share one path
  * (`getClickedRange`) and a click is never applied twice.
  */
-export function useDayRangeDrag({ range, isBlocked, allowTouchDrag = true, onCommit }: UseDayRangeDragOptions) {
+export function useDayRangeDrag({ range, isBlocked, unit = 'day', allowTouchDrag = true, onCommit }: UseDayRangeDragOptions) {
   const [drag, setDrag] = useState<DragState | null>(null);
   const [hoverDate, setHoverDate] = useState<Date | null>(null);
   const dragRef = useRef<DragState | null>(null);
   const onCommitRef = useRef(onCommit);
   onCommitRef.current = onCommit;
-  const isBlockedRef = useRef(isBlocked);
-  isBlockedRef.current = isBlocked;
+  const blockingRef = useRef({ isBlocked, unit });
+  blockingRef.current = { isBlocked, unit };
 
   const updateDrag = (next: DragState | null) => {
     dragRef.current = next;
@@ -61,7 +63,7 @@ export function useDayRangeDrag({ range, isBlocked, allowTouchDrag = true, onCom
       updateDrag(null);
 
       if (event.type === 'pointerup' && current && !isSameDay(current.hover, current.origin)) {
-        const committed = getDragRange(current.anchor, current.hover, isBlockedRef.current);
+        const committed = getDragRange(current.anchor, current.hover, blockingRef.current.isBlocked, blockingRef.current.unit);
         // Clamped down to one day by a blocked neighbor: nothing to commit.
         if (!isSameDay(committed.start, committed.end)) {
           onCommitRef.current(committed);
@@ -118,8 +120,8 @@ export function useDayRangeDrag({ range, isBlocked, allowTouchDrag = true, onCom
 
   const onPointerLeave = () => setHoverDate(null);
 
-  const dragRange = drag ? getDragRange(drag.anchor, drag.hover, isBlocked) : null;
-  const hoverRange = !drag && hoverDate ? getClickedRange(range, hoverDate, isBlocked) : null;
+  const dragRange = drag ? getDragRange(drag.anchor, drag.hover, isBlocked, unit) : null;
+  const hoverRange = !drag && hoverDate ? getClickedRange(range, hoverDate, isBlocked, unit) : null;
 
   return {
     /** The range to render as selected: the live drag, else the value. */

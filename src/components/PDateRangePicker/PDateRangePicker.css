@@ -480,6 +480,7 @@
 }
 
 .p-date-range-picker__day {
+  position: relative;
   aspect-ratio: 1;
   /* Days sit on the popover surface; only state rules below paint them. */
   background: transparent;
@@ -604,4 +605,19 @@
   }
 }
 
+}
+
+/* Consumer content inside a day (renderDayContent): a price, a marker. Sits
+   under the number at caption size; an absolutely positioned child (a corner
+   dot) anchors to the cell, which is `position: relative` for it. */
+.p-date-range-picker__day-content {
+  display: block;
+  font-size: var(--p-font-size-caption);
+  line-height: var(--p-line-height-caption);
+  color: var(--p-date-range-picker-text-muted);
+}
+
+.p-date-range-picker__day--selected .p-date-range-picker__day-content,
+.p-date-range-picker__day--in-range .p-date-range-picker__day-content {
+  color: inherit;
 }

@@ -67,6 +67,9 @@ export const PDateRangePicker = forwardRef<PDateRangePickerRef, PDateRangePicker
       weekStartsOn = 0,
       disabledDates,
       isDateDisabled,
+      disabledUnit,
+      defaultMonth,
+      renderDayContent,
       numberOfMonths = 2,
       summaryUnit = 'days',
       className,
@@ -316,6 +319,9 @@ export const PDateRangePicker = forwardRef<PDateRangePickerRef, PDateRangePicker
             locale={locale}
             weekStartsOn={weekStartsOn}
             isDateDisabled={dateBlocker}
+            disabledUnit={disabledUnit}
+            initialMonth={toLocalDate(defaultMonth)}
+            renderDayContent={renderDayContent}
             summaryUnit={summaryUnit}
             onRangeChange={handleCalendarChange}
           />

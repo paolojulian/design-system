@@ -1,4 +1,4 @@
-import type { KeyboardEvent, MutableRefObject } from 'react';
+import type { KeyboardEvent, MutableRefObject, ReactNode } from 'react';
 import cn from '../../utils/cn';
 import { getCalendarDays, getDayLabel, getMonthLabel, getWeekdayLabels, isSameDay, toIsoDate } from './dateRangeUtils';
 import type { DayRange } from './rangeSelection';
@@ -16,8 +16,10 @@ type DateRangeMonthProps = {
   previewRange: DayRange | null;
   focusedDate: Date;
   isOutOfBounds: (date: Date) => boolean;
-  /** Unavailable days: focusable (so the grid stays navigable) but not selectable. */
-  isBlocked?: (date: Date) => boolean;
+  /** Unavailable to the next click: focusable (so the grid stays navigable) but not selectable. */
+  isUnavailable: (date: Date) => boolean;
+  /** Extra content inside a day cell, after the number (a price, a marker). */
+  renderDayContent?: (date: Date) => ReactNode;
   dayRefs: MutableRefObject<Record<string, FocusableElement | null>>;
   onDayClick: (date: Date) => void;
   onDayKeyDown: (date: Date, event: KeyboardEvent<HTMLButtonElement>) => void;
@@ -62,7 +64,8 @@ export function DateRangeMonth({
   previewRange,
   focusedDate,
   isOutOfBounds,
-  isBlocked,
+  isUnavailable,
+  renderDayContent,
   dayRefs,
   onDayClick,
   onDayKeyDown,
@@ -97,7 +100,8 @@ export function DateRangeMonth({
               }
 
               const isEdge = isSameDay(date, range.start) || isSameDay(date, range.end);
-              const isDayBlocked = Boolean(isBlocked?.(date));
+              const isDayUnavailable = isUnavailable(date);
+              const content = renderDayContent?.(date);
 
               return (
                 <button
@@ -110,10 +114,10 @@ export function DateRangeMonth({
                   data-date={isoDate}
                   className={cn(
                     getDayClassName(date, today, range, previewRange),
-                    isDayBlocked && 'p-date-range-picker__day--blocked',
+                    isDayUnavailable && 'p-date-range-picker__day--blocked',
                   )}
                   disabled={isOutOfBounds(date)}
-                  aria-disabled={isDayBlocked || undefined}
+                  aria-disabled={isDayUnavailable || undefined}
                   aria-label={getDayLabel(date, locale)}
                   aria-selected={isEdge}
                   tabIndex={isSameDay(date, focusedDate) ? 0 : -1}
@@ -121,6 +125,9 @@ export function DateRangeMonth({
                   onKeyDown={(event) => onDayKeyDown(date, event)}
                 >
                   {date.getDate()}
+                  {content != null && content !== false ? (
+                    <span className="p-date-range-picker__day-content">{content}</span>
+                  ) : null}
                 </button>
               );
             })}

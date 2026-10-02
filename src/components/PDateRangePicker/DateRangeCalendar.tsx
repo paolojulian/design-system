@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
+import { useEffect, useRef, useState, type KeyboardEvent, type ReactNode } from 'react';
 import cn from '../../utils/cn';
 import { PButton } from '../PButton';
 import {
@@ -16,7 +16,14 @@ import {
 import { DateRangeCalendarHeader } from './DateRangeCalendarHeader';
 import { DateRangeMonth } from './DateRangeMonth';
 import { DateRangeSummary } from './DateRangeSummary';
-import { getClickedRange, getNextEdge, type DateBlocker, type DayRange } from './rangeSelection';
+import {
+  getClickedRange,
+  getNextEdge,
+  isDateUnavailable,
+  type DateBlocker,
+  type DateBlockerUnit,
+  type DayRange,
+} from './rangeSelection';
 import type { FocusableElement, PDateRangePickerSummaryUnit } from './types';
 import { useDayRangeDrag } from './useDayRangeDrag';
 
@@ -38,6 +45,12 @@ type DateRangeCalendarProps = {
   autoFocus?: boolean;
   /** Unavailable days: not selectable, and no range may include one. */
   isDateDisabled?: DateBlocker;
+  /** What a disabled date blocks: the whole day (default) or the night that starts on it. */
+  disabledUnit?: DateBlockerUnit;
+  /** The month to open on when no start is selected. Defaults to today's. */
+  initialMonth?: Date | null;
+  /** Extra content inside each day cell, after the number. */
+  renderDayContent?: (date: Date) => ReactNode;
 };
 
 const STACK_BATCH = 12;
@@ -59,8 +72,11 @@ export function DateRangeCalendar({
   onRangeChange,
   autoFocus = true,
   isDateDisabled,
+  disabledUnit = 'day',
+  initialMonth,
+  renderDayContent,
 }: DateRangeCalendarProps) {
-  const initialDate = range.start ?? today;
+  const initialDate = range.start ?? initialMonth ?? today;
   const [visibleMonth, setVisibleMonth] = useState(() => startOfMonth(initialDate));
   const [focusedDate, setFocusedDate] = useState(initialDate);
   const [stackCount, setStackCount] = useState(STACK_BATCH);
@@ -76,6 +92,7 @@ export function DateRangeCalendar({
   const { displayRange, previewRange, isDragging, gridProps } = useDayRangeDrag({
     range,
     isBlocked: isDateDisabled,
+    unit: disabledUnit,
     // Touch drags would fight the sheet's vertical scroll; taps still select.
     allowTouchDrag: !isStacked,
     onCommit: (nextRange) => {
@@ -122,7 +139,7 @@ export function DateRangeCalendar({
 
   const handleDayClick = (date: Date) => {
     if (!isOutOfBounds(date)) {
-      const nextRange = getClickedRange(range, date, isDateDisabled);
+      const nextRange = getClickedRange(range, date, isDateDisabled, disabledUnit);
       setFocusedDate(date);
 
       if (!nextRange) {
@@ -196,7 +213,9 @@ export function DateRangeCalendar({
             previewRange={previewRange}
             focusedDate={focusedDate}
             isOutOfBounds={isOutOfBounds}
-            isBlocked={isDateDisabled}
+            // Judged against the committed range, not a live drag, so cells do not flicker mid-drag.
+            isUnavailable={(date) => isDateUnavailable(range, date, isDateDisabled, disabledUnit)}
+            renderDayContent={renderDayContent}
             dayRefs={dayRefs}
             onDayClick={handleDayClick}
             onDayKeyDown={handleDayKeyDown}
