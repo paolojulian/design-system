@@ -158,6 +158,12 @@ export {
   type PTableState,
   type PTableStateTone,
 } from './PTable';
+export {
+  PSegmentedControl,
+  type PSegmentedControlProps,
+  type PSegmentedControlRef,
+  type PSegmentedOption,
+} from './PSegmentedControl';
 export { PSwitch, type PSwitchProps, type PSwitchRef } from './PSwitch';
 export {
   PToast,

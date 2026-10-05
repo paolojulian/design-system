@@ -9,6 +9,8 @@ type DateRangeSummaryProps = {
   locale?: string;
   /** The edge the next click completes, if any; its field is highlighted. */
   nextEdge: RangeEdge | null;
+  /** Draw the per-edge fields under the title. Off when the host form shows the dates itself. */
+  showEdges?: boolean;
 };
 
 const DAY_MS = 24 * 60 * 60 * 1000;
@@ -42,7 +44,7 @@ const EDGE_LABELS: Record<PDateRangePickerSummaryUnit, Record<RangeEdge, string>
  * field per edge like Airbnb's Check-in / Check-out. The field the next click
  * completes is highlighted.
  */
-export function DateRangeSummary({ range, unit, locale, nextEdge }: DateRangeSummaryProps) {
+export function DateRangeSummary({ range, unit, locale, nextEdge, showEdges = true }: DateRangeSummaryProps) {
   const title = getRangeLength(range, unit) ?? (nextEdge === 'end' ? 'Select an end date' : 'Select a start date');
 
   return (
@@ -50,6 +52,7 @@ export function DateRangeSummary({ range, unit, locale, nextEdge }: DateRangeSum
       <p className="p-date-range-picker__summary-title" aria-live="polite">
         {title}
       </p>
+      {showEdges ? (
       <dl className="p-date-range-picker__edges">
         {(['start', 'end'] as const).map((edge) => {
           const date = range[edge];
@@ -69,6 +72,7 @@ export function DateRangeSummary({ range, unit, locale, nextEdge }: DateRangeSum
           );
         })}
       </dl>
+      ) : null}
     </div>
   );
 }

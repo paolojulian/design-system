@@ -111,4 +111,44 @@ export const DefaultMonth: Story = {
   },
 };
 
+export const WithoutEdges: Story = {
+  name: 'Without Edges',
+  args: {
+    label: 'Check-in – Check-out',
+    defaultValue: { start: '2026-05-18', end: '2026-05-23' },
+    summaryUnit: 'nights',
+    numberOfMonths: 1,
+    showEdges: false,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          '`showEdges={false}` drops the Check-in / Check-out fields and keeps the title. For a form that prints the picked dates itself (a booking form with its own summary line), so they are not shown twice.',
+      },
+    },
+  },
+};
+
+export const FullWidth: Story = {
+  name: 'Full Width',
+  args: {
+    label: 'Check-in – Check-out',
+    defaultValue: { start: '2026-05-18', end: '2026-05-23' },
+    summaryUnit: 'nights',
+    numberOfMonths: 1,
+    showEdges: false,
+    fullWidth: true,
+    trimWeeks: true,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          '`trimWeeks` drops the blank sixth row, so Clear dates sits right under the last week. `fullWidth` stretches the calendar to its container instead of the fixed month width, so the day cells grow with the space - a form column, a phone-wide sheet.',
+      },
+    },
+  },
+};
+
 export default meta;

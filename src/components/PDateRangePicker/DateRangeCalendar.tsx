@@ -51,6 +51,8 @@ type DateRangeCalendarProps = {
   initialMonth?: Date | null;
   /** Extra content inside each day cell, after the number. */
   renderDayContent?: (date: Date) => ReactNode;
+  /** Draw the Check-in / Check-out (Start / End) fields in the summary. Defaults to on. */
+  showEdges?: boolean;
 };
 
 const STACK_BATCH = 12;
@@ -75,6 +77,7 @@ export function DateRangeCalendar({
   disabledUnit = 'day',
   initialMonth,
   renderDayContent,
+  showEdges = true,
 }: DateRangeCalendarProps) {
   const initialDate = range.start ?? initialMonth ?? today;
   const [visibleMonth, setVisibleMonth] = useState(() => startOfMonth(initialDate));
@@ -181,6 +184,7 @@ export function DateRangeCalendar({
         unit={summaryUnit}
         locale={locale}
         nextEdge={getNextEdge(displayRange)}
+        showEdges={showEdges}
       />
       <DateRangeCalendarHeader
         visibleMonth={visibleMonth}

@@ -54,6 +54,26 @@ export type PDateRangeCalendarProps = {
   numberOfMonths?: 1 | 2;
   /** How the header counts a range: inclusive `days` (default) or `nights`. */
   summaryUnit?: PDateRangePickerSummaryUnit;
+  /**
+   * Shows the Check-in / Check-out (Start date / End date) fields under the
+   * summary title. Defaults to `true`. Turn it off when the form around the
+   * calendar already shows the picked dates, so they are not printed twice;
+   * the title ("Select a start date", "3 nights") stays.
+   */
+  showEdges?: boolean;
+  /**
+   * Stretch to the container's width instead of hugging the months, so the
+   * day cells grow with the space - for a form column or a phone-wide sheet.
+   * Defaults to `false`.
+   */
+  fullWidth?: boolean;
+  /**
+   * Let a month be as tall as its weeks. By default every month keeps six
+   * rows so the calendar does not change height between months; off that
+   * reserve where what follows the calendar should sit right under it.
+   * Defaults to `false`.
+   */
+  trimWeeks?: boolean;
   /** Shows a "Clear dates" action under the calendar. Defaults to `true`. */
   showClear?: boolean;
   /** Form field names for the hidden start / end inputs. */
@@ -85,6 +105,9 @@ export const PDateRangeCalendar = forwardRef<PDateRangeCalendarRef, PDateRangeCa
       renderDayContent,
       numberOfMonths = 2,
       summaryUnit = 'days',
+      showEdges = true,
+      fullWidth = false,
+      trimWeeks = false,
       showClear = true,
       nameStart,
       nameEnd,
@@ -123,7 +146,13 @@ export const PDateRangeCalendar = forwardRef<PDateRangeCalendarRef, PDateRangeCa
         id={rootId}
         role="group"
         aria-label={label}
-        className={cn('p-date-range-picker', 'p-date-range-picker--inline', className)}
+        className={cn(
+          'p-date-range-picker',
+          'p-date-range-picker--inline',
+          fullWidth && 'p-date-range-picker--inline-full',
+          trimWeeks && 'p-date-range-picker--inline-trim',
+          className,
+        )}
         data-month-count={monthCount}
       >
         <DateRangeCalendar
@@ -140,6 +169,7 @@ export const PDateRangeCalendar = forwardRef<PDateRangeCalendarRef, PDateRangeCa
           initialMonth={toLocalDate(defaultMonth)}
           renderDayContent={renderDayContent}
           summaryUnit={summaryUnit}
+          showEdges={showEdges}
           onRangeChange={handleRangeChange}
           autoFocus={false}
         />

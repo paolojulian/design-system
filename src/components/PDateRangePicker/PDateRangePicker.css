@@ -594,6 +594,21 @@
   );
 }
 
+/* trimWeeks: a week wholly outside the month (never a row) is dropped instead
+   of holding the sixth-row reserve, so the month is as tall as its weeks. */
+.p-date-range-picker--inline-trim .p-date-range-picker__week:not([role="row"]) {
+  display: none;
+}
+
+/* fullWidth: the calendar takes the container and the months share it. */
+.p-date-range-picker--inline-full {
+  width: 100%;
+}
+
+.p-date-range-picker--inline-full .p-date-range-picker__months {
+  grid-template-columns: repeat(var(--p-date-range-picker-month-columns, 1), minmax(0, 1fr));
+}
+
 .p-date-range-picker__inline-footer {
   display: flex;
   justify-content: flex-end;
